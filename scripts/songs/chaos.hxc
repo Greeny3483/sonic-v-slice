@@ -40,7 +40,7 @@ class ChaosSong extends Song
 	{
 		super.onCreate(event);
 
-		ObjectHandler.preloadFleetwayTextures(); // Preload Fleetway textures
+		ObjectHandler.getObject("fleetwayTextures");
 
 		swappingNotestylesModule = ModuleHandler.getModule('SwappingNotestyles');
 		doQuickTime = ModuleHandler.getModule("EXEOptions").scriptGet("quickTimeEvents");

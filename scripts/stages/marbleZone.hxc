@@ -30,118 +30,76 @@ class MarbleZone extends Stage
     override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
-        doVCRShaders = ModuleHandler.getModule('EXEOptions').scriptGet('bonusfeatures');
-        songID = PlayState.instance.currentSong.id.toLowerCase();
-
-        game = PlayState.instance;
-        gameStage = PlayState.instance.currentStage;
-
-        dad = PlayState.instance.currentStage.getDad();
+        ShaderHandler.initVCRShader();
 
         if (songID == "round-a-bout") {
-           sarah = CharacterDataParser.fetchCharacter('Sarah');
-           if (sarah != null) {
+            sarah = CharacterDataParser.fetchCharacter('Sarah');
+            sarah.characterType = CharacterType.DAD;
 
-               sarah.x = -1010;
-               sarah.y = -980;
+            sarah.x = -1010;
+            sarah.y = -980;
+            sarah.alpha = 0;
             
-               sarah.characterType = CharacterType.DAD;
-    
-               sarah.alpha = 0;
-            
-               sarah.playAnimation('idle');
-           } else {
-               trace('Failed to load Sarah character data!');
-           }
-        }
-
-        initVCRShader();
-    }
-
-    function initVCRShader():Void {
-        if (!doVCRShaders) return;
-        try {
-            var shaderSource = Assets.getText(Paths.frag("vcr with no glitch"));
-            vcrShader = new FlxRuntimeShader(shaderSource);
-            
-            vcrShader.setFloat("iTime", 0.0);
-            vcrShader.setFloatArray("iResolution", [FlxG.width, FlxG.height, 1.0]);
-            
-            game.camGame.filters = [new ShaderFilter(vcrShader)];
-            game.camHUD.filters = [new ShaderFilter(vcrShader)];
-			game.camCutscene.filters = [new ShaderFilter(vcrShader)];
-            
-        } catch (e:Dynamic) {
-            trace("Failed to load VCR shader: " + e); // i dont do traces but this is a special case
+            sarah.playAnimation('idle');
         }
     }
 
     override function onUpdate():Void {
         super.onUpdate();
 
-        //if (PlayState.instance.currentSong.id.toLowerCase() != "round-a-bout") return;
-
-        if (vcrShader != null && doVCRShaders) {
-            shaderTime += FlxG.elapsed;
-            vcrShader.setFloat("iTime", shaderTime);
-        }
+        ShaderHandler.updateShader("vcr");
 
         if (songID == "round-a-bout") {
-        if (sarah != null) {
-            var dadAnim = PlayState.instance.currentStage.getDad().animation.curAnim.name;
-            
-            if (dadAnim != null) {
-                var animName = dadAnim.name;
-            
-                if (animName == 'singLEFT') {
-                    if (lastDadAnim != animName) {
+            if (sarah != null) {
+                var dadAnimName = PlayState.instance.currentStage.getDad().animation.curAnim.name;
+
+                if (dadAnimName == 'singLEFT') {
+                    if (lastDadAnim != dadAnimName) {
                         sarah.playAnimation('singLEFT', true);
                     }
                     else if (sarah.animation.curAnim != null && sarah.animation.finished) {
                         sarah.playAnimation('singLEFT', true);
                     }
-                    lastDadAnim = animName;
+                    lastDadAnim = dadAnimName;
                 }
-                else if (animName == 'singDOWN') {
-                    if (lastDadAnim != animName) {
+                else if (dadAnimName == 'singDOWN') {
+                    if (lastDadAnim != dadAnimName) {
                         sarah.playAnimation('singDOWN', true);
                     }
                     else if (sarah.animation.curAnim != null && sarah.animation.finished) {
                         sarah.playAnimation('singDOWN', true);
                     }
-                    lastDadAnim = animName;
+                    lastDadAnim = dadAnimName;
                 }
-                else if (animName == 'singUP') {
-                    if (lastDadAnim != animName) {
+                else if (dadAnimName == 'singUP') {
+                    if (lastDadAnim != dadAnimName) {
                         sarah.playAnimation('singUP', true);
                     }
                     else if (sarah.animation.curAnim != null && sarah.animation.finished) {
                         sarah.playAnimation('singUP', true);
                     }
-                    lastDadAnim = animName;
+                    lastDadAnim = dadAnimName;
                 }
-                else if (animName == 'singRIGHT') {
-                    if (lastDadAnim != animName) {
+                else if (dadAnimName == 'singRIGHT') {
+                    if (lastDadAnim != dadAnimName) {
                         sarah.playAnimation('singRIGHT', true);
                     }
                     else if (sarah.animation.curAnim != null && sarah.animation.finished) {
                         sarah.playAnimation('singRIGHT', true);
                     }
-                    lastDadAnim = animName;
+                    lastDadAnim = dadAnimName;
                 }
-                else if (animName == 'idle') {
-                    lastDadAnim = animName;
+                else if (dadAnimName == 'idle') {
+                    lastDadAnim = dadAnimName;
                 }
             }
         }
-        }
     }
+    
     function onBeatHit(event:SongTimeScriptEvent):Void {
         super.onBeatHit(event);
 
-        if (PlayState.instance.currentSong.id.toLowerCase() != "round-a-bout") return;
-
-        if (sarah != null && lastDadAnim == 'idle') {
+        if (PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout" && sarah != null && lastDadAnim == 'idle') {
             var currentSarahAnim = sarah.animation.curAnim;
             if (currentSarahAnim == null || currentSarahAnim.name == 'idle' || currentSarahAnim.finished) {
                 sarah.playAnimation('idle');
@@ -154,7 +112,7 @@ class MarbleZone extends Stage
 
         if (event.step == 761 && songID == "round-a-bout") {
             sarah.zIndex = 100;
-            game.add(sarah);
+            PlayState.instance.add(sarah);
             FlxTween.tween(sarah, { alpha: 0.7 }, 1);
 
             PlayState.instance.currentStage.getDad().zIndex = 201;
@@ -167,32 +125,9 @@ class MarbleZone extends Stage
 
         if (sarah != null && songID == "round-a-bout") {
             sarah.alpha = 0;
-            if (game != null && game.members.contains(sarah)) {
-                game.remove(sarah);
+            if (PlayState.instance != null && PlayState.instance.members.contains(sarah)) {
+                PlayState.instance.remove(sarah);
             }
         }
-
-        if (doVCRShaders) {
-            shaderTime = 0;
-            if (vcrShader != null) {
-                vcrShader.setFloat("iTime", shaderTime);
-            } else {
-                initVCRShader();
-            }
-        }
-    }
-
-	override function onDestroy(event:ScriptEvent):Void {
-        super.onDestroy(event);
-
-        if (game != null) {
-            if (game.camGame != null) {
-                game.camGame.filters = null;
-            }
-            if (game.camHUD != null) {
-                game.camHUD.filters = null;
-            }
-        }
-        vcrShader = null;
     }
 }

@@ -22,10 +22,6 @@ class EmeraldChamberStage extends Stage
     override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
-		FunkinSprite.cacheTexture(Paths.image('characters/fleetway1'));
-		FunkinSprite.cacheTexture(Paths.image('characters/fleetway2'));
-		FunkinSprite.cacheTexture(Paths.image('characters/fleetway3'));
-
         game = PlayState.instance;
     }
 

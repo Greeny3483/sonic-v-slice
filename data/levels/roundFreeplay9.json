@@ -1,10 +1,11 @@
 {
   "version": "1.0.0",
-  "name": "FUN IS INFINITE / VS MAJIN SONIC",
-  "titleAsset": "storymenu/titles/majin",
+  "name": "CHRISTMAS / VS EXE & LORD X",
+  "visible": false,
+  "titleAsset": "storymenu/titles/xmas",
   "props": [
     {
-      "assetPath": "storymenu/props/menu_majin",
+      "assetPath": "storymenu/props/menu_christmas",
       "scale": 1.05,
       "offsets": [0, 61],
       "animations": [
@@ -17,5 +18,5 @@
     }
   ],
   "background": "#F9CF51",
-  "songs": ["endless"]
+  "songs": ["slaybells"]
 }

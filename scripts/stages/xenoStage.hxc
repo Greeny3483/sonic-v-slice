@@ -18,7 +18,6 @@ class XenoStage extends Stage
     public var originalPlayerStrumlineX:Float = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + (cutoutSize / 2.0); // exact strumline offsets ripped from source code
 	public var originalOpponentStrumlineX:Float = Constants.STRUMLINE_X_OFFSET + cutoutSize;
 
-	public var jumpPosX:Float = FlxG.onMobile ? 200 : 0;
     public var tailsJump:FunkinSprite;
 	public var knucklesJump:FunkinSprite;
 	public var eggmanJump:FunkinSprite;

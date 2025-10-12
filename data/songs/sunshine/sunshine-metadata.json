@@ -1,0 +1,36 @@
+{
+    "version": "2.2.2",
+    "songName": "Sunshine",
+    "artist": "Uptaunt",
+    "playData": {
+        "album": "exeVol2OST",
+        "songVariations": [],
+        "difficulties": [
+            "easy",
+            "normal",
+            "hard"
+        ],
+        "characters": {
+            "player": "bf",
+            "girlfriend": "gf",
+            "opponent": "tailsdoll"
+        },
+        "stage": "mainStage",
+        "noteStyle": "exeSegaSaturn",
+        "ratings": {
+            "easy": 6,
+            "normal": 6,
+            "hard": 7
+        },
+        "previewStart": 0,
+        "previewEnd": 15000
+    },
+    "generatedBy": "FelixBand's Legacy Chart Converter",
+    "timeFormat": "ms",
+    "timeChanges": [
+        {
+            "t": 0,
+            "bpm": 105
+        }
+    ]
+}

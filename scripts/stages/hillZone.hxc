@@ -42,7 +42,7 @@ class HillZone extends Stage {
     override function onCreate(event:ScriptEvent):Void {
         super.onCreate(event);
 
-        ObjectHandler.preloadSonicAnimation();
+        ObjectHandler.getObject("sonicAnimation");
 
 		FunkinMemory.cacheSound(Paths.sound("sppok", "shared"));
 		FunkinMemory.cacheSound(Paths.sound("datOneSound", "shared"));
@@ -159,9 +159,32 @@ class HillZone extends Stage {
 
 		doStrumlineWiggle = true;
     }
+
+    function stopModchart():Void {
+        if (!doModcharts || PlayState.instance.currentSong.id.toLowerCase() != "too-slow") return;
+
+        doStrumlineWiggle = false;
+        strumlinePositionSet = false;
+
+        // Reset strumline positions to base
+        if (PlayState.instance.playerStrumline != null) {
+            PlayState.instance.playerStrumline.x = basePlayerStrumPos;
+            for (i in 0...4) {
+                if (PlayState.instance.playerStrumline.strumlineNotes.members[i] != null)
+                    PlayState.instance.playerStrumline.strumlineNotes.members[i].y = basePlayerStrumPosY;
+            }
+        }
+        if (PlayState.instance.opponentStrumline != null) {
+            PlayState.instance.opponentStrumline.x = baseOpponentStrumPos;
+            for (i in 0...4) {
+                if (PlayState.instance.opponentStrumline.strumlineNotes.members[i] != null)
+                    PlayState.instance.opponentStrumline.strumlineNotes.members[i].y = baseOpponentStrumPosY;
+            }
+        }
+    }
+
 	override function onUpdate(event:UpdateScriptEvent):Void {
 		super.onUpdate(event);
-
 		
 		if (!strumlinePositionSet && PlayState.instance.playerStrumline != null && PlayState.instance.opponentStrumline != null) {
 			basePlayerStrumPos = PlayState.instance.playerStrumline.x;
@@ -186,8 +209,7 @@ class HillZone extends Stage {
 	function onSongRetry() {
 		super.onSongRetry();
 
-		doStrumlineWiggle = false;
-		strumlinePositionSet = false;
+        stopModchart();
         blackOverlay.alpha = 0;
 
         cinematics("hide");

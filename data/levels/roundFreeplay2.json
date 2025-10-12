@@ -1,10 +1,11 @@
 {
   "version": "1.0.0",
-  "name": "REVENGE / VS FLEETWAY SUPER SONIC",
-  "titleAsset": "storymenu/titles/chaos",
+  "name": "ROUND X / VS LORD X",
+  "visible": false,
+  "titleAsset": "storymenu/titles/roundx",
   "props": [
     {
-      "assetPath": "storymenu/props/menu_fleetway",
+      "assetPath": "storymenu/props/menu_lordx",
       "scale": 1.05,
       "offsets": [0, 61],
       "animations": [
@@ -17,5 +18,5 @@
     }
   ],
   "background": "#F9CF51",
-  "songs": ["chaos"]
+  "songs": ["cycles"]
 }

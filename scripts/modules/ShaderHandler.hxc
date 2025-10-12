@@ -1,0 +1,81 @@
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import flixel.addons.display.FlxRuntimeShader;
+import openfl.Assets;
+import openfl.filters.ShaderFilter;
+import funkin.play.PlayState;
+import funkin.play.song.Song;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import funkin.modding.events.UpdateScriptEvent;
+
+class ShaderHandler extends Module {
+    // This module contains logic for window events, such as moving and shaking, and shader effects
+
+    static var vcrShader:FlxRuntimeShader;
+	static var shaderTime:Float = 0;
+	static var doVCRShaders:Bool = true;
+
+    public function new() {
+        super("ShaderHandler");
+    }
+
+    public static function initVCRShader():Void {
+        doVCRShaders = ModuleHandler.getModule("EXEOptions").scriptGet("bonusfeatures");
+        if (!doVCRShaders) return;
+
+        if (vcrShader != null) return; // Avoid re-initialization
+
+        var shaderSource = Assets.getText(Paths.frag("vcr with no glitch"));
+        vcrShader = new FlxRuntimeShader(shaderSource);
+
+        vcrShader.setFloat("iTime", 0.0);
+        vcrShader.setFloatArray("iResolution", [FlxG.width, FlxG.height, 1.0]);
+
+        PlayState.instance.camGame.filters = [new ShaderFilter(vcrShader)];
+        PlayState.instance.camHUD.filters = [new ShaderFilter(vcrShader)];
+		PlayState.instance.camCutscene.filters = [new ShaderFilter(vcrShader)];
+    }
+
+    override function onSongRetry(event:ScriptEvent):Void {
+        super.onSongRetry(event);
+
+        doVCRShaders = ModuleHandler.getModule("EXEOptions").scriptGet("bonusfeatures");
+
+        if (doVCRShaders) {
+            shaderTime = 0;
+            if (vcrShader != null) {
+                vcrShader.setFloat("iTime", shaderTime);
+            } else {
+                initVCRShader();
+            }
+        }
+    }
+
+    public static function updateShader(shaderType:String):Void {
+        doVCRShaders = ModuleHandler.getModule("EXEOptions").scriptGet("bonusfeatures");
+        if (!doVCRShaders) return;
+
+        switch (shaderType) {
+            case "vcr":
+                if (vcrShader != null) {
+                    shaderTime += FlxG.elapsed;
+                    vcrShader.setFloat("iTime", shaderTime);
+                }
+        }
+    }
+
+    override function onDestroy(event:ScriptEvent):Void {
+        super.onDestroy(event);
+
+        if (PlayState.instance != null) {
+            if (PlayState.instance.camGame != null) {
+                PlayState.instance.camGame.filters = null;
+            }
+            if (PlayState.instance.camHUD != null) {
+                PlayState.instance.camHUD.filters = null;
+            }
+        }
+        vcrShader = null;
+    }
+}
