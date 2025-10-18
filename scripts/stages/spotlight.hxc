@@ -1,0 +1,81 @@
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+
+import ShaderHandler;
+import StrumlineHandler;
+
+class SpotlightStage extends Stage
+{
+    var isSpecialPart:Bool = false;
+    var strumTween:FlxTween;
+
+    public function new()
+    {
+        super('spotlight');
+    }
+
+    override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        ShaderHandler.initShader("distortion");
+    }
+
+    override function onStepHit(event:SongTimeScriptEvent):Void {
+        super.onStepHit(event);
+
+        if (PlayState.instance.currentSong.id.toLowerCase() != "sunshine") return;
+
+        switch (event.step) {
+            case 588:
+                getNamedProp('Background').alpha = 0;
+                getBoyfriend().alpha = 0;
+                getDad().alpha = 0;
+
+                PlayState.instance.playerStrumline.alpha = 0;
+                StrumlineHandler.changeStrumlineMode("middlescroll");
+
+                isSpecialPart = true;
+            case 592:
+                getDad().alpha = 1;
+            case 720:
+                isSpecialPart = false;
+                strumTween.cancel();
+            case 721:
+                strumTween.cancel();
+                PlayState.instance.playerStrumline.alpha = 0.5;
+            case 860:
+                getNamedProp('Background').alpha = 1;
+                getBoyfriend().alpha = 1;
+
+                StrumlineHandler.resetStrumlines();
+        }
+    }
+
+    override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+
+        ShaderHandler.updateShader("distortion");
+        StrumlineHandler.updateModchart("wiggle");
+    }
+
+    override function onNoteHit(event:HitNoteScriptEvent):Void {
+        super.onNoteHit(event);
+
+        if (PlayState.instance.currentSong.id.toLowerCase() != "sunshine") return;
+
+        if (isSpecialPart) {
+            if (!event.note.noteData.getMustHitNote()) {
+                PlayState.instance.playerStrumline.alpha = 1;
+                if (event.note.holdNoteSprite != null)
+                {
+                    strumTween = FlxTween.tween(PlayState.instance.playerStrumline, {alpha: 0}, event.note.holdNoteSprite.sustainLength/1000);
+                } else {
+                    strumTween = FlxTween.tween(PlayState.instance.playerStrumline, {alpha: 0}, 2.5);
+                }
+            }
+        }
+    }
+}

@@ -45,22 +45,4 @@ class ObjectHandler extends Module {
                 return;
         }
     }
-
-    /*public static function triggerCinematics():Void {
-        doCinematics = ModuleHandler.getModule("EXEOptions").scriptGet("cinematiceffect");
-        if (!doCinematics) return;
-
-        FlxTween.tween(topBorder, {alpha: 1}, 1);
-        FlxTween.tween(bottomBorder, {alpha: 1}, 1);
-        PlayState.instance.camHUD.alpha = 0;
-    }
-
-    public static function hideCinematics():Void {
-        doCinematics = ModuleHandler.getModule("EXEOptions").scriptGet("cinematiceffect");
-        if (!doCinematics) return;
-
-        FlxTween.tween(topBorder, {alpha: 0}, 1);
-        FlxTween.tween(bottomBorder, {alpha: 0}, 1);
-        PlayState.instance.camHUD.alpha = 1;
-    }*/
 }

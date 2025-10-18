@@ -1,8 +1,4 @@
 {
-	"offsets": [
-		0,
-		200
-	],
 	"version": "1.0.0",
 	"scale": 0.95,
 	"flipX": false,
@@ -12,6 +8,8 @@
 	"healthIcon": {
 		"id": "doll"
 	},
+	"offsets": [0, 200],
+	"cameraOffsets": [100, 150],
 	"generatedBy": "Nova Character Editor REFRESHED v0.1.2",
 	"animations": [
 		{

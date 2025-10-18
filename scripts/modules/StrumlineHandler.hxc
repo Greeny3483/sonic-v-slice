@@ -1,0 +1,196 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
+import flixel.tweens.FlxTween;
+import funkin.Paths;
+import funkin.save.Save;
+import funkin.Conductor;
+import funkin.Preferences;
+import funkin.util.Constants;
+import funkin.play.PlayState;
+import funkin.play.notes.notestyle.NoteStyle;
+import funkin.modding.module.Module;
+import funkin.ui.FullScreenScaleMode;
+import Math;
+
+class StrumlineHandler extends Module {
+    // Contains code for most strumline related functions within the EXE mod
+
+    public static var PLAYER_STRUM_X = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + (PlayState.instance.cutoutSize / 2.0);
+    public static var PLAYER_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.playerStrumline.height - Constants.STRUMLINE_Y_OFFSET - NoteStyle.getStrumlineOffsets()[1] : Constants.STRUMLINE_Y_OFFSET;
+
+    public static var OPPONENT_STRUM_X = Constants.STRUMLINE_X_OFFSET + PlayState.instance.cutoutSize;
+    public static var OPPONENT_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.opponentStrumline.height - Constants.STRUMLINE_Y_OFFSET - NoteStyle.getStrumlineOffsets()[1] : Constants.STRUMLINE_Y_OFFSET;
+
+    public function new() {
+        super("StrumlineHandler");
+    }
+
+    public static function resetStrumlines(strumline:String):Void {
+        // Resets specified strumline(s) completely
+        // This SHOULD work with downscroll
+        if (PlayState.instance.playerStrumline == null || PlayState.instance.opponentStrumline == null) return;
+
+        switch (strumline) {
+            case "player":
+                PlayState.instance.playerStrumline.x = PLAYER_STRUM_X;
+                PlayState.instance.playerStrumline.y = PLAYER_STRUM_Y;
+                PlayState.instance.playerStrumline.visible = true;
+                PlayState.instance.playerStrumline.alpha = 1;
+                return;
+            case "opponent":
+                PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
+                PlayState.instance.opponentStrumline.y = OPPONENT_STRUM_Y;
+                PlayState.instance.opponentStrumline.visible = true;
+                PlayState.instance.opponentStrumline.alpha = 1;
+                return;
+            default:
+                PlayState.instance.playerStrumline.x = PLAYER_STRUM_X;
+                PlayState.instance.playerStrumline.y = PLAYER_STRUM_Y;
+                PlayState.instance.playerStrumline.visible = true;
+                PlayState.instance.playerStrumline.alpha = 1;
+
+                PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
+                PlayState.instance.opponentStrumline.y = OPPONENT_STRUM_Y;
+                PlayState.instance.opponentStrumline.visible = true;
+                PlayState.instance.opponentStrumline.alpha = 1;
+                return;
+        }
+    }
+
+    public static function changeStrumlineMode(mode:String):Void {
+        doModcharts = Save.instance.modOptions["doModcharts"];
+        if (!doModcharts) return;
+        if (PlayState.instance.playerStrumline == null || PlayState.instance.opponentStrumline == null) return;
+
+        switch (mode) {
+            case "middlescroll":
+                PlayState.instance.playerStrumline.x = FlxG.width / 1.5 - PLAYER_STRUM_X / 1.5;
+                PlayState.instance.opponentStrumline.visible = false;
+            default:
+                return;
+        }
+    }
+
+    public static function swapStrumlines(position:String):Void {
+        doModcharts = Save.instance.modOptions["modcharts"];
+        if (!doModcharts) return;
+        if (PlayState.instance.playerStrumline == null || PlayState.instance.opponentStrumline == null) return;
+    
+        switch (position) {
+            case "defaultPos":
+                // Swap strumlines to the other side's default positions
+                PlayState.instance.playerStrumline.x = OPPONENT_STRUM_X;
+                PlayState.instance.playerStrumline.y = OPPONENT_STRUM_Y;
+                
+                PlayState.instance.opponentStrumline.x = PLAYER_STRUM_X;
+                PlayState.instance.opponentStrumline.y = PLAYER_STRUM_Y;
+                return;
+            default: 
+                // If unspecified, use the current positions of the strumlines
+                // Using this twice in a row will just swap them back
+                var tempX = PlayState.instance.playerStrumline.x;
+                var tempY = PlayState.instance.playerStrumline.y;
+                
+                PlayState.instance.playerStrumline.x = PlayState.instance.opponentStrumline.x;
+                PlayState.instance.playerStrumline.y = PlayState.instance.opponentStrumline.y;
+                
+                PlayState.instance.opponentStrumline.x = tempX;
+                PlayState.instance.opponentStrumline.y = tempY;
+                return;
+        }
+    }
+
+    public static var doStrumlineWiggle:Bool = false;
+	public static var basePlayerStrumPos:Float = 0;
+	public static var baseOpponentStrumPos:Float = 0;
+	public static var basePlayerStrumPosY:Float = 0;
+	public static var baseOpponentStrumPosY:Float = 0;
+	public static var strumlinePositionSet:Bool = false;
+	public static var wiggleIntensity:Float = 8;
+
+    public static function startWiggleModchart():Void {
+        // Starts the wiggle effect on both strumlines
+        // Akin to the one used in Too Slow
+        // Make sure to also add updateModchart("wiggle") in your song/stage's onUpdate function
+        doModcharts = Save.instance.modOptions["modcharts"];
+        if (!doModcharts) return;
+        if (PlayState.instance.playerStrumline == null || PlayState.instance.opponentStrumline == null) return;
+
+		doStrumlineWiggle = true;
+    }
+
+    public static function stopWiggleModchart():Void {
+        // Stops the wiggle effect on both strumlines
+        // After you call this, you should also call resetStrumlines()
+
+        doModcharts = Save.instance.modOptions["modcharts"];
+        if (!doModcharts) return;
+        if (PlayState.instance.playerStrumline == null || PlayState.instance.opponentStrumline == null) return;
+
+        doStrumlineWiggle = false;
+        strumlinePositionSet = false;
+
+        // Reset strumline positions to base
+        if (PlayState.instance.playerStrumline != null) {
+            PlayState.instance.playerStrumline.x = basePlayerStrumPos;
+            for (i in 0...4) {
+                if (PlayState.instance.playerStrumline.strumlineNotes.members[i] != null)
+                    PlayState.instance.playerStrumline.strumlineNotes.members[i].y = basePlayerStrumPosY;
+            }
+        }
+        if (PlayState.instance.opponentStrumline != null) {
+            PlayState.instance.opponentStrumline.x = baseOpponentStrumPos;
+            for (i in 0...4) {
+                if (PlayState.instance.opponentStrumline.strumlineNotes.members[i] != null)
+                    PlayState.instance.opponentStrumline.strumlineNotes.members[i].y = baseOpponentStrumPosY;
+            }
+        }
+    }
+
+	public static function updateModchart(type:String):Void {
+        doModcharts = Save.instance.modOptions["modcharts"];
+        if (!doModcharts) return;
+        if (PlayState.instance.playerStrumline == null || PlayState.instance.opponentStrumline == null) return;
+
+        switch (type) {
+            case "wiggle":
+                if (!strumlinePositionSet && PlayState.instance.playerStrumline != null && PlayState.instance.opponentStrumline != null) {
+			        basePlayerStrumPos = PlayState.instance.playerStrumline.x;
+			        baseOpponentStrumPos = PlayState.instance.opponentStrumline.x;
+			        basePlayerStrumPosY = PlayState.instance.playerStrumline.strumlineNotes.members[0] != null ? PlayState.instance.playerStrumline.strumlineNotes.members[0].y : 0;
+			        baseOpponentStrumPosY = PlayState.instance.opponentStrumline.strumlineNotes.members[0] != null ? PlayState.instance.opponentStrumline.strumlineNotes.members[0].y : 0;
+			        strumlinePositionSet = true;
+		        }
+
+		        if (doStrumlineWiggle) {
+			        var curbet = (Conductor.instance.songPosition/1000)*(Conductor.instance.bpm/60);
+			        for (i in 0...4) {
+				        if (PlayState.instance.playerStrumline.strumlineNotes.members[i] != null)
+					        PlayState.instance.playerStrumline.strumlineNotes.members[i].y = basePlayerStrumPosY + (wiggleIntensity * Math.cos((curbet + i*0.25) * Math.PI));
+				        if (PlayState.instance.opponentStrumline.strumlineNotes.members[i] != null)
+					        PlayState.instance.opponentStrumline.strumlineNotes.members[i].y = baseOpponentStrumPosY + (wiggleIntensity * Math.cos((curbet + i*0.25) * Math.PI));
+			        }
+			        PlayState.instance.playerStrumline.x = basePlayerStrumPos + Math.sin(curbet * Math.PI) * wiggleIntensity;
+			        PlayState.instance.opponentStrumline.x = baseOpponentStrumPos + Math.sin(curbet * Math.PI) * wiggleIntensity;
+		        }
+            default:
+                return;
+        }
+	}
+
+    override function onSongRetry():Void {
+        super.onSongRetry();
+
+        stopWiggleModchart();
+        resetStrumlines();
+    }
+
+    override function onDestroy():Void {
+        super.onDestroy();
+
+        stopWiggleModchart();
+        resetStrumlines();
+    }
+}

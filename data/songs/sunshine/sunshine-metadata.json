@@ -11,11 +11,10 @@
             "hard"
         ],
         "characters": {
-            "player": "bf",
-            "girlfriend": "gf",
+            "player": "bfsaturn",
             "opponent": "tailsdoll"
         },
-        "stage": "mainStage",
+        "stage": "spotlight",
         "noteStyle": "exeSegaSaturn",
         "ratings": {
             "easy": 6,

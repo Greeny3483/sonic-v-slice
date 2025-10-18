@@ -96,22 +96,6 @@ class XenoStage extends Stage
 		PlayState.instance.currentStage.refresh();
 	}
 
-	function switchStrumlines(mode:String):Void {
-		if (FlxG.onMobile) return;
-
-		switch (mode) {
-			case 'swap':
-				PlayState.instance.playerStrumline.x = originalOpponentStrumlineX;
-				PlayState.instance.opponentStrumline.x = originalPlayerStrumlineX;
-				return;
-			case 'reset':
-		        PlayState.instance.playerStrumline.x = originalPlayerStrumlineX;
-		        PlayState.instance.opponentStrumline.x = originalOpponentStrumlineX;
-			default:
-				return;
-		}
-	}
-
 	function doJumpscare(jumpscareType:String):Void { // make it an event? not today
 		if (!doJumpscares) return;
 
@@ -169,7 +153,7 @@ class XenoStage extends Stage
 				startStaticTransition();
 			case 1296: // Knuckles jumpscare + swap strumlines
 				switchStageBackground('glitchBG');
-				switchStrumlines('swap');
+				StrumlineHandler.swapStrumlines();
 				doJumpscare('knuckles');
 		    case 2308: // Transition to Xeno BG 2
 				startStaticTransition();
@@ -179,7 +163,7 @@ class XenoStage extends Stage
 				startStaticTransition();
 			case 2824: // Eggman jumpscare + reset strumlines
 				switchStageBackground('glitchBG');
-				switchStrumlines('reset');
+				StrumlineHandler.swapStrumlines();
 				doJumpscare('eggman');
 			case 3160:
 				startStaticTransition();

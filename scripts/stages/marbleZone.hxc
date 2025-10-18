@@ -30,9 +30,9 @@ class MarbleZone extends Stage
     override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
-        ShaderHandler.initVCRShader();
+        ShaderHandler.initShader("vcr");
 
-        if (songID == "round-a-bout") {
+        if (PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             sarah = CharacterDataParser.fetchCharacter('Sarah');
             sarah.characterType = CharacterType.DAD;
 
@@ -44,12 +44,12 @@ class MarbleZone extends Stage
         }
     }
 
-    override function onUpdate():Void {
-        super.onUpdate();
+    override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
 
         ShaderHandler.updateShader("vcr");
 
-        if (songID == "round-a-bout") {
+        if (PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             if (sarah != null) {
                 var dadAnimName = PlayState.instance.currentStage.getDad().animation.curAnim.name;
 
@@ -110,7 +110,7 @@ class MarbleZone extends Stage
     function onStepHit(event:SongTimeScriptEvent):Void {
         super.onStepHit(event);
 
-        if (event.step == 761 && songID == "round-a-bout") {
+        if (event.step == 761 && PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             sarah.zIndex = 100;
             PlayState.instance.add(sarah);
             FlxTween.tween(sarah, { alpha: 0.7 }, 1);
@@ -123,7 +123,7 @@ class MarbleZone extends Stage
     override function onSongRetry(event:ScriptEvent):Void {
         super.onSongRetry(event);
 
-        if (sarah != null && songID == "round-a-bout") {
+        if (sarah != null && PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             sarah.alpha = 0;
             if (PlayState.instance != null && PlayState.instance.members.contains(sarah)) {
                 PlayState.instance.remove(sarah);

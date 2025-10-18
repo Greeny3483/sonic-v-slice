@@ -1,0 +1,9 @@
+import funkin.modding.module.Module;
+
+class WindowHandler extends Module {
+    public function new() {
+        super("WindowHandler");
+    }
+
+    // Modified window code goes here (E.g changing aspect ratio)
+}
