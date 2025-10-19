@@ -19,7 +19,7 @@ class MenuThings extends Module
         "too-slow", "you-cant-run", "triple-trouble", "final-escape",
         "endless", "cycles", "execution", "faker", "black-sun", "relax",
         "chaos", "round-a-bout", "spike-trap", "prey", "fight-or-flight",
-        "fatality", "slaybells", "personnel-serious"
+        "fatality", "slaybells", "personnel-serious", "sunshine"
     ];
 
     public function new()

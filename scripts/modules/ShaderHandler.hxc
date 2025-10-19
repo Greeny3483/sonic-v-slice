@@ -1,0 +1,82 @@
+import flixel.FlxG;
+import flixel.addons.display.FlxRuntimeShader;
+import openfl.Assets;
+import openfl.filters.ShaderFilter;
+import funkin.save.Save;
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+
+class ShaderHandler extends Module {
+    static var vcrShader:FlxRuntimeShader;
+    static var vcrShaderTime:Float = 0;
+
+    static var distortionShader:FlxRuntimeShader;
+	static var distortionShaderTime:Float = 0;
+
+    public function new() {
+        super("ShaderHandler");
+    }
+
+    public static function initShader(shaderType:String):Void {
+        doShaders = Save.instance.modOptions["doShaders"];
+        if (!doShaders) return;
+
+        switch (shaderType) {
+            case "vcr":
+                var source1 = Assets.getText(Paths.frag("VCR"));
+                vcrShader = new FlxRuntimeShader(source1);
+
+                vcrShader.setFloat("iTime", 0.0);
+                vcrShader.setFloatArray("iResolution", [FlxG.width, FlxG.height, 1.0]);
+
+                PlayState.instance.camGame.filters = [new ShaderFilter(vcrShader)];
+                PlayState.instance.camHUD.filters = [new ShaderFilter(vcrShader)];
+		        PlayState.instance.camCutscene.filters = [new ShaderFilter(vcrShader)];
+            case "distortion":
+                var source2 = Assets.getText(Paths.frag("Distortion"));
+                distortionShader = new FlxRuntimeShader(source2);
+
+                distortionShader.setFloat("iTime", 0.0);
+                distortionShader.setFloatArray("iResolution", [FlxG.width, FlxG.height, 1.0]);
+
+                PlayState.instance.camGame.filters = [new ShaderFilter(distortionShader)];
+                PlayState.instance.camHUD.filters = [new ShaderFilter(distortionShader)];
+		        PlayState.instance.camCutscene.filters = [new ShaderFilter(distortionShader)];
+            default: // if no shader is specified, dont do anything
+                return;
+        }
+    }
+
+    public static function updateShader(shaderType:String):Void {
+        doShaders = Save.instance.modOptions["doShaders"];
+        if (!doShaders) return;
+
+        switch (shaderType) {
+            case "vcr":
+                if (vcrShader != null) {
+                    vcrShaderTime += FlxG.elapsed;
+                    vcrShader.setFloat("iTime", vcrShaderTime);
+                }
+            case "distortion":
+                if (distortionShader != null) {
+                    distortionShaderTime += FlxG.elapsed;
+                    distortionShader.setFloat("iTime", distortionShaderTime);
+                }
+        }
+    }
+
+    override function onDestroy(event:ScriptEvent):Void {
+        super.onDestroy(event);
+
+        if (PlayState.instance != null) {
+            if (PlayState.instance.camGame != null) {
+                PlayState.instance.camGame.filters = null;
+            }
+            if (PlayState.instance.camHUD != null) {
+                PlayState.instance.camHUD.filters = null;
+            }
+        }
+        vcrShader = null;
+        distortionShader = null;
+    }
+}

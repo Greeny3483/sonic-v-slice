@@ -1,6 +1,7 @@
 {
   "version": "1.0.0",
   "name": "CRITICAL / VS FATAL ERROR",
+  "visible": false,
   "titleAsset": "storymenu/titles/error",
   "props": [
     {

@@ -1,10 +1,11 @@
 {
   "version": "1.0.0",
-  "name": "CHRISTMAS / VS EXE & LORD X",
-  "titleAsset": "storymenu/titles/xmas",
+  "name": "REVENGE / VS FLEETWAY SUPER SONIC",
+  "visible": false,
+  "titleAsset": "storymenu/titles/chaos",
   "props": [
     {
-      "assetPath": "storymenu/props/menu_christmas",
+      "assetPath": "storymenu/props/menu_fleetway",
       "scale": 1.05,
       "offsets": [0, 61],
       "animations": [
@@ -17,5 +18,5 @@
     }
   ],
   "background": "#F9CF51",
-  "songs": ["slaybells"]
+  "songs": ["chaos"]
 }

@@ -73,7 +73,7 @@ class EXEOptions extends Module
         if(Save.instance.modOptions["bloodsplashes"] == null) Save.instance.modOptions["bloodsplashes"] = true;
         if(Save.instance.modOptions["exebackingCard"] == null) Save.instance.modOptions["exebackingCard"] = "Dad";
         if(Save.instance.modOptions["intensivegore"] == null) Save.instance.modOptions["intensivegore"] = true;
-        if(Save.instance.modOptions["bonusfeatures"] == null) Save.instance.modOptions["bonusfeatures"] = true;
+        if(Save.instance.modOptions["doShaders"] == null) Save.instance.modOptions["doShaders"] = true;
         if(Save.instance.modOptions["quickTimeEvents"] == null) Save.instance.modOptions["quickTimeEvents"] = true;
         if(Save.instance.modOptions["doSongIntroCards"] == null) Save.instance.modOptions["doSongIntroCards"] = true;
         if(Save.instance.modOptions["doCameraShake"] == null) Save.instance.modOptions["doCameraShake"] = true;
@@ -100,7 +100,7 @@ class EXEOptions extends Module
         bloodsplashes = Save.instance.modOptions["bloodsplashes"];
         cinematiceffect = Save.instance.modOptions["cinematiceffect"];
         intensivegore = Save.instance.modOptions["intensivegore"];
-        bonusfeatures = Save.instance.modOptions["bonusfeatures"];
+        doShaders = Save.instance.modOptions["doShaders"];
         exebackingCard = Save.instance.modOptions["exebackingCard"];
         quickTimeEvents = Save.instance.modOptions["quickTimeEvents"];
         doSongIntroCards = Save.instance.modOptions["doSongIntroCards"];
@@ -127,7 +127,7 @@ class EXEOptions extends Module
                 Save.instance.flush();
             }, Save.instance.modOptions["bloodsplashes"]);
 
-            if (!FlxG.onMobile) {
+            if (!FlxG.onMobile) { // Exclude these options if playing on mobile
                 prefs.createPrefItemCheckbox("Icon Colored Healthbar", "Colors the healthbar based on the color of the icons. \nNote: Disabling requires restart", function(value) {
                     Save.instance.modOptions["hpcolors"] = value;
                     hpcolors = value;
@@ -144,7 +144,7 @@ class EXEOptions extends Module
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: GAMEPLAY", "bold", () -> false); // Separate options from the default preferences OR modded preferences.
 			prefs.preferenceDesc.push("Gameplay options for VS Sonic.EXE");
 
-            if (!FlxG.onMobile) {
+            if (!FlxG.onMobile) { // Exclude these options if playing on mobile
                 prefs.createPrefItemCheckbox("Ghost Tapping", "Allows key-presses without penalty when no notes are present.", function(value) {
                     Save.instance.modOptions["ghosttap"] = value;
                     ghosttap = value;
@@ -225,10 +225,10 @@ class EXEOptions extends Module
 			prefs.preferenceDesc.push("Graphic options for VS Sonic.EXE");
 
             prefs.createPrefItemCheckbox("Shaders", "Adds custom shaders (VCR, etc) to certain songs.", function(value) {
-                Save.instance.modOptions["bonusfeatures"] = value;
-                bonusfeatures = value;
+                Save.instance.modOptions["doShaders"] = value;
+                doShaders = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["bonusfeatures"]);
+            }, Save.instance.modOptions["doShaders"]);
 
             prefs.createPrefItemCheckbox("Song Intro Cards", "Enables intro cards for most songs.", function(value) {
                 Save.instance.modOptions["doSongIntroCards"] = value;

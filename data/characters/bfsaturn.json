@@ -1,0 +1,251 @@
+{
+	"danceEvery": 1,
+	"renderType": "sparrow",
+	"version": "1.0.0",
+	"offsets": [-100, 320],
+    "cameraOffsets": [-170, 160],
+	"scale": 1,
+	"name": "Boyfriend (Sega Saturn)",
+	"flipX": true,
+	"singTime": 4,
+	"assetPath": "characters/SSBF_Assets",
+	"healthIcon": {
+		"id": "bf-bloc"
+	},
+	"generatedBy": "Nova Character Editor REFRESHED v0.1.2",
+	"animations": [
+		{
+			"flipY": false,
+			"offsets": [
+				-3,
+				5
+			],
+			"frameRate": 24,
+			"prefix": "BF HEY",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "hey"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				15,
+				18
+			],
+			"frameRate": 24,
+			"prefix": "BF hit",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "hurt"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-4,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "BF idle shaking",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "scared"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				37,
+				11
+			],
+			"frameRate": 24,
+			"prefix": "BF dies",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "firstDeath"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				37,
+				5
+			],
+			"frameRate": 24,
+			"prefix": "BF Dead Loop",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "deathLoop"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				37,
+				69
+			],
+			"frameRate": 24,
+			"prefix": "BF Dead confirm",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "deathConfirm"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-10,
+				-16
+			],
+			"frameRate": 24,
+			"prefix": "boyfriend dodge",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "dodge"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				294,
+				267
+			],
+			"frameRate": 24,
+			"prefix": "boyfriend attack",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "attack"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-40,
+				-40
+			],
+			"frameRate": 24,
+			"prefix": "bf pre attack",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "pre-attack"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-45,
+				20
+			],
+			"frameRate": 24,
+			"prefix": "SSBF IDLE instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "idle"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-42,
+				11
+			],
+			"frameRate": 24,
+			"prefix": "SSBF DOWN instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singDOWN"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-45,
+				27
+			],
+			"frameRate": 24,
+			"prefix": "SSBF UP instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singUP"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-45,
+				16
+			],
+			"frameRate": 24,
+			"prefix": "SSBF RIGHT instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singRIGHT"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-28,
+				20
+			],
+			"frameRate": 24,
+			"prefix": "SSBF LEFTmiss instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singLEFTMISS"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-47,
+				27
+			],
+			"frameRate": 24,
+			"prefix": "SSBF UPmiss instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singUPMISS"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-30,
+				37
+			],
+			"frameRate": 24,
+			"prefix": "SSBF DOWNmiss instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singDOWNMISS"
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-38,
+				32
+			],
+			"frameRate": 24,
+			"prefix": "SSBF RIGHTmiss instance 1",
+			"frameIndices": [],
+			"flipX": false,
+			"looped": false,
+			"name": "singRIGHTMISS"
+		},
+		{
+			"offsets": [
+				-19,
+				30
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"prefix": "SSBF LEFT instance 1000",
+			"name": "singLEFT",
+			"looped": false,
+			"flipX": false
+		}
+	]
+}

@@ -2,43 +2,47 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
+import funkin.Conductor;
 import funkin.util.Constants;
 import funkin.play.PlayState;
+import funkin.play.Countdown;
 import funkin.graphics.FunkinSprite;
 import funkin.modding.module.Module;
 import funkin.modding.module.ModuleHandler;
 
 class SongIntroHandler extends Module {
-    public var supportedSongs = [ // there might be an easier way to do this
-        'too-slow', 'you-cant-run', 'triple-trouble',
-        'final-escape', 'endless', 'cycles', 'execution',
-        'faker', 'black-sun', 'relax', 'round-a-bout',
-        'spike-trap', 'prey', 'fight-or-flight', 'slaybells'
-    ];
 
-    public var doSongIntroCards:Bool = true;
+    /* If you want an automated system, you can use this mod
+      * https://gamebanana.com/mods/619410
+      * made by @StrYk85 on GameBanana.
+    */
 
     public var songIntroCircle:FunkinSprite;
     public var songIntroText:FunkinSprite;
     public var blackBackground:FlxSprite;
     public var songName:String;
 
-    var hasPlayedCutscene:Bool;
+    // These are the songs that will have a custom intro card
+    public var supportedSongs = [
+        'too-slow', 'you-cant-run', 'triple-trouble',
+        'final-escape', 'endless', 'cycles', 'execution',
+        'faker', 'black-sun', 'relax', 'round-a-bout',
+        'spike-trap', 'prey', 'fight-or-flight', 'slaybells'
+    ];
 
     public function new() {
         super("SongIntroHandler");
     }
 
-    function introAssets():Void {
-        if (PlayState.instance == null || PlayState.instance.currentSong == null) return;
-
+    function fetchIntroAssets():Void {
         songName = PlayState.instance.currentSong.id.toLowerCase();
 
         var circleAsset = '';
         var textAsset = '';
+
         switch(songName) {
             case 'too-slow':
-                circleAsset = 'StartScreens/Circle-too-slow';
+                circleAsset = 'StartScreens/Circle-too-slow'; // The asset names typically match the song name
                 textAsset = 'StartScreens/Text-too-slow';
             case 'you-cant-run':
                 circleAsset = 'StartScreens/Circle-you-cant-run';
@@ -110,38 +114,34 @@ class SongIntroHandler extends Module {
         PlayState.instance.add(blackBackground);
     }
 
-    override public function onCountdownStart(event:CountdownScriptEvent):Void {
+    override function onCountdownStart(event:CountdownScriptEvent):Void {
         super.onCountdownStart(event);
 
+        if (PlayState.instance == null || PlayState.instance.currentSong == null) return;
         doSongIntroCards = ModuleHandler.getModule("EXEOptions").scriptGet("doSongIntroCards");
 
-        if (!doSongIntroCards) return;
+        fetchIntroAssets();
 
-        if (PlayState.instance == null || PlayState.instance.currentSong == null) return;
-        songName = PlayState.instance.currentSong.id.toLowerCase();
-
-        introAssets();
-
-        if (supportedSongs.indexOf(songName) != -1) {
+        // Checks that the option is enabled and that it's one of the supported songs
+        if (doSongIntroCards && supportedSongs.indexOf(PlayState.instance.currentSong.id.toLowerCase()) != -1) {
             Constants.COUNTDOWN_VOLUME = 0;
             if (blackBackground != null) blackBackground.visible = true;
             startIntro();
         }
+
+        // If the song is Sunshine, lower the BPM to slow down the countdown
+        if (PlayState.instance.currentSong.id.toLowerCase() == "sunshine") {
+            Conductor.instance.forceBPM(70);
+        }
     }
 
-    override public function onSongRetry():Void {
-        super.onSongRetry();
-
-        doSongIntroCards = ModuleHandler.getModule("EXEOptions").scriptGet("doSongIntroCards");
-
-        if (!doSongIntroCards) return;
+    override function onCountdownEnd(event:CountdownScriptEvent):Void {
+        super.onCountdownEnd(event);
 
         if (PlayState.instance == null || PlayState.instance.currentSong == null) return;
-        songName = PlayState.instance.currentSong.id.toLowerCase();
-        
-        if (supportedSongs.indexOf(songName) != -1) {
-            if (blackBackground != null) blackBackground.visible = true;
-            startIntro();
+
+        if (PlayState.instance.currentSong.id.toLowerCase() == "sunshine") {
+            Conductor.instance.forceBPM(105); // Raise the BPM to the original value
         }
     }
 
@@ -150,38 +150,41 @@ class SongIntroHandler extends Module {
             songIntroCircle.x = FlxG.width;
             songIntroCircle.alpha = 1;
             songIntroCircle.visible = true;
+
+            FlxTween.tween(songIntroCircle, {x: (FlxG.width / 2) - (songIntroCircle.width / 2)}, 1.5, {
+                ease: FlxEase.quadOut,
+                onComplete: function(tween:FlxTween) {
+                    FlxTween.tween(songIntroCircle, {alpha: 0}, 1, {
+                        ease: FlxEase.quadOut,
+                    });
+                }
+            });
         }
+
         if (songIntroText != null) {
             songIntroText.x = -songIntroText.width;
             songIntroText.alpha = 1;
             songIntroText.visible = true;
+
+            FlxTween.tween(songIntroText, {x: (FlxG.width / 2) - (songIntroText.width / 2)}, 1.5, {
+                ease: FlxEase.quadOut,
+                onComplete: function(tween:FlxTween) {
+                    FlxTween.tween(songIntroText, {alpha: 0}, 1, {
+                        ease: FlxEase.quadOut,
+                    });
+
+                    if (blackBackground != null) {
+                        FlxTween.tween(blackBackground, {alpha: 0}, 1, {
+                            ease: FlxEase.quadOut,
+                        });
+                    }
+                }
+            });
         }
 
         if (blackBackground != null) {
             blackBackground.visible = true;
             blackBackground.alpha = 1;
         }
-
-        FlxTween.tween(songIntroCircle, {x: (FlxG.width / 2) - (songIntroCircle.width / 2)}, 1.5, {
-            ease: FlxEase.quadOut,
-            onComplete: function(tween:FlxTween) {
-                FlxTween.tween(songIntroCircle, {alpha: 0}, 1, {
-                    ease: FlxEase.quadOut,
-                });
-            }
-        });
-
-        FlxTween.tween(songIntroText, {x: (FlxG.width / 2) - (songIntroText.width / 2)}, 1.5, {
-            ease: FlxEase.quadOut,
-            onComplete: function(tween:FlxTween) {
-                FlxTween.tween(songIntroText, {alpha: 0}, 1, {
-                    ease: FlxEase.quadOut,
-                });
-
-                FlxTween.tween(blackBackground, {alpha: 0}, 1, {
-                    ease: FlxEase.quadOut,
-                });
-            }
-        });
     }
 }

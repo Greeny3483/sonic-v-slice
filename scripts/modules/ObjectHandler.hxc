@@ -1,58 +1,48 @@
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
 import funkin.Paths;
 import funkin.play.PlayState;
 import funkin.FunkinMemory;
+import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.modding.module.Module;
 import funkin.modding.module.ModuleHandler;
 
 class ObjectHandler extends Module {
-    //This is used as a way to store objects, sounds, etc without needing to bloat your script
+    // This module handles the preloading of certain objects and character assets
 
     public static var sonicAnimation:FunkinSprite;
     public static var fleetway1:FunkinSprite;
     public static var fleetway2:FunkinSprite;
-    public static var staticFlash:FlxSprite;
 
     public function new() {
         super("ObjectHandler");
     }
 
-    override function onCreate(event:ScriptEvent):Void {
-        super.onCreate(event);
-
-        if (FlxG.state is PlayState) {
-            preloadStaticNotes();
+    public static function getObject(name:String):Void {
+        switch (name) {
+            case "sonicAnimation":
+                sonicAnimation = FunkinSprite.createSparrow(0, 0, "characters/getCHA");
+                sonicAnimation.cameras = [PlayState.instance.camHUD];
+                sonicAnimation.zIndex = 1500;
+                sonicAnimation.alpha = 0.000001;
+                PlayState.instance.add(sonicAnimation);
+                return;
+            case "fleetwayTextures":
+                fleetway1 = FunkinSprite.createSparrow(0, 0, "characters/fleetway1");
+                fleetway1.cameras = [PlayState.instance.camHUD];
+                fleetway1.zIndex = 1500;
+                fleetway1.alpha = 0.000001;
+                PlayState.instance.add(fleetway1);
+                
+                fleetway2 = FunkinSprite.createSparrow(0, 0, "characters/fleetway2");
+                fleetway2.cameras = [PlayState.instance.camHUD];
+                fleetway2.zIndex = 1500;
+                fleetway2.alpha = 0.000001;
+                PlayState.instance.add(fleetway2);
+                return;
         }
-    }
-
-    public static function preloadExeNotes():Void {
-        FunkinMemory.cacheTexture(Paths.image('STATIC_assets'));
-        FunkinMemory.cacheTexture(Paths.image('PhantomNote'));
-        FunkinMemory.cacheTexture(paths.image('hitStatic'));
-        FunkinMemory.cacheSound(Paths.sound("hitStatic1", "shared"));
-    }
-
-    public static function preloadSonicAnimation():Void {
-        sonicAnimation = FunkinSprite.createSparrow(0, 0, "characters/getCHA");
-        sonicAnimation.cameras = [PlayState.instance.camHUD];
-        sonicAnimation.zIndex = 1500;
-        sonicAnimation.alpha = 0.000001;
-        PlayState.instance.add(sonicAnimation);
-    }
-
-    public static function preloadFleetwayTextures():Void {
-        fleetway1 = FunkinSprite.createSparrow(0, 0, "characters/fleetway1");
-        fleetway1.cameras = [PlayState.instance.camHUD];
-        fleetway1.zIndex = 1500;
-        fleetway1.alpha = 0.000001;
-        PlayState.instance.add(fleetway1);
-
-        fleetway2 = FunkinSprite.createSparrow(0, 0, "characters/fleetway2");
-        fleetway2.cameras = [PlayState.instance.camHUD];
-        fleetway2.zIndex = 1500;
-        fleetway2.alpha = 0.000001;
-        PlayState.instance.add(fleetway2);
     }
 }

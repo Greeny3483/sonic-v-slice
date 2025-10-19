@@ -12,6 +12,7 @@ import funkin.graphics.FunkinSprite;
 import funkin.modding.module.ModuleHandler;
 
 import ObjectHandler;
+import StrumlineHandler;
 
 class HillZone extends Stage {
 	public function new() {
@@ -21,7 +22,6 @@ class HillZone extends Stage {
     public var doScreenStatic:Bool = true;
     public var doJumpscares:Bool = true;
     public var doCinematics:Bool = true;
-    public var doModcharts:Bool = true;
 
     public var blackOverlay:FlxSprite;
 	public var topBorder:FlxSprite;
@@ -31,27 +31,17 @@ class HillZone extends Stage {
     public var sonicJump:FunkinSprite;
     public var staticScreen:FunkinSprite;
 
-	var doStrumlineWiggle:Bool = false;
-	var basePlayerStrumPos:Float = 0;
-	var baseOpponentStrumPos:Float = 0;
-	var basePlayerStrumPosY:Float = 0;
-	var baseOpponentStrumPosY:Float = 0;
-	var strumlinePositionSet:Bool = false;
-	var wiggleIntensity:Float = 8;
-
     override function onCreate(event:ScriptEvent):Void {
         super.onCreate(event);
-
-        ObjectHandler.preloadSonicAnimation();
 
 		FunkinMemory.cacheSound(Paths.sound("sppok", "shared"));
 		FunkinMemory.cacheSound(Paths.sound("datOneSound", "shared"));
         FunkinMemory.cacheSound(Paths.sound("staticBUZZ", "shared"));
+        ObjectHandler.getObject("sonicAnimation");
 
         doScreenStatic = ModuleHandler.getModule("EXEOptions").scriptGet("screenstatic");
         doJumpscares = ModuleHandler.getModule("EXEOptions").scriptGet("dojumpscares");
         doCinematics = ModuleHandler.getModule("EXEOptions").scriptGet("cinematiceffect");
-        doModcharts = ModuleHandler.getModule("EXEOptions").scriptGet("modcharts");
 
         // Black overlay used for transitions
         blackOverlay = new FlxSprite(0, 0);
@@ -106,8 +96,9 @@ class HillZone extends Stage {
 		PlayState.instance.add(sonicJump);
 
     }
+
     public function cinematics(mode:String):Void {
-        if (!doCinematics || FlxG.onMobile || PlayState.instance.currentSong.id.toLowerCase() != "too-slow") return;
+        if (!doCinematics || FlxG.onMobile) return;
 
         switch (mode) {
             case "show":
@@ -124,8 +115,9 @@ class HillZone extends Stage {
                 return;
         }
     }
+
     public function jumpscare(mode:String):Void {
-        if (!doJumpscares || PlayState.instance.currentSong.id.toLowerCase() != "too-slow") return;
+        if (!doJumpscares) return;
 
         switch (mode) {
             case "animated":
@@ -146,6 +138,7 @@ class HillZone extends Stage {
                 return;
         }
     }
+
     public function screenStatic():Void {
         if (!doScreenStatic) return;
 
@@ -154,45 +147,22 @@ class HillZone extends Stage {
 		staticSound = FunkinSound.playOnce(Paths.sound("staticBUZZ"), 0.6);
 		FlxTween.tween(staticSound, { volume: 0 }, 1);
     }
-    function startModchart():Void {
-        if (!doModcharts || PlayState.instance.currentSong.id.toLowerCase() != "too-slow") return;
 
-		doStrumlineWiggle = true;
+    override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+
+        StrumlineHandler.updateModchart("wiggle");
     }
-	override function onUpdate(event:UpdateScriptEvent):Void {
-		super.onUpdate(event);
 
-		
-		if (!strumlinePositionSet && PlayState.instance.playerStrumline != null && PlayState.instance.opponentStrumline != null) {
-			basePlayerStrumPos = PlayState.instance.playerStrumline.x;
-			baseOpponentStrumPos = PlayState.instance.opponentStrumline.x;
-			basePlayerStrumPosY = PlayState.instance.playerStrumline.strumlineNotes.members[0] != null ? PlayState.instance.playerStrumline.strumlineNotes.members[0].y : 0;
-			baseOpponentStrumPosY = PlayState.instance.opponentStrumline.strumlineNotes.members[0] != null ? PlayState.instance.opponentStrumline.strumlineNotes.members[0].y : 0;
-			strumlinePositionSet = true;
-		}
-
-		if (doStrumlineWiggle) {
-			var curbet = (Conductor.instance.songPosition/1000)*(Conductor.instance.bpm/60);
-			for (i in 0...4) {
-				if (PlayState.instance.playerStrumline.strumlineNotes.members[i] != null)
-					PlayState.instance.playerStrumline.strumlineNotes.members[i].y = basePlayerStrumPosY + (wiggleIntensity * Math.cos((curbet + i*0.25) * Math.PI));
-				if (PlayState.instance.opponentStrumline.strumlineNotes.members[i] != null)
-					PlayState.instance.opponentStrumline.strumlineNotes.members[i].y = baseOpponentStrumPosY + (wiggleIntensity * Math.cos((curbet + i*0.25) * Math.PI));
-			}
-			PlayState.instance.playerStrumline.x = basePlayerStrumPos + Math.sin(curbet * Math.PI) * wiggleIntensity;
-			PlayState.instance.opponentStrumline.x = baseOpponentStrumPos + Math.sin(curbet * Math.PI) * wiggleIntensity;
-		}
-	}
-	function onSongRetry() {
+	override function onSongRetry() {
 		super.onSongRetry();
 
-		doStrumlineWiggle = false;
-		strumlinePositionSet = false;
         blackOverlay.alpha = 0;
 
         cinematics("hide");
 	}
-    function onStepHit(event:SongTimeScriptEvent):Void {
+
+    override function onStepHit(event:SongTimeScriptEvent):Void {
         super.onStepHit(event);
 
         if (!PlayState.instance.currentSong.id.toLowerCase() == "too-slow") return;
@@ -212,7 +182,7 @@ class HillZone extends Stage {
                     jumpscare("image");
                 case 1261:
                     cinematics("hide");
-                    startModchart();
+                    StrumlineHandler.startWiggleModchart();
                 case 1472:
                     jumpscare("animated");
             }
@@ -231,7 +201,7 @@ class HillZone extends Stage {
                     jumpscare("image");
                 case 934:
                     cinematics("hide");
-                    startModchart();
+                    StrumlineHandler.startWiggleModchart();
                 case 1129:
                     PlayState.instance.camCutscene.flash(0xFFFFFFFF, 1); // White
                 case 1217:
