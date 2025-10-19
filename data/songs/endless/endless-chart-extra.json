@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
   "scrollSpeed": {
-    "default": 3,
-    "extra": 3
+    "extra": 3,
+    "default": 3
   },
   "events": [
     {
@@ -24,10 +24,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -42,10 +42,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -53,10 +53,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -64,10 +64,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -75,10 +75,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -93,10 +93,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -104,10 +104,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -115,10 +115,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -126,10 +126,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -137,10 +137,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -162,10 +162,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -173,10 +173,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -191,10 +191,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -209,10 +209,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -234,10 +234,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -252,10 +252,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -277,10 +277,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -288,10 +288,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -306,10 +306,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -324,98 +324,98 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
       "t": 85935.4838709678,
       "e": "NoteSwapEvent",
       "v": {
-	"strumline": "both",
-	"notestyle": "exeFun"
+	"notestyle": "exeFun",
+	"strumline": "both"
 }
     },
     {
       "t": 85935.4838709678,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1.25,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1.25
 }
     },
     {
       "t": 86225.806451613,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1
 }
     },
     {
       "t": 86322.5806451614,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1.25,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1.25
 }
     },
     {
       "t": 86612.9032258065,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1
 }
     },
     {
       "t": 86709.6774193549,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1.25,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1.25
 }
     },
     {
       "t": 87000.0000000001,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1
 }
     },
     {
       "t": 87096.7741935485,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1.25,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1.25
 }
     },
     {
       "t": 87387.0967741936,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1.1,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1.1
 }
     },
     {
@@ -423,10 +423,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -434,10 +434,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -452,10 +452,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -463,10 +463,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -481,10 +481,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -492,10 +492,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -510,10 +510,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -521,10 +521,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -546,10 +546,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -557,10 +557,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -589,10 +589,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -600,10 +600,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -618,10 +618,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -629,10 +629,10 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
@@ -654,20 +654,20 @@
       "e": "Strumline Spin",
       "v": {
 	"duration": 0.35,
-	"target": "both",
 	"spins": "1",
-	"direction": "clockwise",
-	"easing": "quartOut"
+	"target": "both",
+	"easing": "quartOut",
+	"direction": "clockwise"
 }
     },
     {
       "t": 156774.193548387,
       "e": "ZoomCamera",
       "v": {
-	"duration": 4,
 	"ease": "linear",
-	"zoom": 1.25,
-	"mode": "stage"
+	"duration": 4,
+	"mode": "stage",
+	"zoom": 1.25
 }
     }
   ],
@@ -9320,5 +9320,5 @@
       }
     ]
   },
-  "generatedBy": "Friday Night Funkin' - v0.7.3"
+  "generatedBy": "Friday Night Funkin' - v0.7.5"
 }

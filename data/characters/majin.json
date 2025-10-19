@@ -1,57 +1,104 @@
 {
-    "version": "1.0.0",
-    "name": "Majin Sonic",
-    "assetPath": "characters/SonicFunAssets",
-    "singTime": 4,
-    "isPixel": false,
-    "scale": 1,
-    "healthIcon": {
-        "id": "majin",
-        "isPixel": false,
-        "flipX": false,
-        "scale": 1
-    },
-    "animations": [
-        {
-            "name": "singLEFT",
-            "prefix": "SONICFUNLEFT",
-            "offsets": [
-                275,
-                54
-            ]
-        },
-        {
-            "name": "singUP",
-            "prefix": "SONICFUNUP",
-            "offsets": [
-                39,
-                196
-            ]
-        },
-        {
-            "name": "singDOWN",
-            "prefix": "SONICFUNDOWN",
-            "offsets": [
-                51,
-                45
-            ]
-        },
-        {
-            "name": "singRIGHT",
-            "prefix": "SONICFUNRIGHT",
-            "offsets": [
-                -51,
-                133
-            ]
-        },
-        {
-            "name": "idle",
-            "prefix": "SONICFUNIDLE",
-            "offsets": [
-                -42,
-                183
-            ]
-        }
-    ],
-    "flipX": false
+	"version": "1.0.0",
+	"renderType": "sparrow",
+	"offsets": [
+		0,
+		0
+	],
+	"danceEvery": 1,
+	"scale": 1,
+	"name": "Majin Sonic",
+	"cameraOffsets": [
+		0,
+		0
+	],
+	"flipX": false,
+	"startingAnimation": "idle",
+	"isPixel": false,
+	"singTime": 4,
+	"flipY": false,
+	"healthIcon": {
+		"isPixel": false,
+		"offsets": [
+			0,
+			0
+		],
+		"scale": 1,
+		"flipX": false,
+		"id": "majin"
+	},
+	"assetPath": "characters/SonicFunAssets",
+	"generatedBy": "Nova Character Editor v3.0.0",
+	"animations": [
+		{
+			"offsets": [
+				275,
+				54
+			],
+			"frameIndices": [],
+			"prefix": "SONICFUNLEFT",
+			"name": "singLEFT",
+			"looped": false,
+			"flipX": false,
+			"flipY": false,
+			"frameRate": 24,
+			"assetPath": null
+		},
+		{
+			"offsets": [
+				39,
+				196
+			],
+			"frameIndices": [],
+			"prefix": "SONICFUNUP",
+			"name": "singUP",
+			"looped": false,
+			"flipX": false,
+			"flipY": false,
+			"frameRate": 24,
+			"assetPath": null
+		},
+		{
+			"offsets": [
+				51,
+				45
+			],
+			"frameIndices": [],
+			"prefix": "SONICFUNDOWN",
+			"name": "singDOWN",
+			"looped": false,
+			"flipX": false,
+			"flipY": false,
+			"frameRate": 24,
+			"assetPath": null
+		},
+		{
+			"offsets": [
+				-51,
+				133
+			],
+			"frameIndices": [],
+			"prefix": "SONICFUNRIGHT",
+			"name": "singRIGHT",
+			"looped": false,
+			"flipX": false,
+			"flipY": false,
+			"frameRate": 24,
+			"assetPath": null
+		},
+		{
+			"offsets": [
+				-42,
+				183
+			],
+			"frameIndices": [],
+			"prefix": "SONICFUNIDLE",
+			"name": "idle",
+			"looped": true,
+			"flipX": false,
+			"flipY": false,
+			"frameRate": 24,
+			"assetPath": null
+		}
+	]
 }
