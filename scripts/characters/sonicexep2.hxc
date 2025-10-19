@@ -1,0 +1,31 @@
+import flixel.FlxG;
+import funkin.play.character.SparrowCharacter;
+import funkin.play.character.CharacterType;
+import funkin.play.PlayState;
+import funkin.save.Save;
+
+class SonicExeP2 extends SparrowCharacter {
+	public function new() {
+		super("sonicexep2");
+	}
+
+	override function onNoteHit(event:HitNoteScriptEvent)
+    {
+        super.onNoteHit(event);
+
+        curBF = PlayState.instance.currentStage.getBoyfriend().characterId;
+        curDAD = PlayState.instance.currentStage.getDad().characterId;
+        
+		doCameraShake = Save.instance.modOptions["doCameraShake"];
+
+        if (doCameraShake && curDAD == "sonicexep2" || curBF == "sonicexep2" || curDAD == sonicexep2mad || curBF == sonicexep2mad)
+        {
+            if (event.note.holdNoteSprite != null)
+            {
+                FlxG.camera.shake(0.01, event.note.holdNoteSprite.sustainLength/1000);
+            } else {
+                FlxG.camera.shake(0.01, 0.2);
+            }
+        }
+    }
+}

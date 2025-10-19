@@ -65,8 +65,24 @@ class ShaderHandler extends Module {
         }
     }
 
-    override function onDestroy(event:ScriptEvent):Void {
-        super.onDestroy(event);
+    override function onGameOver():Void {
+        super.onGameOver();
+
+        // Shaders dont show on game over
+        if (PlayState.instance != null) {
+            if (PlayState.instance.camGame != null) {
+                PlayState.instance.camGame.filters = null;
+            }
+            if (PlayState.instance.camHUD != null) {
+                PlayState.instance.camHUD.filters = null;
+            }
+        }
+        vcrShader = null;
+        distortionShader = null;
+    }
+
+    override function onDestroy():Void {
+        super.onDestroy();
 
         if (PlayState.instance != null) {
             if (PlayState.instance.camGame != null) {

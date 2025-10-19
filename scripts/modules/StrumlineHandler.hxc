@@ -1,7 +1,5 @@
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import funkin.Paths;
 import funkin.save.Save;
@@ -81,6 +79,7 @@ class StrumlineHandler extends Module {
         switch (position) {
             case "defaultPos":
                 // Swap strumlines to the other side's default positions
+
                 PlayState.instance.playerStrumline.x = OPPONENT_STRUM_X;
                 PlayState.instance.playerStrumline.y = OPPONENT_STRUM_Y;
                 
@@ -90,6 +89,7 @@ class StrumlineHandler extends Module {
             default: 
                 // If unspecified, use the current positions of the strumlines
                 // Using this twice in a row will just swap them back
+
                 var tempX = PlayState.instance.playerStrumline.x;
                 var tempY = PlayState.instance.playerStrumline.y;
                 
