@@ -5,20 +5,10 @@ import funkin.play.notes.StrumlineNote;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
 import funkin.modding.module.ModuleHandler;
+import funkin.save.Save;
 
-/**
- * Event that makes the strumline notes spin, similar to Majin spin
- * 
- * Parameters:
- * - target: Which strumline to spin (player, opponent, both)
- * - direction: Spin direction (clockwise, counter-clockwise)
- * - spins: Number of full rotations (default: 1)
- * - duration: Duration of the spin in seconds (default: 0.35)
- * - easing: Easing function to use (default: quartOut)
- */
 class StrumlineSpin extends ScriptedSongEvent {
     
-    // Static variables to track spinning state
     static var isSpinning:Bool = false;
     static var spinTweens:Array<FlxTween> = [];
     
@@ -27,17 +17,12 @@ class StrumlineSpin extends ScriptedSongEvent {
     }
     
     public override function handleEvent(data) {
-        if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
-        if (PlayState.instance.isMinimalMode) return;
+        doModcharts = Save.instance.modOptions["modcharts"];
+        if (!doModcharts) return;
+        if (PlayState.instance == null) return;
         
-        // Check if mod charts are enabled
-        var modChartsEnabled = ModuleHandler.getModule("EXEOptions").scriptGet("modcharts");
-        if (!modChartsEnabled) return; // Don't spin if mod charts are disabled
-        
-        // Prevent multiple spins at once
         if (isSpinning) return;
         
-        // Parse parameters with better null checking
         var target:String = 'both';
         var direction:String = 'clockwise';
         var spins:Int = 1;
@@ -51,33 +36,26 @@ class StrumlineSpin extends ScriptedSongEvent {
                 spins = Std.parseInt(Std.string(data.value.spins));
                 // Clamp spins to safe range
                 if (spins == null || spins < 1) spins = 1;
-                if (spins > 5) spins = 5; // Reduced max to prevent crashes
+                if (spins > 5) spins = 5;
             }
             if (data.value.duration != null) {
                 duration = data.value.duration;
-                // Clamp duration to safe range
                 if (duration < 0.1) duration = 0.1;
                 if (duration > 3.0) duration = 3.0;
             }
             if (data.value.easing != null) easing = data.value.easing;
         }
         
-        // Convert direction to multiplier
         var directionMultiplier = (direction == 'counter-clockwise') ? -1 : 1;
         
-        // Calculate target angle
         var targetAngle = 360.0 * spins * directionMultiplier;
         
-        // Get easing function
         var easingFunc = getEasingFunction(easing);
         
-        // Clear any existing tweens first
         clearAllTweens();
         
-        // Start spinning
         isSpinning = true;
         
-        // Spin the appropriate strumlines
         switch(target) {
             case 'player':
                 spinStrumline(PlayState.instance.playerStrumline, targetAngle, duration, easingFunc);
@@ -88,7 +66,6 @@ class StrumlineSpin extends ScriptedSongEvent {
                 spinStrumline(PlayState.instance.opponentStrumline, targetAngle, duration, easingFunc);
         }
         
-        // Safety check - if no tweens were created, reset spinning state
         if (spinTweens.length == 0) {
             isSpinning = false;
         }
@@ -107,7 +84,6 @@ class StrumlineSpin extends ScriptedSongEvent {
     function spinStrumline(strumline:Strumline, targetAngle:Float, duration:Float, easingFunc:Dynamic) {
         if (strumline == null || strumline.strumlineNotes == null) return;
         
-        // Spin each strumline note
         var noteCount = strumline.strumlineNotes.length;
         for (i in 0...noteCount) {
             var note = strumline.strumlineNotes.members[i];
@@ -120,17 +96,14 @@ class StrumlineSpin extends ScriptedSongEvent {
                             note.angle = 0;
                         }
                         
-                        // Remove tween from tracking array
                         spinTweens.remove(tween);
-                        
-                        // Check if all tweens are complete
+
                         if (spinTweens.length == 0) {
                             isSpinning = false;
                         }
                     }
                 });
                 
-                // Track the tween
                 if (tween != null) {
                     spinTweens.push(tween);
                 }
