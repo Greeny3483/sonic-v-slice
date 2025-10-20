@@ -13,12 +13,12 @@ class SonicExeP2 extends SparrowCharacter {
     {
         super.onNoteHit(event);
 
-        curBF = PlayState.instance.currentStage.getBoyfriend().characterId;
-        curDAD = PlayState.instance.currentStage.getDad().characterId;
+        curDad = PlayState.instance.currentStage.getDad().characterId;
+        if (curDad == "pixelrunsonic" || curDad == "finalrunsonic") return;
         
 		doCameraShake = Save.instance.modOptions["doCameraShake"];
 
-        if (doCameraShake && curDAD == "sonicexep2" || curBF == "sonicexep2" || curDAD == sonicexep2mad || curBF == sonicexep2mad)
+        if (!event.note.noteData.getMustHitNote() && doCameraShake)
         {
             if (event.note.holdNoteSprite != null)
             {

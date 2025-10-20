@@ -16,6 +16,7 @@ import funkin.graphics.video.FunkinVideoSprite;
 import funkin.modding.module.ModuleHandler;
 
 class HillZonePhase2 extends Stage {
+    
     public function new() {
         super("hillZonePhase2");
     }
@@ -24,19 +25,11 @@ class HillZonePhase2 extends Stage {
     public var doCameraShake:Bool = true;
     public var allowCameraShake:Bool = true; // Used to disable camera shake via script
     public var doRedVignette:Bool = true;
-
-    // Black things
     public var blackOverlay:FlxSprite;
 	public var topBorder:FlxSprite;
 	public var bottomBorder:FlxSprite;
-
-    // Visual effects
     public var staticScreen:FunkinSprite;
     public var redVignette:FunkinSprite;
-    
-    // Props
-    public var greenHill:StageProp;
-
     public var estaguyAnimation:FunkinVideoSprite;
 
     override function onCreate(event:ScriptEvent):Void {
@@ -46,8 +39,6 @@ class HillZonePhase2 extends Stage {
 
         doCameraShake = ModuleHandler.getModule("EXEOptions").scriptGet("doCameraShake");
         doScreenStatic = ModuleHandler.getModule("EXEOptions").scriptGet("screenstatic");
-
-        greenHill = getNamedProp('GreenHill');
 
         // Jumpscares, static, etc
 		staticScreen = FunkinSprite.createSparrow(100, 0, "daSTAT");
@@ -83,20 +74,7 @@ class HillZonePhase2 extends Stage {
         estaguyAnimation.bitmap.volumeAdjust = 0;
         estaguyAnimation.load('videos/videos/ycrencoreanimation.mp4');
     }
-	function onNoteHit(event:HitNoteScriptEvent)
-    {
-        super.onNoteHit(event);
 
-        if (!event.note.noteData.getMustHitNote() && doCameraShake && allowCameraShake)
-        {
-            if (event.note.holdNoteSprite != null)
-            {
-                FlxG.camera.shake(0.01, event.note.holdNoteSprite.sustainLength/1000);
-            } else {
-                FlxG.camera.shake(0.01, 0.2);
-            }
-        }
-    }
     function startVideo():Void {
         estaguyAnimation.play();
         PlayState.instance.add(estaguyAnimation);
@@ -106,6 +84,7 @@ class HillZonePhase2 extends Stage {
             //estaguyAnimation.destroy(); < -- This would make the video not replay if the song is restarted
 		});
     }
+
     public function screenStatic():Void {
         if (!doScreenStatic) return;
 
@@ -118,7 +97,10 @@ class HillZonePhase2 extends Stage {
 			}
 		});
     }
+
     public function switchStageArea(area:String):Void {
+        greenHill = getNamedProp("GreenHill");
+
         switch (area) {
             case "greenHill":
                 greenHill.zIndex = 2;
@@ -132,6 +114,7 @@ class HillZonePhase2 extends Stage {
                 return;
         }
     }
+
     override function buildStage()
 	{
 		super.buildStage();
@@ -145,6 +128,7 @@ class HillZonePhase2 extends Stage {
 			getNamedProp('GreenHill').scale.set(9.6, 9);
 		}
 	}
+
     function doVignette(mode:String):Void {
         if (!doRedVignette) return;
  
@@ -157,6 +141,7 @@ class HillZonePhase2 extends Stage {
             }
         });
     }
+
     override function onSongRetry(event:ScriptEvent):Void {
 		super.onSongRetry(event);
 
@@ -205,13 +190,11 @@ class HillZonePhase2 extends Stage {
                     dad.y = dad.y + 900;
                     dad.cameraFocusPoint.x = dad.cameraFocusPoint.x + -350;
                     dad.cameraFocusPoint.y = dad.cameraFocusPoint.y + -200;
-                    allowCameraShake = false;
                     doRedVignette = false;
                     switchStageArea("greenHill");
                     screenStatic();
                 case 786: // This is weird because sometimes a lag spike can cause this to be skipped
                     doRedVignette = true;
-                    allowCameraShake = true;
                     switchStageArea("normal");
                     screenStatic();
                 case 1296:

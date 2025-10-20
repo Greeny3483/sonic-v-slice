@@ -59,7 +59,7 @@ class PhantomNote extends NoteKind
 	{
 		if (event.note.noteKind == "phantomnote")
 		{
-			event.cancelEvent();
+			event.cancel();
 		}
 	}
 }
