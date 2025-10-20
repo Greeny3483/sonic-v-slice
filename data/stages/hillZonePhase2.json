@@ -14,7 +14,7 @@
 				-1220
 			],
 			"scale": [
-				1,
+				1.07,
 				1
 			],
 			"animType": "sparrow",
@@ -42,7 +42,7 @@
 				-1220
 			],
 			"scale": [
-				1,
+				1.07,
 				1
 			],
 			"animType": "sparrow",
@@ -70,7 +70,7 @@
 				-1220
 			],
 			"scale": [
-				1,
+				1.06,
 				1
 			],
 			"animType": "sparrow",
@@ -98,7 +98,7 @@
 				-1220
 			],
 			"scale": [
-				1,
+				1.07,
 				1
 			],
 			"animType": "sparrow",
@@ -126,7 +126,7 @@
 				-1220
 			],
 			"scale": [
-				1,
+				1.07,
 				1
 			],
 			"animType": "sparrow",
@@ -154,7 +154,7 @@
 				-1220
 			],
 			"scale": [
-				1,
+				1.06,
 				1
 			],
 			"animType": "sparrow",
@@ -178,12 +178,12 @@
 			"zIndex": -50,
 			"danceEvery": 0,
 			"position": [
-				-1296,
-				-1219
+				-1476,
+				-1248
 			],
 			"scale": [
-				8,
-				8
+				9.37,
+				9
 			],
 			"animType": "sparrow",
 			"flipX": false,

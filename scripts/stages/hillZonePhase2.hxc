@@ -201,10 +201,10 @@ class HillZonePhase2 extends Stage {
                 case 80:
                     doRedVignette = true;
                 case 528:
-                    dad.x = dad.x + 720; // Encore pixel Sonic is used for Final Escape, instead of duplicating the character for YCRE, adjust offsets here
+                    /*dad.x = dad.x + 720; // Encore pixel Sonic is used for Final Escape, instead of duplicating the character for YCRE, adjust offsets here
                     dad.y = dad.y + 900;
                     dad.cameraFocusPoint.x = dad.cameraFocusPoint.x + -350;
-                    dad.cameraFocusPoint.y = dad.cameraFocusPoint.y + -200;
+                    dad.cameraFocusPoint.y = dad.cameraFocusPoint.y + -200;*/
                     allowCameraShake = false;
                     doRedVignette = false;
                     switchStageArea("greenHill");

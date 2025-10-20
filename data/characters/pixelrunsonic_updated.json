@@ -2,41 +2,41 @@
 	"version": "1.0.0",
 	"renderType": "sparrow",
 	"offsets": [
-		-120,
-		-45
+		-15,
+		2
 	],
 	"danceEvery": 1,
 	"scale": 12,
-	"name": "Sonic.exe (Pixel)",
+	"name": "Sonic.exe (Pixel Update)",
 	"cameraOffsets": [
-		0,
-		100
+		-100,
+		80
 	],
-	"flipX": false,
+	"flipX": true,
 	"startingAnimation": "idle",
 	"isPixel": true,
-	"singTime": 4,
+	"singTime": 6.1,
 	"flipY": false,
 	"healthIcon": {
-		"isPixel": false,
 		"offsets": [
 			0,
 			0
 		],
+		"isPixel": false,
 		"scale": 1,
 		"flipX": false,
 		"id": "pixelsonic"
 	},
-	"assetPath": "characters/Sonic_EXE_Pixel",
+	"assetPath": "characters/ycr_sonic_sheet",
 	"generatedBy": "Nova Character Editor v3.0.0",
 	"animations": [
 		{
 			"offsets": [
-				-106,
-				-50
+				0,
+				0
 			],
 			"frameIndices": [],
-			"prefix": "Sonic_EXE_Pixel idle",
+			"prefix": "ycr sonic idle",
 			"name": "idle",
 			"looped": false,
 			"flipX": false,
@@ -46,11 +46,11 @@
 		},
 		{
 			"offsets": [
-				-106,
-				-50
+				-1,
+				4
 			],
 			"frameIndices": [],
-			"prefix": "Sonic_EXE_Pixel NOTE UP",
+			"prefix": "ycr sonic up",
 			"name": "singUP",
 			"looped": false,
 			"flipX": false,
@@ -60,12 +60,12 @@
 		},
 		{
 			"offsets": [
-				-106,
-				-50
+				-1,
+				4
 			],
 			"frameIndices": [],
-			"prefix": "Sonic_EXE_Pixel Sonic_EXE_Pixel NOTE DOWN",
-			"name": "singDOWN",
+			"prefix": "ycr sonic left",
+			"name": "singRIGHT",
 			"looped": false,
 			"flipX": false,
 			"flipY": false,
@@ -74,11 +74,11 @@
 		},
 		{
 			"offsets": [
-				-106,
-				-50
+				-1,
+				4
 			],
 			"frameIndices": [],
-			"prefix": "Sonic_EXE_Pixel Sonic_EXE_Pixel NOTE LEFT",
+			"prefix": "ycr sonic right",
 			"name": "singLEFT",
 			"looped": false,
 			"flipX": false,
@@ -88,12 +88,12 @@
 		},
 		{
 			"offsets": [
-				-106,
-				-50
+				-2,
+				4
 			],
 			"frameIndices": [],
-			"prefix": "Sonic_EXE_Pixel NOTE RIGHT",
-			"name": "singRIGHT",
+			"prefix": "ycr sonic down",
+			"name": "singDOWN",
 			"looped": false,
 			"flipX": false,
 			"flipY": false,
