@@ -1,0 +1,106 @@
+import flixel.FlxG;
+import funkin.ui.freeplay.FreeplayState;
+import openfl.utils.Assets;
+import funkin.util.Constants;
+import funkin.audio.FunkinSound;
+import funkin.modding.module.Module;
+import funkin.save.Save;
+
+class EXEFreeplayMenu extends Module
+{
+    public var exeLevels = ['1round1', '2freeplay2', '3extras3'];
+    public var characterBackgrounds:Map<String, String> = [
+        "Default" => "freeplayBGweek1-bf",
+        "Too Slow" => "freeplayBG-too-slow",
+        "You Can't Run" => "freeplayBG-you-cant-run",
+        "Triple Trouble" => "freeplayBG-triple-trouble",
+        "Endless" => "freeplayBG-endless",
+        "Cycles" => "freeplayBG-cycles",
+        "Faker" => "freeplayBG-faker",
+        "Relax" => "freeplayBG-relax",
+        "Prey" => "freeplayBG-prey",
+        "Fatality" => "freeplayBG-fatality",
+        "Personnel" => "freeplayBG-personnel",
+        "Soulless" => "freeplayBG-soulless",
+        "Fight or Flight" => "freeplayBG-fight-or-flight"
+    ];
+
+    public function new()
+    {
+        super('EXEFreeplayMenu');
+    }
+    
+    override function onCreate(event:SubStateScriptEvent)
+    {
+        super.onCreate(event);
+
+        Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("encore");
+        Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("extra");
+    }
+
+    override function onSongSelected(event:CapsuleScriptEvent):Void {
+        super.onSongSelected(event);
+
+        switch (event.capsule?.freeplayData.levelId) {
+            case '1round1':
+                var menulaugh = FunkinSound.playOnce(Paths.sound("menulaugh"), 1);
+        }
+    }
+
+    override function onCapsuleSelected(event:CapsuleScriptEvent):Void {
+        super.onCapsuleSelected(event);
+
+        if (event.capsule?.freeplayData == null) return;
+        if (FlxG.state.subState == null || FlxG.state.subState.ostName == null) return;
+
+        if (exeLevels.indexOf(event.capsule?.freeplayData.levelId) != -1) {
+            FlxG.state.subState.ostName.text = "VS SONIC.EXE";
+        } else {
+            FlxG.state.subState.ostName.text = "OFFICIAL OST";
+        }
+    }
+
+    function getSelectedCharacter():String {
+        // Read from modOptions save data
+        var selectedChar = "Default";
+        if (Save.instance.modOptions["freeplayBG"] != null) {
+            selectedChar = Save.instance.modOptions["freeplayBG"];
+        }
+        
+        return selectedChar;
+    }
+
+    override function onSubStateOpenEnd(event) {
+        super.onSubStateOpenEnd(event);
+        if (Std.isOfType(event.targetState, FreeplayState)) {
+            replaceBackingImage(event.targetState);
+        }
+    }
+
+    override function onStateOpenEnd(event) {
+        super.onStateOpenEnd(event);
+        if (Std.isOfType(event.targetState, FreeplayState)) {
+            replaceBackingImage(event.targetState);
+        }
+    }
+
+    function replaceBackingImage(freeplayState:FreeplayState) {
+        if (freeplayState?.backingImage != null) {
+            var selectedCharacter = getSelectedCharacter();
+            
+            var backgroundName = characterBackgrounds.get(selectedCharacter);
+            if (backgroundName == null) backgroundName = "freeplayBGweek1-bf"; // fallback here
+            
+            var customPath = Paths.image('freeplay/' + backgroundName);
+            
+            if (Assets.exists(customPath)) {
+                freeplayState.backingImage.loadTextureAsync(customPath);
+            } else {
+                var defaultPath = Paths.image('freeplay/freeplayBGweek1-bf');
+                if (Assets.exists(defaultPath)) {
+                    freeplayState.backingImage.loadTextureAsync(defaultPath);
+                }
+            }
+        }
+    }
+}

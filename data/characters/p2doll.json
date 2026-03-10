@@ -1,0 +1,223 @@
+{
+    "assetPath": "characters/tailsdoll_p2",
+    "name": "Tails Doll (P2)",
+    "singTime": 4,
+    "version": "1.0.0",
+    "scale": 1.05,
+    "flipX": false,
+    "isPixel": false,
+    "offsets": [
+        730,
+        60
+    ],
+    "cameraOffsets": [
+        20,
+        190
+    ],
+    "healthIcon": {
+        "id": "doll",
+        "offsets": [
+            0,
+            0
+        ],
+        "flipX": false,
+        "isPixel": false,
+        "scale": 1
+    },
+    "animations": [
+        {
+            "name": "idle",
+            "prefix": "idle",
+            "looped": false,
+            "offsets": [
+                77,
+                -50
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+            ]
+        },
+        {
+            "name": "singUP",
+            "prefix": "singUP",
+            "looped": false,
+            "offsets": [
+                -53,
+                -1
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        },
+        {
+            "name": "singDOWN",
+            "prefix": "singDOWN",
+            "looped": false,
+            "offsets": [
+                130,
+                -171
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        },
+        {
+            "name": "singLEFT",
+            "prefix": "singLEFT",
+            "looped": false,
+            "offsets": [
+                287,
+                -80
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        },
+        {
+            "name": "singRIGHT",
+            "prefix": "singRIGHT",
+            "looped": false,
+            "offsets": [
+                -306,
+                -49
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        },
+        {
+            "name": "smile",
+            "prefix": "creepysmile",
+            "looped": false,
+            "offsets": [
+                -200,
+                -230
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        },
+        {
+            "name": "laugh",
+            "prefix": "creepystare",
+            "looped": true,
+            "offsets": [
+                -200,
+                -230
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15
+            ]
+        }
+    ]
+}

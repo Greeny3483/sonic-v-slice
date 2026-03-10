@@ -1,0 +1,46 @@
+import flixel.FlxG;
+import funkin.save.Save;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.modding.module.ModuleHandler;
+
+import EXEStrumlines;
+
+class EggLab extends Stage
+{
+	public function new()
+	{
+		super('eggLab');
+	}
+
+	override function onCreate(event:ScriptEvent):Void
+	{
+		super.onCreate(event);
+
+		allowGore = Save.instance.modOptions["allowGore"];
+		if (!allowGore) getNamedProp('StarvedSonicDead').visible = false;
+
+		FearBar.createFearBar();
+	}
+
+	override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
+
+		if (!PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight') return;
+
+		PlayState.instance.healthBar.visible = false;
+		PlayState.instance.healthBarBG.visible = false;
+		PlayState.instance.iconP1.visible = false;
+		PlayState.instance.iconP2.visible = false;
+
+		EXEStrumlines.changeStrumlineMode("middlescroll");
+	}
+
+	override function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+		FearBar.updateFearBar();
+	}
+}

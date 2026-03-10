@@ -29,12 +29,12 @@
         "bf-endless"
       ]
     },
-    "stage": "endless-forest",
-    "noteStyle": "exeSemi",
+    "stage": "majinForest",
+    "noteStyle": "majin",
     "ratings": {
       "extra": 7
     },
-    "album": "exeVol1OST",
+    "album": "exeOST",
     "previewStart": 0,
     "previewEnd": 15000
   },

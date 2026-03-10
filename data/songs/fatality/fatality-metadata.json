@@ -4,7 +4,7 @@
   "artist": "Saster",
   "charter": "niffirg",
   "playData": {
-    "album": "exeVol3OST",
+    "album": "exeOST",
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf-fatal",
@@ -12,8 +12,8 @@
       "opponent": "fatal-sonic",
       "instrumental": ""
     },
-    "stage": "fatalZone",
-    "noteStyle": "exeFatal",
+    "stage": "launchbase",
+    "noteStyle": "fatal",
     "ratings": {"easy": 7, "normal": 9, "hard": 11},
     "previewStart": 0,
     "previewEnd": 15000

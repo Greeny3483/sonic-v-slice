@@ -4,7 +4,7 @@
   "artist": "MarStarBro",
   "charter": "Sandplanet",
   "playData": {
-    "album": "exeVol1OST",
+    "album": "exeOST",
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf",
@@ -14,8 +14,8 @@
       "altInstrumentals": []
     },
     "songVariations": ["encore"],
-    "stage": "hillZone",
-    "noteStyle": "exeFourKey",
+    "stage": "hill",
+    "noteStyle": "exe",
     "ratings": {"easy": 5, "normal": 6, "hard": 7},
     "previewStart": 0,
     "previewEnd": 15000

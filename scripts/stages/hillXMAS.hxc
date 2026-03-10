@@ -1,0 +1,40 @@
+import flixel.FlxG;
+import funkin.Conductor;
+import funkin.play.stage.Stage;
+
+class HillXMAS extends Stage
+{
+	public function new()
+	{
+		super('hillXMAS');
+	}
+
+	override function onCreate(event:ScriptEvent):Void
+	{
+		super.onCreate(event);
+
+		if (FlxG.onMobile) getNamedProp('Foreground').scale.set(1.1, 1.0);
+	}
+
+	override function onNoteHit(event:HitNoteScriptEvent):Void
+	{
+		if (event.note.noteData.getMustHitNote()) return;
+
+		var ranges:Array<Array<Int>> = [
+			[511, 639], [895, 960], [1151, 1215], [1311, 1375], [1631, 1759],
+			[1888, 1919], [1989, 2015], [2047, 2079], [2111, 2143], [2271, 2399]
+		];
+
+		var currentStep = Conductor.instance.currentStep;
+		for (range in ranges)
+		{
+			if (currentStep >= range[0] && currentStep <= range[1])
+			{
+				getGirlfriend().playSingAnimation(event.note.noteData.getDirection(), false);
+				getGirlfriend().holdTimer = 0;
+				event.stopPropagation();
+				return;
+			}
+		}
+	}
+}

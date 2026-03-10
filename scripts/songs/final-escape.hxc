@@ -3,21 +3,21 @@ import funkin.play.Countdown;
 import funkin.play.song.Song;
 import funkin.modding.module.ModuleHandler;
 
+import funkin.save.Save;
+
 class FinalEscapeSong extends Song {
     public function new() {
         super("final-escape");
     }
 
-    override function onCreate(event:ScriptEvent):Void {
+	public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String> {
+		if (showLocked || Save.instance.hasBeatenLevel('1round1')) {
+			return super.listDifficulties(variationId, variationIds);
+		}
 
-        super.onCreate(event);
-
-        doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
-        if (!doBloodSplash) {
-            ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapStrumlines', ['exeSemi']);
-        }
-
-    }
+		// Hide all difficulties if the player has not beaten the week.
+		return [];
+	}
 
 	public override function onCountdownStart(event:CountdownScriptEvent):Void
 	{

@@ -1,0 +1,20 @@
+import flixel.FlxG;
+import funkin.Paths;
+import funkin.FunkinMemory;
+import funkin.play.PlayState;
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.character.CharacterType;
+
+class SonicEXE extends MultiSparrowCharacter {
+	public function new() {
+		super("sonicexe");
+	}
+
+    override function onCreate(event:ScriptEvent) {
+        super.onCreate(event);
+
+        // dont know why i didnt do this in the first place
+        FunkinMemory.cacheTexture(Paths.image("characters/specialAnims/sonicexe_gotcha"));
+    }
+
+}

@@ -11,9 +11,9 @@
                 1.0,
                 1.0
             ],
-            "name": "StarvedBG",
+            "name": "Background",
             "isPixel": false,
-            "assetPath": "starved/stardustBg",
+            "assetPath": "stages/stardustSpeedway/stardustBg",
             "scroll": [
                 1.0,
                 1.0
@@ -30,9 +30,9 @@
                 1.0,
                 1.0
             ],
-            "name": "StarvedGround",
+            "name": "Floor",
             "isPixel": false,
-            "assetPath": "starved/stardustFloor",
+            "assetPath": "stages/stardustSpeedway/stardustFloor",
             "scroll": [
                 1.0,
                 1.0

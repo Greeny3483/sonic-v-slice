@@ -63,19 +63,46 @@ class ChangeCharacterModule extends Module {
 		var unknownCharacters = [];
 		for (i in PlayState.instance.songEvents) {
 			if (i.eventKind == "Change Character") {
-				if (CharacterDataParser.listCharacterIds().contains(i.value.char)) {
-					var exCharacter = CharacterDataParser.fetchCharacter(i.value.char);
-					exCharacter.x = PlayState.instance.currentStage.getBoyfriend().x;
-					exCharacter.y = PlayState.instance.currentStage.getBoyfriend().y;
-					exCharacter.zIndex = PlayState.instance.currentStage.getBoyfriend().zIndex;
-					characterCaches.get(i.value.target).set(i.value.char, exCharacter);
+				var charId = i.value.char;
+				var target = i.value.target;
+				if (CharacterDataParser.listCharacterIds().contains(charId)) {
+					var cache = characterCaches.get(target);
+					if (cache == null || cache.exists(charId)) continue;
+
+					var exCharacter = CharacterDataParser.fetchCharacter(charId);
+					
+					var currentCharacter = null;
+					switch(target) {
+						case "bf": currentCharacter = PlayState.instance.currentStage.getBoyfriend();
+						case "gf": currentCharacter = PlayState.instance.currentStage.getGirlfriend();
+						case "dad": currentCharacter = PlayState.instance.currentStage.getDad();
+					}
+
+					if (currentCharacter != null) {
+						exCharacter.x = currentCharacter.x;
+						exCharacter.y = currentCharacter.y;
+						exCharacter.zIndex = currentCharacter.zIndex;
+					}
+
+					// Temporarily add to stage to force asset loading/GPU upload, then kill
+					var prevChar = currentCharacter;
+					PlayState.instance.currentStage.addCharacter(exCharacter, types.get(target));
+					exCharacter.initHealthIcon(target == "dad");
+					exCharacter.kill();
+
+					// Restore the original character reference
+					if (prevChar != null) {
+						PlayState.instance.currentStage.addCharacter(prevChar, types.get(target));
+					}
+
+					cache.set(charId, exCharacter);
 				} else {
-					unknownCharacters.push(i.value.char);
+					unknownCharacters.push(charId);
 				}
 			}
 		}
 		for (i in unknownCharacters)
-			trace("Unkown Character \"" + i + "\"");
+			trace("Unknown Character \"" + i + "\"");
 		trace("Character Caching Finished!");
 		PlayState.instance.currentStage.refresh();
 	}

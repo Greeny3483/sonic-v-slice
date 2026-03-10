@@ -1,16 +1,16 @@
 {
-  "title": "VERSUS SONIC.EXE [V-Slice Add-On | DEMO]",
-  "description": "Port of VERSUS SONIC.EXE to the base game engine through softcode!",
+  "title": "VS SONIC.EXE [V-Slice Add-On]",
+  "description": "Port of VS SONIC.EXE to the base game engine through softcode!",
   "homepage": "https://gamebanana.com/mods/600193",
   "contributors": [
     {
       "name": "Greeny3483",
-      "role": "Port Creator (Coder)",
+      "role": "Port Author",
       "url": "https://gamebanana.com/members/1895178"
     },
     {
       "name": "Comedy Lost",
-      "role": "Notestyle Swap Event",
+      "role": "Fatality Overhaul + Notestyle Swap Event",
       "url": "https://gamebanana.com/members/2287198"
     },
     {
@@ -24,7 +24,7 @@
       "url": "https://gamebanana.com/mods/316022"
     }
   ],
-  "api_version": "0.7.0",
-  "mod_version": "0.2.5",
+  "api_version": "0.8.0",
+  "mod_version": "0.3.0",
   "license": "Apache-2.0"
 }

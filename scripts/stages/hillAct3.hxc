@@ -1,0 +1,65 @@
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import EXEScripts;
+import EXEStrumlines;
+
+class HillAct3 extends Stage
+{
+	public function new()
+	{
+		super('hillAct3');
+	}
+
+	function switchStageArea(area:String):Void {
+		p3_Stats = getNamedProp('p3_Stats');
+		p3_Glitch = getNamedProp('p3_Glitch');
+
+		switch (area) {
+			case 'xenoBG':
+				p3_Stats.zIndex = 4;
+				p3_Glitch.zIndex = 1;
+				return;
+			case 'glitchBG':
+				p3_Stats.zIndex = 1;
+				p3_Glitch.zIndex = 4;
+				return;
+			default:
+				return;
+		}
+		PlayState.instance.currentStage.refresh();
+	}
+
+	override function onStepHit(event:SongTimeScriptEvent):Void {
+		super.onStepHit(event);
+
+		if (!PlayState.instance.currentSong.id.toLowerCase() == "triple-trouble") return;
+
+		switch (event.step) {
+			case 4, 1029, 1094, 1221, 1285, 2308, 2820, 3160, 3384, 3947: // Song startup
+				EXEScripts.triggerGlitchTransition();
+			case 151: // Tails jumpscare
+				EXEScripts.triggerJumpscare('tails');
+			case 1038:
+				switchStageArea('xenoBG');
+			case 1296: // Knuckles jumpscare + swap strumlines
+				switchStageArea('glitchBG');
+				EXEScripts.triggerJumpscare('knuckles');
+				EXEStrumlines.swapStrumlines("isDefault");
+			case 2320:
+				switchStageArea('xenoBG');
+			case 2824: // Eggman jumpscare + reset strumlines
+				switchStageArea('glitchBG');
+				EXEStrumlines.resetStrumlines("both");
+				EXEScripts.triggerJumpscare('eggman');
+			case 3957:
+				switchStageArea('xenoBG');
+		}
+	}
+
+	override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
+
+		switchStageArea('glitchBG');
+		EXEStrumlines.resetStrumlines();
+	}
+}

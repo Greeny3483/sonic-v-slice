@@ -10,7 +10,7 @@
     "altVocals": {    }
   },
   "playData": {
-    "album": "exeVol3OST",
+    "album": "exeOST",
     "songVariations": [    ],
     "difficulties": [
       "easy",
@@ -30,7 +30,7 @@
       ]
     },
     "stage": "marbleZone",
-    "noteStyle": "exeFourKey",
+    "noteStyle": "exe",
     "ratings": {
       "easy": 4,
       "normal": 4,

@@ -11,7 +11,7 @@
   },
   "playData": {
     "songVariations": [    ],
-    "album": "exeVol3OST",
+    "album": "exeOST",
     "difficulties": [
       "easy",
       "normal",
@@ -29,8 +29,8 @@
         "starvedtails"
       ]
     },
-    "stage": "egglair",
-    "noteStyle": "exeFourKey",
+    "stage": "eggLab",
+    "noteStyle": "exe",
     "ratings": {"easy": 4, "normal": 5, "hard": 7},
     "previewStart": 0,
     "previewEnd": 15000

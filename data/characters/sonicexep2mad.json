@@ -1,167 +1,127 @@
 {
-	"version": "1.0.0",
-	"renderType": "sparrow",
-	"offsets": [
-		0,
-		0
-	],
-	"danceEvery": 1,
-	"scale": 1,
-	"name": "Sonic.exe (Phase 2 - Mad)",
-	"cameraOffsets": [
-		0,
-		0
-	],
-	"flipX": false,
-	"startingAnimation": "idle",
-	"isPixel": false,
-	"singTime": 6.1,
-	"flipY": false,
-	"healthIcon": {
-		"offsets": [
-			0,
-			0
-		],
-		"isPixel": false,
-		"scale": 1,
-		"flipX": false,
-		"id": "ycr-pissy"
-	},
-	"assetPath": "characters/YCR_Mad",
-	"generatedBy": "Nova Character Editor v3.0.0",
-	"animations": [
-		{
-			"offsets": [
-				18,
-				-35
-			],
-			"frameIndices": [
-				1,
-				2,
-				3,
-				4,
-				5,
-				6
-			],
-			"prefix": "laugh_Instance",
-			"name": "laugh",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 24,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				360,
-				7
-			],
-			"frameIndices": [],
-			"prefix": "scream",
-			"name": "scream",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 24,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				18,
-				-35
-			],
-			"frameIndices": [],
-			"prefix": "laugh",
-			"name": "singDOWN-alt",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 24,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				192,
-				32
-			],
-			"frameIndices": [],
-			"prefix": "mad_left",
-			"name": "singLEFT",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 38,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				-61,
-				238
-			],
-			"frameIndices": [],
-			"prefix": "mad_up",
-			"name": "singUP",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 42,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				-20,
-				-26
-			],
-			"frameIndices": [],
-			"prefix": "mad_down",
-			"name": "singDOWN",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 40,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				-26,
-				0
-			],
-			"frameIndices": [],
-			"prefix": "mad_right",
-			"name": "singRIGHT",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 35,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				-18,
-				67
-			],
-			"frameIndices": [],
-			"prefix": "mad_idle",
-			"name": "idle",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 26,
-			"assetPath": null
-		},
-		{
-			"offsets": [
-				170,
-				20
-			],
-			"frameIndices": [],
-			"prefix": "just_die",
-			"name": "die",
-			"looped": false,
-			"flipX": false,
-			"flipY": false,
-			"frameRate": 24,
-			"assetPath": null
-		}
-	]
+    "assetPath": "characters/YCR_Mad",
+    "name": "Sonic.EXE (Act 2 - Mad)",
+    "singTime": 6.1,
+    "version": "1.0.0",
+    "scale": 1,
+    "flipX": false,
+    "isPixel": false,
+    "offsets": [
+        0,
+        110
+    ],
+    "cameraOffsets": [
+        -80,
+        90
+    ],
+    "healthIcon": {
+        "id": "ycr-pissy",
+        "offsets": [
+            0,
+            0
+        ],
+        "flipX": false,
+        "isPixel": false,
+        "scale": 1
+    },
+    "animations": [
+        {
+            "name": "laugh",
+            "prefix": "laugh_Instance",
+            "looped": false,
+            "offsets": [
+                18,
+                -35
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ]
+        },
+        {
+            "name": "scream",
+            "prefix": "scream",
+            "looped": false,
+            "offsets": [
+                360,
+                7
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singDOWN-alt",
+            "prefix": "laugh",
+            "looped": false,
+            "offsets": [
+                18,
+                -35
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singLEFT",
+            "prefix": "mad_left",
+            "looped": false,
+            "offsets": [
+                192,
+                32
+            ],
+            "frameRate": 38
+        },
+        {
+            "name": "singUP",
+            "prefix": "mad_up",
+            "looped": false,
+            "offsets": [
+                -61,
+                238
+            ],
+            "frameRate": 42
+        },
+        {
+            "name": "singDOWN",
+            "prefix": "mad_down",
+            "looped": false,
+            "offsets": [
+                -20,
+                -26
+            ],
+            "frameRate": 40
+        },
+        {
+            "name": "singRIGHT",
+            "prefix": "mad_right",
+            "looped": false,
+            "offsets": [
+                -26,
+                0
+            ],
+            "frameRate": 35
+        },
+        {
+            "name": "idle",
+            "prefix": "mad_idle",
+            "looped": true,
+            "offsets": [
+                -18,
+                67
+            ],
+            "frameRate": 26
+        },
+        {
+            "name": "die",
+            "prefix": "just_die",
+            "looped": false,
+            "offsets": [
+                170,
+                20
+            ],
+            "frameRate": 24
+        }
+    ]
 }

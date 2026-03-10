@@ -4,7 +4,7 @@
 	"artist": "Jacaris",
 	"charter": "punkett",
 	"playData": {
-	  "album": "exeVol2OST",
+	  "album": "exeOST",
 	  "difficulties": ["easy", "normal", "hard"],
 	  "characters": {
 		"player": "bf",
@@ -13,7 +13,7 @@
 		"instrumental": ""
 	  },
 	  "stage": "emeraldChamber",
-	  "noteStyle": "exeFourKey",
+	  "noteStyle": "exe",
 	  "ratings": {"easy": 8, "normal": 11, "hard": 13},
 	  "previewStart": 0,
 	  "previewEnd": 15000

@@ -1,0 +1,61 @@
+import funkin.FunkinMemory;
+import funkin.Paths;
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+
+class SonicPrey extends MultiSparrowCharacter {
+    public function new() {
+        super("sonicprey");
+	}
+
+	function onCreate(event:ScriptEvent) {
+		super.onCreate(event);
+
+        FunkinMemory.cacheTexture(Paths.image("characters/deathScreens/sonic_gameover"));
+
+		GameOverSubState.musicSuffix = "Prey";
+		GameOverSubState.blueBallSuffix = "-prey";
+	}
+
+	function onGameOver(event) {
+		super.onGameOver(event);
+
+		if (PlayState.instance.currentStage.getBoyfriend != null)
+			PlayState.instance.currentStage.getBoyfriend().scale.set(9, 9);
+	}
+
+	function onSongRetry(event) {
+		super.onGameOver(event);
+        if (PlayState.instance.currentStage.getBoyfriend != null)
+		    PlayState.instance.currentStage.getBoyfriend().scale.set(6, 6);
+	}
+}
+
+class SonicPeelout extends MultiSparrowCharacter {
+    public function new() {
+        super("sonic-peelout");
+	}
+
+	function onCreate(event:ScriptEvent) {
+		super.onCreate(event);
+
+        FunkinMemory.cacheTexture(Paths.image("characters/deathScreens/sonic_gameover"));
+
+		GameOverSubState.musicSuffix = "Prey";
+		GameOverSubState.blueBallSuffix = "-prey";
+	}
+
+	function onGameOver(event) {
+		super.onGameOver(event);
+
+		if (PlayState.instance.currentStage.getBoyfriend != null)
+			PlayState.instance.currentStage.getBoyfriend().scale.set(9, 9);
+	}
+
+	function onSongRetry(event) {
+		super.onGameOver(event);
+        if (PlayState.instance.currentStage.getBoyfriend != null)
+		    PlayState.instance.currentStage.getBoyfriend().scale.set(6, 6);
+	}
+}

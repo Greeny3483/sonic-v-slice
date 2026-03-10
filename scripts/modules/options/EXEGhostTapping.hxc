@@ -1,0 +1,23 @@
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import funkin.save.Save;
+
+class EXEGhostTapping extends Module {
+    public function new() {
+        super("EXEGhostTapping");
+    }
+
+    override function onNoteGhostMiss(event) {
+        super.onNoteGhostMiss(event);
+
+        if (PlayState.instance == null) return;
+
+        doGhostTapping = Save.instance.modOptions["doGhostTapping"];
+
+        if (doGhostTapping) {
+            event.cancel();
+            event.stopPropagation();
+        }
+    }
+}

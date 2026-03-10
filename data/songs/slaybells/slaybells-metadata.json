@@ -4,7 +4,7 @@
 	"artist": "Madame McHummus & Saster",
 	"charter": "Ryzzon",
 	"playData": {
-	  "album": "exeVol3OST",
+	  "album": "exeOST",
 	  "difficulties": ["easy", "normal", "hard"],
 	  "characters": {
 		"player": "sonic_exenew",
@@ -12,8 +12,8 @@
 		"opponent": "exeCHRISTMAS",
 		"instrumental": ""
 	  },
-	  "stage": "christmas",
-	  "noteStyle": "exeFourKey",
+	  "stage": "hillXMAS",
+	  "noteStyle": "exe",
 	  "ratings": {"easy": 3, "normal": 4, "hard": 5},
 	  "previewStart": 0,
 	  "previewEnd": 15000

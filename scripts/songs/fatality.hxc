@@ -2,7 +2,7 @@ import funkin.play.song.Song;
 import funkin.modding.module.ModuleHandler;
 import funkin.play.PlayState;
 
-class FatalitySong extends Song {
+class Fatality extends Song {
     public function new() {
         super("fatality");
     }
@@ -10,13 +10,13 @@ class FatalitySong extends Song {
     override function onCreate(event:ScriptEvent):Void {
         super.onCreate(event);
 
-        ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapOpponentStrumlines', ['exeFatalOpp']);
+        ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapOpponentStrumlines', ['fatalOpponent']);
         PlayState.instance.opponentStrumline.fadeInArrows();
     }
     
     override function onSongRetry(event:ScriptEvent):Void {
         super.onSongRetry(event);
 
-        ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapOpponentStrumlines', ['exeFatalOpp']);
+        ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapOpponentStrumlines', ['fatalOpponent']);
     }
 }

@@ -13,7 +13,7 @@
             ],
             "name": "bg",
             "isPixel": false,
-            "assetPath": "Chamber/Wall",
+            "assetPath": "stages/emeraldChamber/Wall",
             "scroll": [
                 0.5,
                 0.5
@@ -33,7 +33,7 @@
             "name": "ChamberFloor",
             "isPixel": false,
             "startingAnimation": "blue",
-            "assetPath": "Chamber/Floor",
+            "assetPath": "stages/emeraldChamber/Floor",
             "scroll": [
                 1,
                 1
@@ -79,7 +79,7 @@
             "name": "ChamberRock",
             "isPixel": false,
             "startingAnimation": "Idle",
-            "assetPath": "Chamber/FleetwayBGshit",
+            "assetPath": "stages/emeraldChamber/FleetwayBGshit",
             "scroll": [
                 1,
                 1
@@ -125,7 +125,7 @@
             "name": "ChamberPebles",
             "isPixel": false,
             "startingAnimation": "Idle",
-            "assetPath": "Chamber/pebles",
+            "assetPath": "stages/emeraldChamber/pebles",
             "scroll": [
                 1,
                 1
@@ -171,7 +171,7 @@
             "name": "Porker",
             "isPixel": false,
             "startingAnimation": "idle",
-            "assetPath": "Chamber/Porker Lewis",
+            "assetPath": "stages/emeraldChamber/Porker Lewis",
             "scroll": [
                 1.2,
                 1.2
@@ -205,7 +205,7 @@
             "name": "ChamberRainEmerald",
             "isPixel": false,
             "startingAnimation": "Idle",
-            "assetPath": "Chamber/Emerald Beam",
+            "assetPath": "stages/emeraldChamber/Emerald Beam",
             "scroll": [
                 1,
                 1
@@ -239,7 +239,7 @@
             "name": "ChamberRainEmerald2",
             "isPixel": false,
             "startingAnimation": "rain",
-            "assetPath": "Chamber/Emerald Beam Charged",
+            "assetPath": "stages/emeraldChamber/Emerald Beam Charged",
             "scroll": [
                 1,
                 1
@@ -273,7 +273,7 @@
             "name": "ChamberMasterEmerald",
             "isPixel": false,
             "startingAnimation": "fly",
-            "assetPath": "Chamber/Emeralds",
+            "assetPath": "stages/emeraldChamber/Emeralds",
             "scroll": [
                 1,
                 1
@@ -307,7 +307,7 @@
             "name": "Chamber",
             "isPixel": false,
             "startingAnimation": "idle",
-            "assetPath": "Chamber/The Chamber",
+            "assetPath": "stages/emeraldChamber/The Chamber",
             "scroll": [
                 1,
                 1
@@ -365,5 +365,5 @@
             ]
         }
     },
-    "name": "Emerald Chambers"
+    "name": "Chaos Emerald Chamber"
 }

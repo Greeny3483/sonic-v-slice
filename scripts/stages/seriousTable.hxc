@@ -1,34 +1,10 @@
-import flixel.FlxG;
-import flixel.math.FlxBasePoint;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
-import flixel.text.FlxText;
-import flixel.text.FlxTextBorderStyle;
-import flixel.FlxCamera;
-import funkin.audio.FunkinSound;
-import funkin.Conductor;
-import funkin.graphics.FunkinSprite;
-import funkin.modding.module.ScriptedModule;
-import funkin.modding.events.ScriptEvent;
-import funkin.modding.events.ScriptEventDispatcher;
-import funkin.util.ReflectUtil;
-import funkin.Paths;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
-import funkin.play.stage.Bopper;
-import funkin.play.stage.StageProp;
-import funkin.data.stage.StageRegistry;
-import funkin.play.character.CharacterType;
-import funkin.play.character.BaseCharacter;
-import funkin.play.character.CharacterDataParser;
-import funkin.play.song.Song;
-import flixel.FlxSprite;
-import haxe.Json;
-import funkin.play.notes.Strumline;
-import funkin.play.notes.StrumlineNote;
-import flixel.math.FlxMath;
-import flixel.math.FlxPoint;
+
+import EXEOverlays;
 
 class SeriousTable extends Stage
 {
@@ -37,54 +13,39 @@ class SeriousTable extends Stage
 		super('seriousTable');
 	}
 
-    var blackOverlay:FunkinSprite;
-
 	override function onCreate(event:ScriptEvent):Void
 	{
 		super.onCreate(event);
 
-		game = PlayState.instance;
-
-		blackOverlay = FunkinSprite.create(0, 0, 'blackness');
-		blackOverlay.alpha = 1;
-		blackOverlay.zIndex = 400;
-		blackOverlay.scale.set(5, 5);
-		//blackOverlay.cameras = [game.camHUD];
-		blackOverlay.scrollFactor.set(0, 0); // Make it static (doesn't scroll with the camera)
-	
-		// Add the black overlay to the stage
-		game.add(blackOverlay);
+		EXEOverlays.createOverlay(0, "", 400, 1, 5, 000000, 0.0001); // ID, camera, zIndex, alpha, size, color, fade
 	}
+
 	override function onCountdownStart(event:CountdownScriptEvent):Void
 	{
 		super.onCountdownStart(event);
 
         new FlxTimer().start(0.000001, function(tmr)
         {
-			game.camHUD.visible = false;
+			PlayState.instance.camHUD.alpha = 0;
         });
 	}
 
-	override function buildStage()
-	{
-		super.buildStage();
-	}
 	function onStepHit(event:SongTimeScriptEvent):Void
 	{
-		var light = getNamedProp('light');
 
 		if (event.beat % 4 == 0) // 
 		{
-			FlxTween.tween(light, { alpha: 0.7 }, 0.02, { ease: FlxEase.quadInOut, onComplete: function(_) {
-				FlxTween.tween(light, { alpha: 1 }, 0.02, { ease: FlxEase.quadInOut });
+			FlxTween.tween(getNamedProp('light'), { alpha: 0.7 }, 0.02, { ease: FlxEase.quadInOut, onComplete: function(_) {
+				FlxTween.tween(getNamedProp('light'), { alpha: 1 }, 0.02, { ease: FlxEase.quadInOut });
 			}});
 		}
 
-		if (event.step == 31)
-		{
-			game.camHUD.visible = true;
-
-			blackOverlay.alpha = 0.4;
+		switch(event.step) {
+			case 31:
+				PlayState.instance.camHUD.alpha = 1;
+			    EXEOverlays.setAlpha(0, 0.4); // ID, alpha, optional fade
+			case 813:
+				EXEScripts.triggerJumpscare("shadow");
 		}
 	}
 }

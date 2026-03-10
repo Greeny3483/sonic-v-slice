@@ -1,0 +1,70 @@
+import flixel.FlxG;
+import flixel.util.FlxTimer;
+import flixel.system.scaleModes.RatioScaleMode;
+import lime.app.Application;
+import funkin.play.ResultState;
+import funkin.ui.FullScreenScaleMode;
+import funkin.modding.module.Module;
+import funkin.save.Save;
+import funkin.modding.module.ModuleHandler;
+
+class EXEWindow extends Module {
+
+	// (most) Code by ComedyLost
+	// for now, all it does is resize the window
+	// I plan on having most of the window editing code from launchbase in here eventually
+
+    public function new(){
+        super("EXEWindow");
+    }
+
+    public static function resizeWindow(sizeX:Int = 1280, sizeY:Int = 720) {
+        if (FlxG.onMobile) return;
+
+		var wasFullscreen = Application.current.window.fullscreen;
+		Application.current.window.fullscreen = false;
+		var wideScreen = (26 * 6) + 4;
+
+		FlxG.initialWidth = FlxG.width = sizeX;
+		FlxG.initialHeight = FlxG.height = sizeY;
+		FlxG.stage.stageWidth = sizeX;
+		FlxG.resizeWindow(sizeX, sizeY);
+		for (cameras in FlxG.cameras.list) {
+			cameras.width = FlxG.initialWidth;
+			cameras.height = FlxG.initialHeight;
+		}
+		FlxG.camera.width = FlxG.initialWidth;
+		FlxG.camera.height = FlxG.initialHeight;
+    	var resolutionX = Math.ceil(Application.current.window.display.currentMode.width * Application.current.window.scale);
+    	var resolutionY = Math.ceil(Application.current.window.display.currentMode.height * Application.current.window.scale);
+    	Application.current.window.x = (resolutionX - Application.current.window.width) / 2;
+    	Application.current.window.y = (resolutionY - Application.current.window.height) / 2;
+
+		FlxG.scaleMode = new RatioScaleMode(); // Change the mode to recenter the game
+		//Return to fullscreen to fix the camera offset weirdness
+		if (wasFullscreen) Application.current.window.fullscreen = true;
+    }
+
+	override function onSubStateOpenEnd(event) {
+		super.onSubStateOpenEnd(event);
+        if (FlxG.onMobile) return;
+
+		if (Std.isOfType(event.targetState, ResultState)) {
+			resizeWindow(1280, 720);
+		}
+	}
+	
+	override function onSongEnd(event) {
+		super.onSongEnd(event);
+        if (FlxG.onMobile) return;
+
+		resizeWindow(1280, 720);
+	}
+
+	override function onDestroy(event) {
+		super.onDestroy(event);
+        if (FlxG.onMobile) return;
+
+		resizeWindow(1280, 720);
+	}
+}

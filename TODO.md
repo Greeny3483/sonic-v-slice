@@ -1,4 +1,0 @@
-- [x] Add static initBorders() function to ObjectHandler.hxc
-- [x] Modify new() to call initBorders()
-- [x] Modify triggerCinematics() to call initBorders() at start
-- [x] Modify hideCinematics() to call initBorders() at start

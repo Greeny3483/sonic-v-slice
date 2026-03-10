@@ -1,0 +1,372 @@
+import flixel.FlxG;
+import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import funkin.play.PlayState;
+import funkin.play.Countdown;
+import funkin.play.stage.Stage;
+import funkin.graphics.FunkinSprite;
+
+import flixel.addons.display.FlxRuntimeShader;
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.graphics.adobeanimate.FlxAtlasSprite;
+import funkin.modding.base.ScriptedFlxAtlasSprite;
+
+import EXEOverlays;
+import EXEStrumlines;
+
+class FinalActErect extends Stage
+{
+	public function new()
+	{
+		super('finalZoneErect');
+	}
+
+	var colorShaderBf:AdjustColorShader;
+    var colorShaderDad:AdjustColorShader;
+    var colorShaderGf:AdjustColorShader;
+	var wontGetAway:FunkinSprite;
+	var bfLegs1:FunkinSprite;
+	var bfLegs3:FunkinSprite;
+    var opponentFloatOffset:Float = 0; // Offset for sine wave movement
+    var opponentFloatEnabled:Bool = true; // Add this flag
+	var opponentNoteHitShake:Bool = true;
+	var sonicJump:FunkinSprite;
+	var songIntroCircle:FunkinSprite;
+	var songIntroText:FunkinSprite;
+	var redVignette:FunkinSprite;
+
+	public var doRedVignette:Bool = true;
+
+	override function onCreate(event:ScriptEvent):Void
+	{
+		super.onCreate(event);
+
+        songIntroCircle = FunkinSprite.create(0, 0, 'songIntros/circle-default');
+        songIntroCircle.cameras = [PlayState.instance.camCutscene];
+        songIntroCircle.zIndex = 3002;
+        songIntroCircle.x = FlxG.width;
+
+        songIntroText = FunkinSprite.create(0, 0, 'songIntros/text-default');
+        songIntroText.cameras = [PlayState.instance.camCutscene];
+        songIntroText.zIndex = 3002;
+        songIntroText.x = -songIntroText.width;
+
+		sonicJump = FunkinSprite.create(0, 0, 'events/jumpscares/Sonic');
+		sonicJump.cameras = [PlayState.instance.camCutscene];
+		PlayState.instance.add(sonicJump);
+		sonicJump.visible = false;
+
+		wontGetAway = FunkinSprite.create(-150, -300);
+		wontGetAway.frames = Paths.getSparrowAtlas('events/xenoAnims/getaway');
+		wontGetAway.animation.addByPrefix('go', 'no', 24, false);
+		wontGetAway.scale.set(0.7, 0.7);
+		wontGetAway.zIndex = 3001;
+		wontGetAway.cameras = [PlayState.instance.camCutscene];
+		PlayState.instance.add(wontGetAway);
+		wontGetAway.alpha = 0;
+
+		bfLegs1 = FunkinSprite.create(-150, 350);
+		bfLegs1.frames = Paths.getSparrowAtlas('characters/hisleg');
+		bfLegs1.animation.addByPrefix('idle', 'leg', 24, true);
+		bfLegs1.animation.play('idle');
+		bfLegs1.scale.set(1, 1);
+		bfLegs1.zIndex = 2000;
+		PlayState.instance.add(bfLegs1);
+		bfLegs1.visible = false;
+
+		bfLegs3 = FunkinSprite.create(-150, 350);
+		bfLegs3.frames = Paths.getSparrowAtlas('characters/hisleg3');
+		bfLegs3.animation.addByPrefix('idle', 'run legs000', 24, true);
+		bfLegs3.animation.play('idle');
+		bfLegs3.scale.set(1.2, 1.2);
+		bfLegs3.zIndex = 299;
+		PlayState.instance.currentStage.add(bfLegs3);
+		bfLegs3.visible = false;
+
+		redVignette = FunkinSprite.create(0, 0, 'RedderVG');
+		redVignette.zIndex = 1000;
+		redVignette.scrollFactor.set(0, 0); // Make it static (doesn't scroll with the camera)
+		redVignette.cameras = [PlayState.instance.camCutscene];
+		PlayState.instance.add(redVignette);
+		redVignette.alpha = 0;
+
+	}
+
+	public override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
+		
+		PlayState.instance.camHUD.alpha = 0;
+		PlayState.instance.opponentStrumline.visible = false;
+	}
+
+	override function buildStage()
+	{
+		super.buildStage();
+
+		colorShaderBf = new AdjustColorShader();
+        colorShaderDad = new AdjustColorShader();
+
+        colorShaderBf.brightness = -23;
+        colorShaderBf.hue = 12;
+        colorShaderBf.contrast = 7;
+		colorShaderBf.saturation = 0;
+
+        colorShaderDad.brightness = -10;
+        colorShaderDad.hue = -10;
+        colorShaderDad.contrast = 15;
+		colorShaderDad.saturation = 0;
+	}
+
+	override function update(elapsed:Float):Void {
+		super.update(elapsed);
+
+		if (PlayState.instance != null) {
+			if (opponentFloatEnabled) { // Only float if enabled
+				opponentFloatOffset += elapsed * 1.5;
+				PlayState.instance.currentStage.getDad().y += Math.sin(opponentFloatOffset) * 0.5; // Reduced from 1.5 to 0.5
+			}
+		}
+	}
+
+	public function onNoteHit(event:HitNoteScriptEvent)
+	{
+		super.onNoteHit(event);
+
+        if (opponentNoteHitShake) {
+			if (!event.note.noteData.getMustHitNote())
+		    {
+			   if (event.note.holdNoteSprite != null)
+			   {
+				   FlxG.camera.shake(0.005, event.note.holdNoteSprite.sustainLength/1000);
+			   } else {
+				   FlxG.camera.shake(0.005, 0.2);
+			   }
+		    }
+		}
+	}
+
+    function triggerVignette():Void {
+        if (!doRedVignette) return;
+ 
+        FlxTween.tween(redVignette, { alpha: 0.5 }, 0.75, {
+            ease: FlxEase.quadInOut,
+            onComplete: function(tween:FlxTween) {
+                FlxTween.tween(redVignette, { alpha: 0 }, 0.75, {
+                    ease: FlxEase.quadInOut,
+                });
+            }
+        });
+    }
+
+	function onStepHit(event:SongTimeScriptEvent):Void
+	{
+		super.onStepHit(event);
+
+		var introBG = getNamedProp('IntroBG');
+		var flatBand = getNamedProp('FlatBand');
+		var endBG = getNamedProp('EndBG');
+		var greenHill = getNamedProp('GreenHill');
+		var band = getNamedProp('Band');
+
+		if (event.step >= 287 && event.step % 20 == 0 && event.step < 2350) // Flash red vignette repeatedly every 20 steps, stop at 2350
+		{
+			doRedVignette = true;
+			triggerVignette();
+		}
+
+		switch (event.step) {
+			case 0:
+				EXEOverlays.createOverlay(0, "camCutscene", 3000, 1, 5, 000000, 0.0001);
+				EXEOverlays.createOverlay(1, "camCutscene", 4000, 1, 5, 0xFFFFFFFF, 2.5);
+			case 32:
+				EXEOverlays.removeOverlay(0, 0.000001);
+				EXEOverlays.removeOverlay(1, 0.000001);
+			case 156:
+				FlxTween.tween(PlayState.instance.camHUD, { alpha: 1 }, 0.4);
+			    PlayState.instance.currentStage.getDad().zIndex = 7000;
+			case 286:
+				PlayState.instance.camCutscene.flash(FlxColor.WHITE, 1);
+				getNamedProp('IntroBG').zIndex = -50;
+
+				EXEStrumlines.startWiggleModchart();
+
+			    bfLegs1.visible = true;
+			    bfLegs1.animation.play('idle');
+			    PlayState.instance.currentStage.refresh();
+			case 544, 551, 559, 575, 1690, 1824, 1952, 1976, 2081, 2337, 3648, 3917, 3923:
+				FlxG.camera.flash(0xFFFF0000, 0.5);
+			case 1616:
+			    sonicJump.visible = true;
+			    new FlxTimer().start(1.3, function(_) {
+				    sonicJump.visible = false;
+				    FlxG.camera.flash(0xFFFF0000, 0.5);
+			    });
+			case 1740:
+				EXEOverlays.createOverlay(2, "camCutscene", 3000, 1, 5, 000000, 0.0001);
+				wontGetAway.alpha = 1;
+				wontGetAway.animation.play('go');
+				wontGetAway.animation.finishCallback = function() {
+				    wontGetAway.visible = false;
+				    EXEOverlays.removeOverlay(2, 0.000001); // Hide the black overlay after the animation finishes
+			    };
+			case 1760, 2464:
+				FlxG.camera.flash(0xFFFFFFFF, 0.5);
+			case 2335:
+				EXEOverlays.createOverlay(3, "camCutscene", 500, 1, 10, 000000, 3.5);
+			case 2431:
+
+			    PlayState.instance.add(songIntroCircle);
+			    PlayState.instance.add(songIntroText);
+
+			    FlxTween.tween(songIntroCircle, {x: (FlxG.width / 2) - (songIntroCircle.width / 2)}, 1.5, {
+                ease: FlxEase.quadOut,
+                onComplete: function(tween:FlxTween) {
+                    FlxTween.tween(songIntroCircle, {alpha: 0}, 1, {
+                        ease: FlxEase.quadOut,
+                        onComplete: function(tween:FlxTween) {
+                            PlayState.instance.remove(songIntroCircle);
+                        }
+                    });
+                }
+            });
+
+                FlxTween.tween(songIntroText, {x: (FlxG.width / 2) - (songIntroText.width / 2)}, 1.5, {
+                    ease: FlxEase.quadOut,
+                    onComplete: function(tween:FlxTween) {
+                    FlxTween.tween(songIntroText, {alpha: 0}, 1, {
+                        ease: FlxEase.quadOut,
+                        onComplete: function(tween:FlxTween) {
+                            PlayState.instance.remove(songIntroText);
+                        }
+                    });
+                }
+            });
+			case 2350:
+				doRedVignette = false;
+				opponentFloatEnabled = false; // Stop floating at this step
+			case 2461:
+				getNamedProp('GreenHill').zIndex = 100;
+				PlayState.instance.currentStage.refresh();
+			case 2463, 2464, 2465, 2466, 2467:
+				bfLegs1.visible = false;
+			    opponentNoteHitShake = false;
+				EXEStrumlines.stopWiggleModchart();
+				EXEOverlays.removeOverlay(3, 0.000001);
+			case 3137:
+				PlayState.instance.camCutscene.flash(FlxColor.WHITE, 0.5);
+				getNamedProp('GreenHill').zIndex = -100;
+				getNamedProp('EndBG').zIndex = 100;
+				getNamedProp('Band').zIndex = 101;
+				EXEStrumlines.startWiggleModchart();
+				bfLegs1.visible = true;
+                PlayState.instance.currentStage.refresh();
+				doRedVignette = true;
+				opponentNoteHitShake = true; // Re-enable opponent note hit shake
+			    opponentFloatEnabled = true;
+			case 3392, 3520:
+				FlxG.camera.flash(0xFFFF0000, 0.5);
+			case 3648:
+				FlxG.camera.flash(0xFFFFFFFF, 0.5);
+				PlayState.instance.currentStage.getDad().zIndex = 101;
+				getNamedProp('EndBG').zIndex = 100;
+				getNamedProp('FlatBand').zIndex = 102;
+				getNamedProp('Band').zIndex = -10;
+				bfLegs1.visible = false;
+				bfLegs3.visible = true;
+				PlayState.instance.currentStage.getBoyfriend().zIndex = 400;
+				PlayState.instance.currentStage.refresh();
+		}
+	}
+
+	override function onUpdate(event:UpdateScriptEvent):Void
+	{
+		super.onUpdate(event);
+
+        if(PlayState.instance.currentStage.getBoyfriend() != null && PlayState.instance.currentStage.getBoyfriend().shader == null)
+		{
+			PlayState.instance.currentStage.getBoyfriend().shader = colorShaderBf;
+			if (PlayState.instance.bfLegs1 != null && PlayState.instance.bfLegs3 != null) {
+				PlayState.instance.bfLegs1.shader = colorShaderBf;
+			    PlayState.instance.bfLegs3.shader = colorShaderBf;
+			}
+
+			PlayState.instance.currentStage.getDad().shader = colorShaderDad;
+		}
+
+		EXEStrumlines.updateModchart("wiggle");
+    }
+
+	override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
+		
+		if (redVignette != null) {
+			redVignette.visible = false;
+			redVignette.alpha = 0;
+		}
+		
+		// Reset sprite states
+		if (wontGetAway != null) {
+			wontGetAway.visible = false;
+		}
+		
+		if (bfLegs1 != null) {
+			bfLegs1.visible = false;
+		}
+		
+		if (bfLegs3 != null) {
+			bfLegs3.visible = false;
+		}
+		
+		if (sonicJump != null) {
+			sonicJump.visible = false;
+		}
+		
+		// Reset floating and shake states
+		opponentFloatEnabled = true;
+		opponentNoteHitShake = true;
+		opponentFloatOffset = 0;
+		
+		PlayState.instance.camHUD.alpha = 0;
+		
+		// Reset stage prop z-indices to original values
+		var introBG = getNamedProp('IntroBG');
+		var flatBand = getNamedProp('FlatBand');
+		var endBG = getNamedProp('EndBG');
+		var greenHill = getNamedProp('GreenHill');
+		var band = getNamedProp('Band');
+		
+		if (introBG != null) introBG.zIndex = 100;
+		if (flatBand != null) flatBand.zIndex = -17;
+		if (endBG != null) endBG.zIndex = -16;
+		if (greenHill != null) greenHill.zIndex = -100;
+		if (band != null) band.zIndex = -1;
+		
+		// Reset character z-indices
+		if (PlayState.instance != null && PlayState.instance.currentStage != null) {
+			if (PlayState.instance.currentStage.getDad() != null) {
+				PlayState.instance.currentStage.getDad().zIndex = 200; // Reset to default
+			}
+			if (PlayState.instance.currentStage.getBoyfriend() != null) {
+				PlayState.instance.currentStage.getBoyfriend().zIndex = 300; // Reset to default
+			}
+			PlayState.instance.currentStage.refresh();
+		}
+		
+		// Remove intro elements if they exist
+		if (songIntroCircle != null && PlayState.instance != null) {
+			PlayState.instance.remove(songIntroCircle);
+			songIntroCircle.x = FlxG.width; // Reset position
+			songIntroCircle.alpha = 1; // Reset alpha
+		}
+		
+		if (songIntroText != null && PlayState.instance != null) {
+			PlayState.instance.remove(songIntroText);
+			songIntroText.x = -songIntroText.width; // Reset position
+			songIntroText.alpha = 1; // Reset alpha
+		}
+	}
+}

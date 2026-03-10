@@ -7,7 +7,7 @@
 	],
 	"danceEvery": 1,
 	"scale": 1,
-	"name": "Sonic.exe",
+	"name": "Sonic.EXE",
 	"flipX": false,
 	"cameraOffsets": [
 		-10,
@@ -112,7 +112,7 @@
 			"flipX": false,
 			"flipY": false,
 			"frameRate": 24,
-			"assetPath": "characters/getCHA"
+			"assetPath": "characters/specialAnims/sonicexe_gotcha"
 		}
 	]
 }

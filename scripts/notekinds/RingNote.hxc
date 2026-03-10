@@ -1,0 +1,37 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import funkin.Paths;
+import funkin.play.PlayState;
+import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
+import funkin.play.notes.notekind.NoteKind;
+
+class RingNote extends NoteKind
+{
+	public function new(noteKind:String, description:String = "", ?noteStyleId:String, ?params:Array<NoteKindParam>)
+	{
+		super("ringnote", "Ring Note (EXE)", "ringnote", []);
+	}
+
+	function onNoteIncoming(event)
+	{
+		super.onNoteIncoming(event);
+
+		event.note.lowPriority = true;
+		//event.note.offset.x = 40.3;
+	}
+
+	function onNoteHit(event:HitNoteScriptEvent)
+	{
+		if (event.judgement == "perfect" || event.judgement == "good")
+		{
+			FunkinSound.playOnce(Paths.sound("Ring"), 1);
+		}
+	}
+
+	function onNoteMiss(event:NoteScriptEvent)
+	{
+        Highscore.tallies.totalNotes--;
+		event.cancelEvent();
+	}
+}

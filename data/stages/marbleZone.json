@@ -13,7 +13,7 @@
             ],
             "name": "NeedleSky",
             "isPixel": false,
-            "assetPath": "needlemouse/sky",
+            "assetPath": "stages/marbleZone/sky",
             "scroll": [
                 0.8,
                 0.8
@@ -32,7 +32,7 @@
             ],
             "name": "NeedleMountains",
             "isPixel": false,
-            "assetPath": "needlemouse/mountains",
+            "assetPath": "stages/marbleZone/mountains",
             "scroll": [
                 0.9,
                 0.9
@@ -51,7 +51,7 @@
             ],
             "name": "NeedleBuildings",
             "isPixel": false,
-            "assetPath": "needlemouse/buildings",
+            "assetPath": "stages/marbleZone/buildings",
             "scroll": [
                 1,
                 1
@@ -70,7 +70,7 @@
             ],
             "name": "NeedleFront",
             "isPixel": false,
-            "assetPath": "needlemouse/fg",
+            "assetPath": "stages/marbleZone/fg",
             "scroll": [
                 1.05,
                 1.05
@@ -89,7 +89,7 @@
             ],
             "name": "NeedleRuins",
             "isPixel": false,
-            "assetPath": "needlemouse/ruins",
+            "assetPath": "stages/marbleZone/ruins",
             "scroll": [
                 1,
                 1
@@ -108,7 +108,7 @@
             ],
             "name": "NeedleGround",
             "isPixel": false,
-            "assetPath": "needlemouse/CONK_CREET",
+            "assetPath": "stages/marbleZone/CONK_CREET",
             "scroll": [
                 1,
                 1

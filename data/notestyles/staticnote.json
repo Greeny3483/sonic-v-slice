@@ -5,7 +5,7 @@
   "fallback": "funkin",
   "assets": {
     "note": {
-      "assetPath": "STATIC_assets",
+      "assetPath": "notekinds/staticnote/STATIC_assets",
       "scale": 0.7,
       "offsets": [-100, 0],
       "data": {
@@ -44,7 +44,7 @@
       "data": {}
     },
     "noteSplash": {
-      "assetPath": "BloodSplash",
+      "assetPath": "noteskins/BloodSplash",
       "offsets": [35, 10],
       "data": {
         "enabled": true,
@@ -67,25 +67,25 @@
       "data": {
         "enabled": true,
         "left": {
-          "assetPath": "holdCoverExe",
+          "assetPath": "noteskins/holdCoverExe",
           "start": { "prefix": "holdCoverStartRed" },
           "hold": { "prefix": "holdCoverRed" },
           "end": { "prefix": "holdCoverEndRed" }
         },
         "right": {
-          "assetPath": "holdCoverExe",
+          "assetPath": "noteskins/holdCoverExe",
           "start": { "prefix": "holdCoverStartRed" },
           "hold": { "prefix": "holdCoverRed" },
           "end": { "prefix": "holdCoverEndRed" }
         },
         "up": {
-          "assetPath": "holdCoverExe",
+          "assetPath": "noteskins/holdCoverExe",
           "start": { "prefix": "holdCoverStartRed" },
           "hold": { "prefix": "holdCoverRed" },
           "end": { "prefix": "holdCoverEndRed" }
         },
         "down": {
-          "assetPath": "holdCoverExe",
+          "assetPath": "noteskins/holdCoverExe",
           "start": { "prefix": "holdCoverStartRed" },
           "hold": { "prefix": "holdCoverRed" },
           "end": { "prefix": "holdCoverEndRed" }

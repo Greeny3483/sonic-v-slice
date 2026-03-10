@@ -1,79 +1,105 @@
 {
-    "assetPath": "characters/Tails",
-    "name": "Tails.exe",
-    "singTime": 6.1,
-    "version": "1.0.0",
-    "scale": 1.2,
-    "flipX": false,
-    "isPixel": false,
-    "offsets": [
-        0,
-        240
-    ],
-    "cameraOffsets": [
-        -170,
-        0
-    ],
-    "healthIcon": {
-        "id": "tails",
-        "offsets": [
-            0,
-            0
-        ],
-        "flipX": false,
-        "isPixel": false,
-        "scale": 1
-    },
-    "animations": [
-        {
-            "name": "idle",
-            "prefix": "Tails IDLE",
-            "looped": true,
-            "offsets": [
-                0,
-                0
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singLEFT",
-            "prefix": "Tails LEFT",
-            "looped": false,
-            "offsets": [
-                85,
-                -15
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singDOWN",
-            "prefix": "Tails DOWN",
-            "looped": false,
-            "offsets": [
-                20,
-                -62
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singUP",
-            "prefix": "Tails UP",
-            "looped": false,
-            "offsets": [
-                20,
-                45
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singRIGHT",
-            "prefix": "Tails RIGHT",
-            "looped": false,
-            "offsets": [
-                0,
-                -20
-            ],
-            "frameRate": 24
-        }
-    ]
+	"version": "1.0.0",
+	"offsets": [
+		0,
+		240
+	],
+	"renderType": "sparrow",
+	"danceEvery": 1,
+	"applyStageMatrix": false,
+	"scale": 1.2,
+	"name": "Tails.EXE",
+	"flipX": false,
+	"cameraOffsets": [
+		-170,
+		0
+	],
+	"isPixel": false,
+	"singTime": 6.1,
+	"startingAnimation": "idle",
+	"assetPath": "characters/Tails",
+	"healthIcon": {
+		"isPixel": false,
+		"offsets": [
+			0,
+			0
+		],
+		"scale": 1,
+		"id": "tails",
+		"flipX": false
+	},
+	"atlasSettings": {
+		"applyStageMatrix": false,
+		"useRenderTexture": false,
+		"filterQuality": 1,
+		"cacheOnLoad": false,
+		"swfMode": true
+	},
+	"animations": [
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "Tails IDLE",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "idle",
+			"looped": true
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				84,
+				-13
+			],
+			"frameRate": 24,
+			"prefix": "Tails LEFT",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singLEFT",
+			"looped": false
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				17,
+				-51
+			],
+			"frameRate": 24,
+			"prefix": "Tails DOWN",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singDOWN",
+			"looped": false
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				20,
+				39
+			],
+			"frameRate": 24,
+			"prefix": "Tails UP",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singUP",
+			"looped": false
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				0,
+				-16
+			],
+			"frameRate": 24,
+			"prefix": "Tails RIGHT",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singRIGHT",
+			"looped": false
+		}
+	]
 }

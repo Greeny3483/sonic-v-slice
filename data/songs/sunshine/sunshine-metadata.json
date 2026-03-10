@@ -3,7 +3,7 @@
     "songName": "Sunshine",
     "artist": "Uptaunt",
     "playData": {
-        "album": "exeVol2OST",
+        "album": "exeOST",
         "songVariations": [],
         "difficulties": [
             "easy",
@@ -15,7 +15,7 @@
             "opponent": "tailsdoll"
         },
         "stage": "spotlight",
-        "noteStyle": "exeSegaSaturn",
+        "noteStyle": "saturn",
         "ratings": {
             "easy": 6,
             "normal": 6,

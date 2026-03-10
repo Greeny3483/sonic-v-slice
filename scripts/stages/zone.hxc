@@ -1,0 +1,36 @@
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+
+class Zone extends Stage
+{
+	public function new()
+	{
+		super('zone');
+	}
+
+	override function onCreate(event:ScriptEvent):Void
+	{
+		super.onCreate(event);
+
+		if (FlxG.onMobile) getNamedProp('FakerGround').scale.set(1.11, 1.2);
+	}
+
+	function onStepHit(event:SongTimeScriptEvent):Void
+	{
+		if (PlayState.instance.currentSong.id.toLowerCase() != "faker") return;
+
+		switch (event.step) {
+			case 768:
+				FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 3);
+			case 800, 809, 815, 824, 828, 832, 836, 840, 844, 848:
+				EXEScripts.triggerStatic("camCutscene", 1, false);
+			case 856:
+				EXEScripts.triggerStaticLoop("camCutscene", 1, false);
+            case 883:
+				EXEScripts.stopStaticLoop();
+				EXEOverlays.createOverlay(0, "camCutscene", 5000, 1, 10, 000000, 0.0001); // ID, camera, zIndex, alpha, size, color, fade
+		}
+	}
+}

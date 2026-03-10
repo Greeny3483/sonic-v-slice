@@ -4,7 +4,7 @@
   "artist": "Juno, punkett, & MarStarBro",
   "charter": "MarStarBro",
   "playData": {
-    "album": "exeVol2OST",
+    "album": "exeOST",
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf",
@@ -12,8 +12,8 @@
       "opponent": "tails",
       "instrumental": ""
     },
-    "stage": "xenoStage",
-    "noteStyle": "exeFourKey",
+    "stage": "hillAct3",
+    "noteStyle": "exe",
     "ratings": {"easy": 8, "normal": 10, "hard": 12},
     "previewStart": 0,
     "previewEnd": 15000

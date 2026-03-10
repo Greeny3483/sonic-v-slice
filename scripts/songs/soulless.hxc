@@ -1,0 +1,27 @@
+import flixel.util.FlxTimer;
+import funkin.play.song.Song;
+import funkin.play.Countdown;
+import funkin.modding.module.ModuleHandler;
+
+class SoullessSong extends Song {
+    public function new() {
+        super("soulless");
+    }
+
+    override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        EXEStrumlines.changeStrumlineMode("middlescroll");
+    }
+
+	public override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
+
+        new FlxTimer().start(0.000001, function(tmr)
+        {
+            Countdown.skipCountdown();
+        });
+	}
+}
+

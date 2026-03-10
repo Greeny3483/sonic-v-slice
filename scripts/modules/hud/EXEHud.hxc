@@ -3,461 +3,354 @@ import flixel.FlxSprite;
 import funkin.Paths;
 import funkin.play.PlayState;
 import funkin.Preferences;
+import funkin.save.Save;
 import funkin.modding.module.Module;
 import funkin.modding.module.ModuleHandler;
 import funkin.modding.events.ScriptEvent;
-import funkin.util.Constants;
 import haxe.ds.StringMap;
 import Math;
 import Std;
 
 class EXEHud extends Module
 {
-    // Pixel-style HUD sprites
     var sonicMissesSprite:FlxSprite;
     var sonicTimeSprite:FlxSprite;
     var sonicScoreSprite:FlxSprite;
     var sonicColonSprite:FlxSprite;
-    var sonicHealthSprite:FlxSprite; // Health display for fight-or-flight
-    
+    var sonicHealthSprite:FlxSprite;
+
     var scoreNumbers:Array<FlxSprite> = [];
     var missesNumbers:Array<FlxSprite> = [];
     var timeNumbers:Array<FlxSprite> = [];
-    var healthNumbers:Array<FlxSprite> = []; // Health numbers for fight-or-flight
-    
+    var healthNumbers:Array<FlxSprite> = [];
+
     var misses:Int = 0;
-    
+
     var textX:Float = 20;
     var textY:Float = 0;
     var hudOffset:Float = 50;
-    
     var fontStyle:String = "sonic1";
     var numbersOffset:Array<Int> = [7, 11];
-    
     var inPlay:Bool = false;
-
-    var doRetroAspectRatio:Bool = false;
 
     public function new()
     {
         super('EXEHud');
     }
-    
-    override function onCountdownStart(ev:ScriptEvent) {
+
+    override function onCountdownStart(ev:ScriptEvent)
+    {
         super.onCountdownStart(ev);
-        
+    }
+
+    function onPlayStateEnter()
+    {
         var playState = PlayState.instance;
         if (playState == null) return;
-    }
-    
-    function onPlayStateEnter() {
-        if (PlayState.instance == null) return;
-        
-        var exeHudEnabled = true;
-        try {
-            var exeOptions = ModuleHandler.getModule("EXEOptions");
-            if (exeOptions != null) {
-                exeHudEnabled = exeOptions.scriptGet("exehud");
-            }
-        } catch (e:Dynamic) {
-            exeHudEnabled = true;
-        }
-        
+
+        doEXEHud = Save.instance.modOptions["doGenesisHUD"];
+
         cleanup();
-        
-        if (!exeHudEnabled) {
-            if (PlayState.instance.scoreText != null) {
-                PlayState.instance.scoreText.visible = true;
-            }
+
+        if (!doEXEHud)
+        {
+            if (playState.scoreText != null) playState.scoreText.visible = true;
             return;
         }
-        
-        determineFontStyle();
-        
+
+        fontStyle = getFontStyle();
         setupPositioning();
-        
-        if (PlayState.instance.scoreText != null) {
-            PlayState.instance.scoreText.visible = false;
+
+        if (playState.scoreText != null) playState.scoreText.visible = false;
+        var healthBarAsset = (playState.currentStage.id == "launchbase") ? 'sonicUI/sonic3/healthbar' : 'sonicUI/healthbar-light';
+
+        if (playState.healthBarBG != null)
+        {
+            playState.healthBarBG.loadGraphic(Paths.image(healthBarAsset));
+            playState.healthBarBG.cameras = [playState.camHUD];
         }
-        
-        if (PlayState.instance.healthBarBG != null) {
-            var currentStage = PlayState.instance.currentStage?.id ?? "";
-            var healthBarAsset = (currentStage == "fatalZone") ? 'fatalHealth' : 'hpR-light';
-            PlayState.instance.healthBarBG.loadGraphic(Paths.image(healthBarAsset));
-            PlayState.instance.healthBarBG.cameras = [PlayState.instance.camHUD];
-        }
-        
-        if (PlayState.instance.healthBar != null) {
-            PlayState.instance.healthBar.y = FlxG.height * (!Preferences.downscroll ? 0.88 : 0.12);
-            PlayState.instance.healthBar.screenCenter(0x01);
-            PlayState.instance.healthBar.x += 100;
-            PlayState.instance.healthBar.cameras = [PlayState.instance.camHUD];
-            
-            var currentStage = PlayState.instance.currentStage?.id ?? "";
-            if (currentStage == "fatalZone") {
-                PlayState.instance.healthBar.x += 50;
-                PlayState.instance.healthBarBG.scale.set(1.2, 1.3);
-                PlayState.instance.healthBar.scale.set(0.8, 1.1);
-            } else {
-                PlayState.instance.healthBar.scale.set(1.010, 1.2);
+
+        if (playState.healthBar != null)
+        {
+            playState.healthBar.y = FlxG.height * (!Preferences.downscroll ? 0.88 : 0.12);
+            playState.healthBar.screenCenter(0x01);
+            playState.healthBar.cameras = [playState.camHUD];
+             playState.healthBar.x += 100;
+
+            if (playState.currentStage.id == "launchbase")
+            {
+                playState.healthBar.setPosition(310, 633);
+                playState.healthBarBG.setPosition(303, 630); // The white bar
+                playState.healthBarBG.scale.set(1.3, 1.3);
+                playState.healthBar.scale.set(0.865, 1.1);
+            }
+            else
+            {
+                playState.healthBarBG.setPosition(playState.healthBar.x - 28, playState.healthBar.y - 7);
+                playState.healthBar.scale.set(1.010, 1.2);
             }
         }
-        
-        if (PlayState.instance.healthBarBG != null && PlayState.instance.healthBar != null) {
-            //PlayState.instance.healthBarBG.setPosition(PlayState.instance.healthBar.x - 6, PlayState.instance.healthBar.y - 5);
-            PlayState.instance.healthBarBG.setPosition(PlayState.instance.healthBar.x + - 28, PlayState.instance.healthBar.y - 7);
-        }
-        
-        createPixelHUD();
-        
-        PlayState.instance.refresh();
-    }
-    
-    function determineFontStyle() {
-        var currentStage = PlayState.instance.currentStage?.id ?? "";
-        
-        if (currentStage == "fatalZone") {
-            fontStyle = "sonic3";
-        } else if (currentStage == "horizon") {
-            fontStyle = "chaotix";
-            numbersOffset = [7, 13];
-        } else if (currentStage.indexOf("sonic2") != -1) {
-            fontStyle = "sonic2";
-            numbersOffset = [8, 11];
-        } else {
-            fontStyle = "sonic1";
-            numbersOffset = [7, 11];
-        }
-    }
-    
-    function setupPositioning() {
-        doRetroAspectRatio = ModuleHandler.getModule("EXEOptions").scriptGet("screenratio");
-        doBonusFeatures = ModuleHandler.getModule('EXEOptions').scriptGet('bonusfeatures');
 
-        if (!Preferences.downscroll) {
-            textY = FlxG.height - 160;
-        } else {
-            textY = hudOffset;
-        }
-        
-        var currentStage = PlayState.instance.currentStage?.id ?? "";
-        if (currentStage == "fatalZone" && doRetroAspectRatio && FlxG.onMobile) {
-            textX = 160;
-        } else {
-            textX = 20;
-        }
+        createPixelHUD();
+        playState.refresh();
     }
-    
-    function createPixelHUD() {
+
+    function getFontStyle():String
+    {
+        if (PlayState.instance.currentStage.id == "launchbase") return "sonic3";
+        if (PlayState.instance.currentStage.id.indexOf("sonic2") != -1)
+        {
+            numbersOffset = [8, 11];
+            return "sonic2";
+        }
+        numbersOffset = [7, 11];
+        return "sonic1";
+    }
+
+    function setupPositioning()
+    {
+        doScreenEdit = Save.instance.modOptions["screenratio"];
+
+        textY = !Preferences.downscroll ? FlxG.height - 160 : hudOffset;
+        textX = (PlayState.instance.currentStage.id == "launchbase" && doScreenEdit && FlxG.onMobile) ? 160 : 20;
+    }
+
+    function createPixelHUD()
+    {
         var directory = 'sonicUI/' + fontStyle;
-        var currentSongId = PlayState.instance.currentSong.id.toLowerCase();
-        
-        if (currentSongId == 'fight-or-flight') {
-            sonicHealthSprite = new FlxSprite(textX, textY - hudOffset);
-            sonicHealthSprite.loadGraphic(Paths.image('sonicUI/sonic1/health'));
-            sonicHealthSprite.antialiasing = false;
-            sonicHealthSprite.scale.set(3.5, 3.5);
-            sonicHealthSprite.updateHitbox();
-            sonicHealthSprite.zIndex = 10000;
-            sonicHealthSprite.cameras = [PlayState.instance.camHUD];
-            PlayState.instance.add(sonicHealthSprite);
+
+        if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless')
+        {
+            sonicHealthSprite = createSprite('sonicUI/sonic1/health', textX, textY - hudOffset, 3.5);
         }
-        
-        sonicMissesSprite = new FlxSprite(textX, textY);
-        sonicMissesSprite.loadGraphic(Paths.image(directory + '/misses'));
-        sonicMissesSprite.antialiasing = false;
-        sonicMissesSprite.scale.set(3.5, 3.5);
-        sonicMissesSprite.updateHitbox();
-        sonicMissesSprite.zIndex = 10000;
-        sonicMissesSprite.cameras = [PlayState.instance.camHUD];
-        PlayState.instance.add(sonicMissesSprite);
-        
-        sonicTimeSprite = new FlxSprite(textX, textY + hudOffset);
-        sonicTimeSprite.loadGraphic(Paths.image(directory + '/time'));
-        sonicTimeSprite.antialiasing = false;
-        sonicTimeSprite.scale.set(3.5, 3.5);
-        sonicTimeSprite.updateHitbox();
-        sonicTimeSprite.zIndex = 10000;
-        sonicTimeSprite.cameras = [PlayState.instance.camHUD];
-        PlayState.instance.add(sonicTimeSprite);
-        
-        sonicScoreSprite = new FlxSprite(textX, textY + (hudOffset * 2));
-        sonicScoreSprite.loadGraphic(Paths.image(directory + '/score'));
-        sonicScoreSprite.antialiasing = false;
-        sonicScoreSprite.scale.set(3.5, 3.5);
-        sonicScoreSprite.updateHitbox();
-        sonicScoreSprite.zIndex = 10000;
-        sonicScoreSprite.cameras = [PlayState.instance.camHUD];
-        PlayState.instance.add(sonicScoreSprite);
-        
-        sonicColonSprite = new FlxSprite();
-        sonicColonSprite.loadGraphic(Paths.image(directory + '/colon'));
-        sonicColonSprite.antialiasing = false;
-        sonicColonSprite.scale.set(3, 3);
-        sonicColonSprite.updateHitbox();
-        sonicColonSprite.zIndex = 10000;
-        sonicColonSprite.cameras = [PlayState.instance.camHUD];
-        PlayState.instance.add(sonicColonSprite);
-        
-        scoreNumbers = [];
-        missesNumbers = [];
-        timeNumbers = [];
-        
+
+        sonicMissesSprite = createSprite(directory + '/misses', textX, textY, 3.5);
+        sonicTimeSprite = createSprite(directory + '/time', textX, textY + hudOffset, 3.5);
+        sonicScoreSprite = createSprite(directory + '/score', textX, textY + (hudOffset * 2), 3.5);
+        sonicColonSprite = createSprite(directory + '/colon', 0, 0, 3);
+
         var timeLabels = ['TenMinutes', 'Minutes', 'TenSeconds', 'Seconds'];
-        for (i in 0...timeLabels.length) {
-            var timeNum = createNumberSprite(directory + '/numbers');
-            timeNumbers.push(timeNum);
-            PlayState.instance.add(timeNum);
+        for (i in 0...timeLabels.length)
+        {
+            timeNumbers.push(createNumberSprite(directory + '/numbers'));
         }
-        
+
         updatePixelHUDPositions();
     }
-    
-    function createNumberSprite(graphicPath:String):FlxSprite {
+
+    function createSprite(path:String, x:Float, y:Float, scale:Float):FlxSprite
+    {
+        var sprite = new FlxSprite(x, y);
+        sprite.loadGraphic(Paths.image(path));
+        sprite.antialiasing = false;
+        sprite.scale.set(scale, scale);
+        sprite.updateHitbox();
+        sprite.zIndex = 10000;
+        sprite.cameras = [PlayState.instance.camHUD];
+        PlayState.instance.add(sprite);
+        return sprite;
+    }
+
+    function createNumberSprite(graphicPath:String):FlxSprite
+    {
         var sprite = new FlxSprite();
         sprite.loadGraphic(Paths.image(graphicPath), true, numbersOffset[0], numbersOffset[1]);
         sprite.animation.add('numbers', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 0, false);
         sprite.antialiasing = false;
         sprite.scale.set(3, 3);
         sprite.updateHitbox();
+        sprite.zIndex = 10000;
         sprite.cameras = [PlayState.instance.camHUD];
+        PlayState.instance.add(sprite);
         return sprite;
     }
-    
 
-    
-    function updatePixelHUDPositions() {
-        if (sonicColonSprite != null && sonicTimeSprite != null) {
-            sonicColonSprite.setPosition(
-                sonicTimeSprite.x + sonicTimeSprite.width + 44,
-                sonicTimeSprite.y
-            );
+    function updatePixelHUDPositions()
+    {
+        if (sonicColonSprite != null && sonicTimeSprite != null)
+        {
+            sonicColonSprite.setPosition(sonicTimeSprite.x + sonicTimeSprite.width + 44, sonicTimeSprite.y);
         }
-        
+
         var hudTimeOffsets = [22, 22, 28, 27];
-        for (i in 0...timeNumbers.length) {
-            if (timeNumbers[i] != null && sonicTimeSprite != null) {
-                timeNumbers[i].setPosition(
-                    sonicTimeSprite.x + sonicTimeSprite.width - 26 + (hudTimeOffsets[i] * (i + 1)),
-                    sonicTimeSprite.y + 2
-                );
+        for (i in 0...timeNumbers.length)
+        {
+            if (timeNumbers[i] != null && sonicTimeSprite != null)
+            {
+                timeNumbers[i].setPosition(sonicTimeSprite.x + sonicTimeSprite.width - 26 + (hudTimeOffsets[i] * (i + 1)), sonicTimeSprite.y + 2);
             }
         }
     }
-    
-    function updatePixelNumbers() {
+
+    function updatePixelNumbers()
+    {
         var directory = 'sonicUI/' + fontStyle;
-        var currentSongId = PlayState.instance.currentSong.id.toLowerCase();
 
-        if (currentSongId == 'fight-or-flight' && sonicHealthSprite != null) {
-
+        if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless' && sonicHealthSprite != null)
+        {
             var healthPercent = Math.round((PlayState.instance.health / 2) * 100);
-
             if (healthPercent < 0) healthPercent = 0;
             if (healthPercent > 100) healthPercent = 100;
             var healthStr = Std.string(healthPercent);
             ensureNumberSprites(healthNumbers, healthStr.length, directory + '/numbers');
-            for (i in 0...healthStr.length) {
+            for (i in 0...healthStr.length)
+            {
                 var digit = Std.parseInt(healthStr.charAt(i));
                 if (digit == null) digit = 0;
-                
-                if (i < healthNumbers.length && healthNumbers[i] != null && healthNumbers[i].animation != null) {
+                if (i < healthNumbers.length && healthNumbers[i] != null && healthNumbers[i].animation != null)
+                {
                     healthNumbers[i].animation.play('numbers');
-                    if (healthNumbers[i].animation.curAnim != null) {
-                        healthNumbers[i].animation.curAnim.curFrame = digit;
-                    }
-                    healthNumbers[i].setPosition(
-                        sonicHealthSprite.x + sonicHealthSprite.width + 22 + (22 * i),
-                        sonicHealthSprite.y + 2
-                    );
+                    if (healthNumbers[i].animation.curAnim != null) healthNumbers[i].animation.curAnim.curFrame = digit;
+                    healthNumbers[i].setPosition(sonicHealthSprite.x + sonicHealthSprite.width + 22 + (22 * i), sonicHealthSprite.y + 2);
                 }
             }
         }
-        
+
         var missesStr = Std.string(misses);
         ensureNumberSprites(missesNumbers, missesStr.length, directory + '/numbers');
-        for (i in 0...missesStr.length) {
+        for (i in 0...missesStr.length)
+        {
             var digit = Std.parseInt(missesStr.charAt(i));
             if (digit == null) digit = 0;
-            
-            if (i < missesNumbers.length && missesNumbers[i] != null && missesNumbers[i].animation != null) {
+            if (i < missesNumbers.length && missesNumbers[i] != null && missesNumbers[i].animation != null)
+            {
                 missesNumbers[i].animation.play('numbers');
-                if (missesNumbers[i].animation.curAnim != null) {
-                    missesNumbers[i].animation.curAnim.curFrame = digit;
-                }
-                missesNumbers[i].setPosition(
-                    sonicMissesSprite.x + sonicMissesSprite.width + 22 + (22 * i),
-                    sonicMissesSprite.y + 2
-                );
+                if (missesNumbers[i].animation.curAnim != null) missesNumbers[i].animation.curAnim.curFrame = digit;
+                missesNumbers[i].setPosition(sonicMissesSprite.x + sonicMissesSprite.width + 22 + (22 * i), sonicMissesSprite.y + 2);
             }
         }
-        
+
         var scoreStr = Std.string(PlayState.instance.songScore);
         ensureNumberSprites(scoreNumbers, scoreStr.length, directory + '/numbers');
-        for (i in 0...scoreStr.length) {
+        for (i in 0...scoreStr.length)
+        {
             var digit = Std.parseInt(scoreStr.charAt(i));
             if (digit == null) digit = 0;
-            
-            if (i < scoreNumbers.length && scoreNumbers[i] != null && scoreNumbers[i].animation != null) {
+            if (i < scoreNumbers.length && scoreNumbers[i] != null && scoreNumbers[i].animation != null)
+            {
                 scoreNumbers[i].animation.play('numbers');
-                if (scoreNumbers[i].animation.curAnim != null) {
-                    scoreNumbers[i].animation.curAnim.curFrame = digit;
-                }
-                scoreNumbers[i].setPosition(
-                    sonicScoreSprite.x + sonicScoreSprite.width + 22 + (22 * i),
-                    sonicScoreSprite.y + 2
-                );
+                if (scoreNumbers[i].animation.curAnim != null) scoreNumbers[i].animation.curAnim.curFrame = digit;
+                scoreNumbers[i].setPosition(sonicScoreSprite.x + sonicScoreSprite.width + 22 + (22 * i), sonicScoreSprite.y + 2);
             }
         }
-        
+
         var songPos = Math.max(0, PlayState.instance.conductorInUse.songPosition);
-        if (timeNumbers.length >= 4) {
-            for (i in 0...4) {
-                if (timeNumbers[i] != null && timeNumbers[i].animation != null) {
+        if (timeNumbers.length >= 4)
+        {
+            for (i in 0...4)
+            {
+                if (timeNumbers[i] != null && timeNumbers[i].animation != null)
+                {
                     timeNumbers[i].animation.play('numbers');
-                    if (timeNumbers[i].animation.curAnim != null) {
-                        switch (i) {
-                            case 0: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 600000) % 10); // Ten minutes
-                            case 1: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 60000) % 10);  // Minutes
-                            case 2: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 10000) % 6);   // Ten seconds
-                            case 3: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 1000) % 10);   // Seconds
+                    if (timeNumbers[i].animation.curAnim != null)
+                    {
+                        switch (i)
+                        {
+                            case 0: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 600000) % 10);
+                            case 1: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 60000) % 10);
+                            case 2: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 10000) % 6);
+                            case 3: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 1000) % 10);
                         }
                     }
                 }
             }
         }
     }
-    
-    function ensureNumberSprites(array:Array<FlxSprite>, count:Int, graphicPath:String) {
-        while (array.length < count) {
-            var sprite = createNumberSprite(graphicPath);
-            array.push(sprite);
-            PlayState.instance.add(sprite);
+
+    function ensureNumberSprites(array:Array<FlxSprite>, count:Int, graphicPath:String)
+    {
+        while (array.length < count)
+        {
+            array.push(createNumberSprite(graphicPath));
         }
-        
-        for (i in count...array.length) {
-            if (array[i] != null) {
-                array[i].visible = false;
-            }
+        for (i in count...array.length)
+        {
+            if (array[i] != null) array[i].visible = false;
         }
-        
-        for (i in 0...count) {
-            if (array[i] != null) {
-                array[i].visible = true;
-            }
+        for (i in 0...count)
+        {
+            if (array[i] != null) array[i].visible = true;
         }
     }
-    
 
-    
-    function cleanup() {
+    function cleanup()
+    {
         var stuffToRemove = [sonicMissesSprite, sonicTimeSprite, sonicScoreSprite, sonicColonSprite, sonicHealthSprite];
-        
-        for (thing in stuffToRemove) {
+        for (thing in stuffToRemove)
+        {
             if (thing != null) thing.destroy();
         }
-        
-        // Clean up number arrays
-        for (sprite in scoreNumbers) {
-            if (sprite != null) sprite.destroy();
-        }
-        for (sprite in missesNumbers) {
-            if (sprite != null) sprite.destroy();
-        }
-        for (sprite in timeNumbers) {
-            if (sprite != null) sprite.destroy();
-        }
-        for (sprite in healthNumbers) {
-            if (sprite != null) sprite.destroy();
-        }
-        
-        // Reset variables
+
+        for (sprite in scoreNumbers) if (sprite != null) sprite.destroy();
+        for (sprite in missesNumbers) if (sprite != null) sprite.destroy();
+        for (sprite in timeNumbers) if (sprite != null) sprite.destroy();
+        for (sprite in healthNumbers) if (sprite != null) sprite.destroy();
+
         misses = 0;
-        
+
         sonicMissesSprite = null;
         sonicTimeSprite = null;
         sonicScoreSprite = null;
         sonicColonSprite = null;
         sonicHealthSprite = null;
-        
+
         scoreNumbers = [];
         missesNumbers = [];
         timeNumbers = [];
         healthNumbers = [];
     }
-    
-    override function onBeatHit(ev:ScriptEvent) {
-        super.onBeatHit(ev);
-    }
-    
-    override function onSongEvent(ev:ScriptEvent) {
-        super.onSongEvent(ev);
-    }
-    
-    override function onPause(ev:ScriptEvent) {
-        super.onPause(ev);
-    }
-    
-    override function onDestroy(ev:ScriptEvent) {
+
+    override function onDestroy(ev:ScriptEvent)
+    {
         super.onDestroy(ev);
         cleanup();
     }
-    
-    override function onUpdate(ev:ScriptEvent) {
+
+    override function onUpdate(ev:ScriptEvent)
+    {
         super.onUpdate(ev);
         if (!inPlay) return;
-        
-        var exeHudEnabled = true;
-        try {
-            var exeOptions = ModuleHandler.getModule("EXEOptions");
-            if (exeOptions != null) {
-                exeHudEnabled = exeOptions.scriptGet("exehud");
-            }
-        } catch (e:Dynamic) {
-            exeHudEnabled = true;
-        }
-        
-        if (!exeHudEnabled) return;
-        
+
         updatePixelNumbers();
     }
-    
-    override function onNoteMiss(ev:ScriptEvent) {
+
+    override function onNoteMiss(ev:ScriptEvent)
+    {
         super.onNoteMiss(ev);
-        if (!inPlay || ev.healthChange == 0 || ev.note.noteData.kind == "phantomnote") return;
-        
+        if (!inPlay || ev.healthChange == 0 || ev.note.noteData.kind == "phantomnote" || ev.note.noteData.kind == "ringnote") return;
         misses++;
     }
-    
-    override function onNoteGhostMiss(ev:ScriptEvent) {
+
+    override function onNoteGhostMiss(ev:ScriptEvent)
+    {
         super.onNoteGhostMiss(ev);
 
-        enableGhostTap = ModuleHandler.getModule("EXEOptions").scriptGet("ghosttap");
-
-        if (!inPlay || ev.healthChange == 0 || enableGhostTap) return;
-        
+        doGhostTapping = Save.instance.modOptions["ghosttap"];
+        if (!inPlay || ev.healthChange == 0 || doGhostTapping) return;
         misses++;
     }
-    
-    override function onSongRetry(ev:ScriptEvent) {
+
+    override function onSongRetry(ev:ScriptEvent)
+    {
         super.onSongRetry(ev);
-        
         misses = 0;
     }
-    
-    override function onStateChangeBegin(ev:ScriptEvent) {
+
+    override function onStateChangeBegin(ev:ScriptEvent)
+    {
         super.onStateChangeBegin(ev);
-        
-        if (ev.targetState == null || !Std.isOfType(ev.targetState, PlayState)) {
+        if (ev.targetState == null || !Std.isOfType(ev.targetState, PlayState))
+        {
             cleanup();
             inPlay = false;
         }
     }
-    
-    override function onStateChangeEnd(ev:ScriptEvent) {
+
+    override function onStateChangeEnd(ev:ScriptEvent)
+    {
         super.onStateChangeEnd(ev);
-        
-        if (ev.targetState != null && Std.isOfType(ev.targetState, PlayState)) {
+        if (ev.targetState != null && Std.isOfType(ev.targetState, PlayState))
+        {
             onPlayStateEnter();
             inPlay = true;
         }

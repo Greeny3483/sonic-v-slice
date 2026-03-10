@@ -4,7 +4,7 @@ import funkin.play.character.CharacterType;
 import funkin.play.PlayState;
 import funkin.save.Save;
 
-class SonicExeP2 extends SparrowCharacter {
+class SonicEXEAct2 extends SparrowCharacter {
 	public function new() {
 		super("sonicexep2");
 	}
@@ -16,9 +16,31 @@ class SonicExeP2 extends SparrowCharacter {
         curDad = PlayState.instance.currentStage.getDad().characterId;
         if (curDad == "pixelrunsonic" || curDad == "finalrunsonic") return;
         
-		doCameraShake = Save.instance.modOptions["doCameraShake"];
+		doCameraShakes = Save.instance.modOptions["doCameraShakes"];
 
-        if (!event.note.noteData.getMustHitNote() && doCameraShake)
+        if (!event.note.noteData.getMustHitNote() && doCameraShakes)
+        {
+            if (event.note.holdNoteSprite != null)
+            {
+                FlxG.camera.shake(0.01, event.note.holdNoteSprite.sustainLength/1000);
+            } else {
+                FlxG.camera.shake(0.01, 0.2);
+            }
+        }
+    }
+}
+class SonicEXEAct2Mad extends SparrowCharacter {
+	public function new() {
+		super("sonicexep2mad");
+	}
+
+	override function onNoteHit(event:HitNoteScriptEvent)
+    {
+        super.onNoteHit(event);
+        
+		doCameraShakes = Save.instance.modOptions["doCameraShakes"];
+
+        if (!event.note.noteData.getMustHitNote() && doCameraShakes)
         {
             if (event.note.holdNoteSprite != null)
             {

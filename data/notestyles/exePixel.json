@@ -1,6 +1,6 @@
 {
   "version": "1.1.0",
-  "name": "Pixel (Exe)",
+  "name": "EXE (Pixel)",
   "author": "Moawling",
   "fallback": "funkin",
   "assets": {
@@ -47,7 +47,7 @@
       "data": {}
     },
     "noteSplash": {
-      "assetPath": "PixelBloodSplash",
+      "assetPath": "noteskins/PixelBloodSplash",
       "offsets": [35, 10],
       "isPixel": true,
       "data": {

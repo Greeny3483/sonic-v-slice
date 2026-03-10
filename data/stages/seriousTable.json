@@ -13,7 +13,7 @@
             ],
             "name": "bg",
             "isPixel": false,
-            "assetPath": "bgs/serious/bg",
+            "assetPath": "stages/seriousTable/bg",
             "scroll": [
                 1,
                 1
@@ -32,7 +32,7 @@
             ],
             "name": "table",
             "isPixel": false,
-            "assetPath": "bgs/serious/table",
+            "assetPath": "stages/seriousTable/table",
             "scroll": [
                 1,
                 1
@@ -51,7 +51,7 @@
             ],
             "name": "light",
             "isPixel": false,
-            "assetPath": "bgs/serious/light",
+            "assetPath": "stages/seriousTable/light",
             "scroll": [
                 1,
                 1
@@ -95,5 +95,5 @@
             ]
         }
     },
-    "name": "Badass Table"
+    "name": "Table Of Badassery"
 }

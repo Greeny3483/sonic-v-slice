@@ -1,0 +1,83 @@
+{
+    "assetPath": "characters/sonic_gameover",
+    "name": "bf-sonic-gameover.json",
+    "singTime": 4,
+    "version": "1.0.0",
+    "scale": 7,
+    "flipX": true,
+    "isPixel": true,
+    "offsets": [
+        200,
+        350
+    ],
+    "cameraOffsets": [
+        490,
+        -60
+    ],
+    "healthIcon": {
+        "id": "bf-pixel",
+        "offsets": [
+            0,
+            0
+        ],
+        "flipX": false,
+        "isPixel": false,
+        "scale": 1
+    },
+    "animations": [
+        {
+            "name": "firstDeath",
+            "prefix": "sonic gameover start",
+            "looped": false,
+            "offsets": [
+                50,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "sonic gameover loop",
+            "looped": true,
+            "offsets": [
+                50,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "deathConfirm",
+            "prefix": "sonic gameover end",
+            "looped": false,
+            "offsets": [
+                30,
+                0
+            ],
+            "frameRate": 24,
+            "frameIndices": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22
+            ]
+        }
+    ]
+}

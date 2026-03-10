@@ -1,0 +1,113 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import funkin.play.PlayState;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.module.Module;
+import haxe.ds.IntMap;
+
+class EXEOverlays extends Module {
+    // ID based overlay system
+    // no more creating one in each stage script
+
+    public function new() {
+        super("EXEOverlays");
+    }
+
+    public static var overlays:IntMap = new IntMap();
+    public static var nextId:Int = 1;
+
+    public static function createOverlay( // Having two overlays with the same ID will cause issues, be aware
+        ?id:Int,
+        ?camera:String = null, 
+        ?zIndex:Float = 5000, 
+        ?alpha:Float = 1,
+        ?size:Float = 1,
+        ?hex:Int = 0x000000,
+        ?fade:Float = 0.00001) {
+            var overlay = FunkinSprite.create(0, 0);
+            overlay.makeGraphic(FlxG.width, FlxG.height, 0xFF000000 | hex);
+            var targetAlpha:Float = alpha;
+            if (fade > 0) {
+                overlay.alpha = 0;
+            } else {
+                overlay.alpha = targetAlpha;
+            }
+            overlay.scale.set(size, size);
+            overlay.zIndex = zIndex;
+            if (PlayState.instance != null) PlayState.instance.add(overlay);
+
+            if (camera != null && camera != "") {
+                switch (camera) {
+                    case "camGame":
+                        overlay.cameras = [PlayState.instance.camGame];
+                    case "camHUD":
+                        overlay.cameras = [PlayState.instance.camHUD];
+                    case "camCutscene":
+                        overlay.cameras = [PlayState.instance.camCutscene];
+                }
+            }
+            if (id == null) id = nextId++;
+            overlays.set(id, overlay);
+
+            if (fade > 0) {
+                FlxTween.tween(overlay, {alpha: targetAlpha}, fade);
+            }
+
+            return overlay;
+        }
+        
+    public static function removeOverlay(id:Int, fade:Float = 0.00001):Void {
+        var overlay = overlays.get(id);
+        if (overlay != null) {
+            FlxTween.tween(overlay, {alpha: 0}, fade, {
+                onComplete: function(_) {
+                    overlay.kill();
+                    overlays.remove(id);
+                }
+            });
+        }
+    }
+
+    public static function clearOverlays(fade:Float = 0.00001):Void {
+        for (id in overlays.keys()) {
+            removeOverlay(id, fade);
+        }
+    }
+
+    public static function setAlpha(id:Int, alpha:Float, fade:Float = 0.00001):Void {
+        var overlay = overlays.get(id);
+        if (overlay != null) {
+            if (fade > 0) {
+                FlxTween.tween(overlay, {alpha: alpha}, fade);
+            } else {
+                overlay.alpha = alpha;
+            }
+        }
+    }
+
+    public static function setZIndex(id:Int, zIndex:Float):Void {
+        var overlay = overlays.get(id);
+        if (overlay != null) {
+            overlay.zIndex = zIndex;
+        }
+    }
+
+    public static function setSize(id:Int, size:Float):Void {
+        var overlay = overlays.get(id);
+        if (overlay != null) {
+            overlay.scale.set(size, size);
+        }
+    }
+
+    public static function setColor(id:Int, hex:Int):Void {
+        var overlay = overlays.get(id);
+        if (overlay != null) {
+            overlay.color = hex;
+        }
+    }
+
+    //public static function
+}

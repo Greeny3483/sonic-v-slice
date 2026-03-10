@@ -1,0 +1,416 @@
+{
+	"props": [
+		{
+			"danceEvery": 0,
+			"zIndex": 0,
+			"position": [
+				-1164,
+				-910
+			],
+			"scale": [
+				1,
+				1
+			],
+			"name": "sky",
+			"animType": "sparrow",
+			"flipX": false,
+			"isPixel": false,
+			"flipY": false,
+			"scroll": [
+				0.2,
+				0.2
+			],
+			"assetPath": "stages/hillXMAS/Sky"
+		},
+		{
+			"danceEvery": 0,
+			"zIndex": 1,
+			"position": [
+				-991,
+				-1140
+			],
+			"scale": [
+				1,
+				1
+			],
+			"name": "trees2",
+			"animType": "sparrow",
+			"flipX": false,
+			"isPixel": false,
+			"flipY": false,
+			"scroll": [
+				0.6,
+				0.8
+			],
+			"assetPath": "stages/hillXMAS/Trees2"
+		},
+		{
+			"danceEvery": 0,
+			"zIndex": 5,
+			"position": [
+				-471,
+				-1105
+			],
+			"scale": [
+				1,
+				1
+			],
+			"name": "trees1",
+			"animType": "sparrow",
+			"flipX": false,
+			"isPixel": false,
+			"flipY": false,
+			"scroll": [
+				0.8,
+				0.9
+			],
+			"assetPath": "stages/hillXMAS/Trees1"
+		},
+		{
+			"danceEvery": 0,
+			"zIndex": 20,
+			"position": [
+				-996,
+				-1106
+			],
+			"scale": [
+				1,
+				1
+			],
+			"name": "Foreground",
+			"animType": "sparrow",
+			"flipX": false,
+			"isPixel": false,
+			"flipY": false,
+			"scroll": [
+				1,
+				1
+			],
+			"assetPath": "stages/hillXMAS/Foreground"
+		},
+		{
+			"danceEvery": 0,
+			"zIndex": 500,
+			"position": [
+				200,
+				250
+			],
+			"scale": [
+				0.47,
+				0.47
+			],
+			"name": "box",
+			"animType": "sparrow",
+			"flipX": false,
+			"isPixel": false,
+			"flipY": false,
+			"scroll": [
+				1,
+				1
+			],
+			"assetPath": "stages/hillXMAS/box"
+		},
+		{
+			"danceEvery": 0,
+			"zIndex": 316,
+			"isPixel": false,
+			"position": [
+				0,
+				-720
+			],
+			"assetPath": "",
+			"scroll": [
+				1,
+				1
+			],
+			"scale": [
+				1,
+				1
+			],
+			"name": "flashingshit"
+		},
+		{
+			"zIndex": -14,
+			"position": [
+				-850,
+				-170
+			],
+			"scale": [
+				1,
+				1
+			],
+			"animType": "sparrow",
+			"name": "Sanic",
+			"isPixel": false,
+			"startingAnimation": "baam",
+			"assetPath": "stages/hillXMAS/christma-sanic",
+			"scroll": [
+				1,
+				1
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Sanic",
+					"looped": true,
+					"flipX": false,
+					"name": "baam"
+				}
+			]
+		},
+		{
+			"zIndex": 30,
+			"position": [
+				1100,
+				-160
+			],
+			"scale": [
+				1,
+				1
+			],
+			"animType": "sparrow",
+			"name": "Requital",
+			"flipX": false,
+			"startingAnimation": "boom",
+			"flipY": false,
+			"isPixel": false,
+			"assetPath": "stages/hillXMAS/christma-requital",
+			"scroll": [
+				1,
+				1
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Requital",
+					"looped": true,
+					"flipX": false,
+					"name": "boom"
+				}
+			]
+		},
+		{
+			"zIndex": 32,
+			"position": [
+				1400,
+				-490
+			],
+			"scale": [
+				0.5,
+				0.5
+			],
+			"animType": "sparrow",
+			"name": "Luther",
+			"flipX": false,
+			"startingAnimation": "bom",
+			"flipY": false,
+			"isPixel": false,
+			"assetPath": "stages/hillXMAS/christma-luther",
+			"scroll": [
+				1,
+				1
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Luther",
+					"looped": true,
+					"flipX": false,
+					"name": "bom"
+				}
+			]
+		},
+		{
+			"zIndex": 33,
+			"position": [
+				-660,
+				-450
+			],
+			"scale": [
+				0.5,
+				0.5
+			],
+			"animType": "sparrow",
+			"name": "Needle",
+			"flipX": false,
+			"startingAnimation": "bum",
+			"flipY": false,
+			"isPixel": false,
+			"assetPath": "stages/hillXMAS/christma-needle",
+			"scroll": [
+				1,
+				1
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Needle",
+					"looped": true,
+					"flipX": false,
+					"name": "bum"
+				}
+			]
+		},
+		{
+			"zIndex": 313,
+			"position": [
+				961,
+				200
+			],
+			"scale": [
+				1,
+				1
+			],
+			"animType": "sparrow",
+			"name": "Sunky",
+			"isPixel": false,
+			"startingAnimation": "bep",
+			"assetPath": "stages/hillXMAS/christma-sunky",
+			"scroll": [
+				0.8,
+				0.8
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Sunky",
+					"looped": true,
+					"flipX": false,
+					"name": "bep"
+				}
+			]
+		},
+		{
+			"zIndex": 314,
+			"position": [
+				-360,
+				200
+			],
+			"scale": [
+				1,
+				1
+			],
+			"animType": "sparrow",
+			"name": "Devoid",
+			"isPixel": false,
+			"startingAnimation": "boing",
+			"assetPath": "stages/hillXMAS/christma-devoid",
+			"scroll": [
+				0.8,
+				0.8
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Devoid",
+					"looped": true,
+					"flipX": false,
+					"name": "boing"
+				}
+			]
+		},
+		{
+			"zIndex": 315,
+			"position": [
+				-800,
+				-95
+			],
+			"scale": [
+				1,
+				1
+			],
+			"animType": "sparrow",
+			"name": "Fleetway",
+			"isPixel": false,
+			"startingAnimation": "bam",
+			"assetPath": "stages/hillXMAS/christma-fleetway",
+			"scroll": [
+				0.8,
+				0.8
+			],
+			"animations": [
+				{
+					"offsets": [
+						0,
+						0
+					],
+					"flipY": false,
+					"frameRate": 24,
+					"prefix": "Fleetway",
+					"looped": true,
+					"flipX": false,
+					"name": "bam"
+				}
+			]
+		}
+	],
+	"cameraZoom": 0.6,
+	"version": "1.0.0",
+	"directory": "Stage Generated By: Nova Stage Editor v0.1.1",
+	"characters": {
+		"bf": {
+			"zIndex": 300,
+			"position": [
+				1150,
+				-250
+			],
+			"cameraOffsets": [
+				-150,
+				100
+			]
+		},
+		"dad": {
+			"zIndex": 200,
+			"position": [
+				280,
+				850
+			],
+			"cameraOffsets": [
+				200,
+				-500
+			]
+		},
+		"gf": {
+			"zIndex": 100,
+			"cameraOffsets": [
+				60,
+				50
+			],
+			"position": [
+				560,
+				-50
+			]
+		}
+	},
+	"name": "Hill (Christmas)"
+}

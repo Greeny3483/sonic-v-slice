@@ -1,0 +1,96 @@
+import flixel.FlxG;
+import flixel.util.FlxColor;
+import funkin.save.Save;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+
+class Hill extends Stage {
+	public function new() {
+		super('hill');
+    }
+
+    override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        allowGore = Save.instance.modOptions["allowGore"];
+        doCameraShakes = Save.instance.modOptions["doCameraShakes"];
+
+        if (!allowGore) {
+            getNamedProp("TooSlowTail1").visible = false;
+            getNamedProp("TooSlowEgg").visible = false;
+        }
+    }
+
+    override function onStepHit(event:SongTimeScriptEvent):Void {
+        super.onStepHit(event);
+
+        if (!PlayState.instance.currentSong.id.toLowerCase() == "too-slow") return;
+
+        if (event.beat == 10 || event.beat % 35 == 0)
+		{
+            EXEScripts.triggerStatic();
+		}
+        if (PlayState.instance.currentVariation == "default") {
+            switch (event.step) {
+                case 761:
+                    FlxG.camera.flash(FlxColor.RED);
+                case 1166:
+                    EXEScripts.triggerCinematics();
+                case 1190:
+                    EXEScripts.triggerJumpscare("sonic");
+                case 1261:
+                    EXEScripts.disableCinematics();
+                    EXEStrumlines.startWiggleModchart();
+                case 1472:
+                    EXEScripts.triggerAnimatedJumpscare();
+                case 1649:
+                    if (doCameraShakes) FlxG.camera.shake(0.015, 3.325); // intensity, duration
+            }
+        }
+        if (PlayState.instance.currentVariation == "encore") {
+            switch (event.step) {
+                case 385:
+                    EXEOverlays.createOverlay(0, "camCutscene", 5000, 1, 10, 000000, 0.0001); // ID, camera, zIndex, alpha, size, color, fade
+                    PlayState.instance.camCutscene.flash(FlxColor.WHITE, 1); // we arent poor anymore so we can use FlxColor
+                case 398:
+                    EXEOverlays.removeOverlay(0);
+                    FlxG.camera.flash(FlxColor.RED);
+                case 837:
+                    EXEScripts.triggerCinematics();
+                case 863:
+                    EXEScripts.triggerJumpscare("sonic");
+                case 934:
+                    EXEScripts.disableCinematics();
+                    EXEStrumlines.startWiggleModchart();
+                case 1129:
+                    PlayState.instance.camCutscene.flash(FlxColor.WHITE, 1);
+                case 1217:
+                    PlayState.instance.camCutscene.flash(FlxColor.RED, 1);
+                case 1279:
+                    PlayState.instance.camCutscene.flash(FlxColor.WHITE, 1);
+                case 1303:
+                    EXEScripts.triggerAnimatedJumpscare();
+            }
+        }
+    }
+
+    override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+
+        EXEStrumlines.updateModchart("wiggle");
+    }
+
+    override function onSongEnd(event) {
+        super.onSongEnd(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        EXEStrumlines.resetStrumlines("both");
+    }
+
+    override function onDestroy(event) {
+        super.onDestroy(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        EXEStrumlines.resetStrumlines("both");
+    }
+}

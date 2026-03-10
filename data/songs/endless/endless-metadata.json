@@ -5,12 +5,6 @@
   "charter": "Echolocated",
   "divisions": 96,
   "looped": false,
-  "offsets": {
-    "instrumental": 0,
-    "altInstrumentals": {    },
-    "vocals": {    },
-    "altVocals": {    }
-  },
   "playData": {
     "songVariations": [
       "extra"
@@ -35,14 +29,14 @@
         "bf-endless"
       ]
     },
-    "stage": "endless-forest",
+    "stage": "majinForest",
     "noteStyle": "exeSemi",
     "ratings": {
       "easy": 6,
       "normal": 7,
       "hard": 7
     },
-    "album": "exeVol2OST",
+    "album": "exeOST",
     "previewStart": 0,
     "previewEnd": 15000
   },
@@ -51,16 +45,7 @@
   "timeChanges": [
     {
       "t": 0,
-      "b": 0,
-      "bpm": 155,
-      "n": 4,
-      "d": 4,
-      "bt": [
-        4,
-        4,
-        4,
-        4
-      ]
+      "bpm": 155
     }
   ]
 }

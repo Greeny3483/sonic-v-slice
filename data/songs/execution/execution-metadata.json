@@ -4,7 +4,7 @@
   "artist": "MarStarBro",
   "charter": "MarStarBro",
   "playData": {
-    "album": "exeVol1OST",
+    "album": "exeOST",
     "difficulties": ["extra"],
     "characters": {
       "player": "bf",
@@ -14,8 +14,8 @@
       "altInstrumentals": []
     },
     "songVariations": [],
-    "stage": "hillZoneM",
-    "noteStyle": "exeFourKey",
+    "stage": "hillX",
+    "noteStyle": "exe",
     "ratings": {"extra": 5},
     "previewStart": 0,
     "previewEnd": 15000

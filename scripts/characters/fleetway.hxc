@@ -1,0 +1,20 @@
+import flixel.FlxG;
+import funkin.Paths;
+import funkin.FunkinMemory;
+import funkin.play.PlayState;
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.character.CharacterType;
+
+class FleetwaySuperSonic extends MultiSparrowCharacter {
+	public function new() {
+		super("fleetway");
+	}
+
+    override function onCreate(event:ScriptEvent) {
+        super.onCreate(event);
+
+        FunkinMemory.cacheTexture(Paths.image("characters/specialAnims/fleetway1"));
+        FunkinMemory.cacheTexture(Paths.image("characters/specialAnims/fleetway2"));
+    }
+
+}

@@ -1,0 +1,17 @@
+import flixel.FlxG;
+import funkin.play.stage.Stage;
+
+class HillX extends Stage
+{
+	public function new()
+	{
+		super('hillX');
+	}
+
+    override function onCreate(event:ScriptEvent):Void
+	{
+		super.onCreate(event);
+
+		if (FlxG.onMobile) getNamedProp('cyclesMontain').scale.set(0.65, 0.5);
+	}
+}

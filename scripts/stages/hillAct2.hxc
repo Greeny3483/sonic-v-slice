@@ -1,0 +1,159 @@
+import flixel.FlxG;
+import flixel.util.FlxTimer;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.graphics.FunkinSprite;
+import funkin.graphics.video.FunkinVideoSprite;
+import funkin.play.character.CharacterDataParser;
+import funkin.save.Save;
+
+import EXEScripts;
+
+class HillAct2 extends Stage {
+    // This script handles primary functions for You Can't Run + ENCORE
+
+    public function new() {
+        super("hillAct2");
+    }
+
+    public var doRedVignette:Bool = true;
+
+    public var redVignette:FunkinSprite;
+    public var video1:FunkinVideoSprite;
+
+    override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        doCameraShake = Save.instance.modOptions["doCameraShakes"];
+
+		redVignette = FunkinSprite.create(0, 0, 'RedVG');
+		redVignette.zIndex = 1000;
+        redVignette.scale.set(FlxG.onMobile ? 1.4 : 1, 1);
+		redVignette.cameras = [PlayState.instance.camCutscene];
+        redVignette.alpha = 0;
+		PlayState.instance.add(redVignette);
+
+        video1 = new FunkinVideoSprite(0, 0); // replacement for "Play Video" event
+        video1.cameras = [PlayState.instance.camCutscene];
+        video1.zIndex = 5001;
+        video1.bitmap.volumeAdjust = 0;
+        video1.load('videos/videos/ycrencoreanimation.mp4');
+
+		if (FlxG.onMobile) {
+			getNamedProp('RunSky').scale.set(1.18, 1);
+			getNamedProp('RunGround').scale.set(1.19, 1);
+			getNamedProp('RunTopOverlay').scale.set(1.135, 1);
+			getNamedProp('RunTrees').scale.set(1.14, 1);
+			getNamedProp('RunBG').scale.set(1.19, 1);
+			getNamedProp('GreenHill').scale.set(9.6, 9);
+		}
+    }
+
+    function startVideo():Void {
+        video1.play();
+        PlayState.instance.add(video1);
+        new FlxTimer().start(14.2, function(timer:FlxTimer) { // The video is 14 seconds long
+            video1.stop();
+            PlayState.instance.remove(video1);
+		});
+    }
+
+    public function switchStageArea(area:String):Void {
+        switch (area) {
+            case "greenHill":
+                getNamedProp("GreenHill").zIndex = 2;
+			    PlayState.instance.currentStage.refresh();
+            case "normal":
+                getNamedProp("GreenHill").zIndex = -50;
+			    PlayState.instance.currentStage.refresh();
+        }
+    }
+
+    override function onSongRetry(event:ScriptEvent):Void {
+		super.onSongRetry(event);
+
+        doRedVignette = false;
+        switchStageArea("normal");
+	}
+
+    function triggerVignette():Void {
+        if (!doRedVignette) return;
+ 
+        FlxTween.tween(redVignette, { alpha: 0.5 }, 0.75, {
+            ease: FlxEase.quadInOut,
+            onComplete: function(tween:FlxTween) {
+                FlxTween.tween(redVignette, { alpha: 0 }, 0.75, {
+                    ease: FlxEase.quadInOut,
+                });
+            }
+        });
+    }
+
+    function onStepHit(event:SongTimeScriptEvent):Void {
+        super.onStepHit(event);
+
+        if (event.beat == 2 || event.beat % 35 == 0)
+		{
+            EXEScripts.triggerStatic();
+		}
+        if (event.step >= 79 && event.step % 16 == 0) { // bpm and song time is the same on both variations
+            if (doRedVignette) triggerVignette();
+        }
+
+        // DEFAULT
+        if (PlayState.instance.currentVariation == "default") {
+            switch (event.step) {
+                case 79:
+                    doRedVignette = true;
+                case 128, 328:
+                    FlxG.camera.flash(FlxColor.RED);
+                case 149:
+                    EXEScripts.triggerJumpscare("sonic");
+                case 527:
+                    EXEScripts.triggerStatic("camCutscene", 1, false);
+                    switchStageArea("greenHill");
+                    doRedVignette = false;
+                case 783:
+                    EXEScripts.triggerStatic("camCutscene", 1, false);
+                    switchStageArea("normal");
+                    doRedVignette = true;
+            }
+        }
+        
+        // ENCORE
+        if (PlayState.instance.currentVariation == "encore") {
+            switch (event.step) {
+                case 80:
+                    doRedVignette = true;
+                case 128, 328, 1216:
+                    FlxG.camera.flash(FlxColor.RED);
+                case 149:
+                    EXEScripts.triggerJumpscare("sonic");
+                case 528:
+                    doRedVignette = false;
+                    EXEScripts.triggerStatic("camCutscene", 1, false); // camera, alpha, ?randomAlpha
+                    switchStageArea("greenHill");
+                case 529:
+                    getDad().x = getDad().x + 720; // Encore pixel Sonic is used for Final Escape, instead of duplicating the character for YCRE, adjust offsets here
+                    getDad().y = getDad().y + 900;
+                    getDad().cameraFocusPoint.x = getDad().cameraFocusPoint.x + -350;
+                    getDad().cameraFocusPoint.y = getDad().cameraFocusPoint.y + -200;
+                case 786:
+                    doRedVignette = true;
+                    switchStageArea("normal");
+                    EXEScripts.triggerStatic("camCutscene", 1, false); // camera, alpha, ?randomAlpha
+                case 1296:
+                    //EXEScripts.addBlackOverlay("camCutscene", 5000, 1, 1);
+                    EXEOverlays.createOverlay(0, "camCutscene", 5000, 1, 10, 000000, 1); // ID, camera, zIndex, alpha, size, color, fade
+                case 1308:
+                    startVideo();
+                case 1439:
+                    PlayState.instance.camCutscene.flash(0xFFFFFFFF, 1);
+                    EXEOverlays.removeOverlay(0);
+            }
+        }
+    }
+}

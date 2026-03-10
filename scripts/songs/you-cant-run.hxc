@@ -1,16 +1,12 @@
 import flixel.FlxG;
 import funkin.Paths;
+import funkin.save.Save;
 import funkin.play.song.Song;
 import funkin.play.PlayStatePlaylist;
 import funkin.play.cutscene.VideoCutscene;
 import funkin.modding.module.ModuleHandler;
-// Check the other script in scripts/stages/xenoStage for the stage prop editing, everything else is done here.
 
 class YouCantRunSong extends Song {
-
-
-    var STOP:Bool = false;
-
     var hasPlayedCutscene:Bool;
 
     public function new() {
@@ -20,16 +16,14 @@ class YouCantRunSong extends Song {
     }
 
     override function onCreate(event:ScriptEvent):Void {
-
         super.onCreate(event);
 
         hasPlayedCutscene = false;
 
-        doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
-        if (!doBloodSplash) {
-            ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapStrumlines', ['exeSemi']);
+        if (PlayStatePlaylist.isStoryMode && !hasPlayedCutscene) {
+            var intro = ModuleHandler.getModule('EXEIntros');
+            if (intro != null) intro.scriptSet('skipNextIntro', true);
         }
-
     }
 
     function onSongRetry():Void {
@@ -54,8 +48,8 @@ class YouCantRunSong extends Song {
         }
     }
 
-  function startVideo() {
-     VideoCutscene.play(Paths.videos('tooslowcutscene2'));
-  }
+    function startVideo() {
+        VideoCutscene.play(Paths.videos('tooslowcutscene2'));
+    }
 }
 

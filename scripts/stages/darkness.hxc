@@ -1,0 +1,56 @@
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+
+import EXEOverlays;
+import EXEShaders;
+
+class Darkness extends Stage
+{
+	// Soulless doesn't have a unique stage, it's just a black background
+	public function new()
+	{
+		super('darkness');
+	}
+
+    override function onCreate(event:ScriptEvent):Void
+	{
+		super.onCreate(event);
+
+		EXEShaders.initShader("vcr");
+	}
+
+	override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
+
+		PlayState.instance.iconP1.alpha = 0;
+		PlayState.instance.iconP2.alpha = 0;
+		PlayState.instance.healthBar.alpha = 0;
+		PlayState.instance.healthBarBG.alpha = 0;
+		PlayState.instance.camHUD.alpha = 0;
+
+		getBoyfriend().alpha = 0;
+		getDad().alpha = 0;
+	}
+
+	override function onStepHit(event:SongTimeScriptEvent):Void {
+		super.onStepHit(event);
+
+		switch (event.step) {
+			case 0:
+				FlxTween.tween(getDad(), {alpha: 1}, 19);
+				FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 19);
+			case 240:
+				//getDad().playAnimation("idle", false, true);
+
+		}
+	}
+
+	override function onUpdate(event:UpdateScriptEvent):Void {
+		super.onUpdate(event);
+
+		EXEShaders.updateShader("vcr");
+	}
+}

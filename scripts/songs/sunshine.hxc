@@ -1,21 +1,35 @@
+import flixel.util.FlxTimer;
+import funkin.Conductor;
+import funkin.save.Save;
+import funkin.play.PlayState;
 import funkin.play.song.Song;
 import funkin.modding.module.ModuleHandler;
 
 class SunshineSong extends Song {
-
     public function new() {
         super("sunshine");
     }
 
-    override function onCreate(event:ScriptEvent):Void {
-        super.onCreate(event);
+	override function onNoteHit(event:HitNoteScriptEvent):Void {
+        super.onNoteHit(event);
 
-        ShaderHandler.initShader("distortion");
-
-        doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
-        if (!doBloodSplash) {
-            ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapStrumlines', ['exeSemi']);
-        }
+		doModcharts = Save.instance.modOptions["doModcharts"];
+		if(!doModcharts) return;
+		if (!event.note.mustPress) {
+			if (Conductor.instance.currentStep > 588 && Conductor.instance.currentStep < 860)
+			{
+				PlayState.instance.playerStrumline.alpha = 0.7;
+				if (PlayState.instance.playerStrumline.alpha != 0)
+				{
+					new FlxTimer().start(0.01, function(fadeTime:FlxTimer)
+					{
+						PlayState.instance.playerStrumline.alpha -= 0.03;
+						if (PlayState.instance.playerStrumline.alpha != 0)
+							fadeTime.reset();
+					    });
+				}
+			}
+		}
     }
 }
 

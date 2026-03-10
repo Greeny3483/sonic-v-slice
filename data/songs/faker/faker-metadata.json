@@ -4,9 +4,9 @@
 	"artist": "MarStarBro",
 	"charter": "Sandplanet",
 	"playData": {
-		"album": "exeVol2OST",
-		"stage": "barrenHill",
-		"noteStyle": "exeFourKey",
+		"album": "exeOST",
+		"stage": "zone",
+		"noteStyle": "exe",
 		"difficulties": ["easy", "normal", "hard"],
 		"ratings": {"easy": 2, "normal": 3, "hard": 4},
 		"previewStart": 0,

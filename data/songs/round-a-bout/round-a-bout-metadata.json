@@ -4,7 +4,7 @@
   "artist": "SimplyCrispy",
   "charter": "",
   "playData": {
-    "album": "exeVol3OST",
+    "album": "exeOST",
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf-needle",
@@ -15,7 +15,7 @@
     },
     "songVariations": [],
     "stage": "marbleZone",
-    "noteStyle": "exeFourKey",
+    "noteStyle": "exe",
     "ratings": {"easy": 2, "normal": 4, "hard": 5},
     "previewStart": 0,
     "previewEnd": 15000

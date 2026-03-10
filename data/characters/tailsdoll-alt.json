@@ -1,0 +1,164 @@
+{
+	"version": "1.0.0",
+	"scale": 0.95,
+	"flipX": false,
+	"name": "Tails Doll (Alt)",
+	"singTime": 4,
+	"assetPath": "characters/specialAnims/Tails_Doll_Alt",
+	"healthIcon": {
+		"id": "doll"
+	},
+	"offsets": [0, 200],
+	"cameraOffsets": [100, 150],
+	"generatedBy": "Nova Character Editor REFRESHED v0.1.2",
+	"animations": [
+		{
+			"offsets": [
+				-74,
+				-50
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13
+			],
+			"prefix": "TailsDoll IDLE instance0000",
+			"name": "idle",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				-65,
+				117
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			],
+			"prefix": "TailsDoll UP instance00",
+			"name": "singUP",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				-103,
+				-201
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			],
+			"prefix": "TailsDoll DOWN instance00",
+			"name": "singDOWN",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				-192,
+				-35
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			],
+			"prefix": "TailsDoll RIGHT instance00",
+			"name": "singRIGHT",
+			"looped": false,
+			"flipX": false
+		},
+		{
+			"offsets": [
+				33,
+				-40
+			],
+			"flipY": false,
+			"frameRate": 24,
+			"frameIndices": [
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15
+			],
+			"prefix": "TailsDoll LEFT instance00",
+			"name": "singLEFT",
+			"looped": false,
+			"flipX": false
+		}
+	]
+}

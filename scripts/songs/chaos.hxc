@@ -10,56 +10,31 @@ import funkin.play.PlayState;
 import funkin.play.song.Song;
 import funkin.modding.module.ModuleHandler;
 
-import ObjectHandler;
-
 class ChaosSong extends Song
 {
-	public var opponentFloatOffset:Float = 0;
-
-    var hasPlayedInGameCutscene:Bool;
-    var quickTimeActive:Bool = false;
-    var spacePressed:Bool = false;
-
-	public var chamber:String;
-	public var chamberEmerald1:String;
-	public var chamberEmerald2:String;
-	public var dad:String;
-
-	public var quickTime:FunkinSprite;
-	
-	var cutsceneTimers:Array<FlxTimer> = [];
+	var hasPlayedInGameCutscene:Bool = false;
+	var quickTimeActive:Bool = false;
+	var spacePressed:Bool = false;
+	var quickTime:FunkinSprite;
+	var cutsceneTimer:FlxTimer;
 
 	public function new()
 	{
 		super('chaos');
-		hasPlayedInGameCutscene = false;
-		
 	}
 
 	override function onCreate(event:ScriptEvent):Void
 	{
 		super.onCreate(event);
 
-		ObjectHandler.getObject("fleetwayTextures");
-
 		swappingNotestylesModule = ModuleHandler.getModule('SwappingNotestyles');
 		doQuickTime = ModuleHandler.getModule("EXEOptions").scriptGet("quickTimeEvents");
 		doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
 
-		chamber = PlayState.instance.currentStage.getNamedProp('Chamber');
-		chamberEmerald1 = PlayState.instance.currentStage.getNamedProp('ChamberRainEmerald');
-		chamberEmerald2 = PlayState.instance.currentStage.getNamedProp('ChamberRainEmerald2');
-		dad = PlayState.instance.currentStage.getDad();
-		
 		if (doQuickTime) {
 			initializeQuickTime();
 		}
 
-		hasPlayedInGameCutscene = false;
-
-        if (!doBloodSplash && swappingNotestylesModule != null) {
-            swappingNotestylesModule.scriptCall('swapStrumlines', ['exeSemi']);
-        }
 	}
 	
 	function initializeQuickTime():Void {
@@ -123,94 +98,77 @@ class ChaosSong extends Song
 		quickTimeActive = false;
 	}
 
-	public override function onCountdownStart(event:CountdownScriptEvent):Void {
-        super.onCountdownStart(event);
+	public override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
 
 		if (!hasPlayedInGameCutscene) {
 			hasPlayedInGameCutscene = true;
 			event.cancel();
-			introCutscene();
+			playCutscene();
 		}
 	}
 
-	function introCutscene():Void {
-		dad.y = 1000;
-		dad.visible = false;
+	function playCutscene():Void
+	{
+		var chamber = PlayState.instance.currentStage.getNamedProp('Chamber');
+		var emerald1 = PlayState.instance.currentStage.getNamedProp('ChamberRainEmerald');
+		var emerald2 = PlayState.instance.currentStage.getNamedProp('ChamberRainEmerald2');
+
+		PlayState.instance.currentStage.getDad().y = 1000;
+		PlayState.instance.currentStage.getDad().visible = false;
 		PlayState.instance.currentStage.refresh();
-		disableHud();
+		PlayState.instance.camHUD.alpha = 0;
 		PlayState.instance.tweenCameraToPosition(-50, 100, 0);
 
-		doCutsceneFr(chamber, chamberEmerald1, chamberEmerald2, dad);
-	}
-	
-	function doCutsceneFr(chamber:Dynamic, chamberEmerald1:Dynamic, chamberEmerald2:Dynamic, dad:Dynamic):Void {
-		cutsceneTimers.push(new FlxTimer().start(1, function(tmr) {
-			PlayState.instance.tweenCameraZoom(1.1, 1, true, FlxEase.quadInOut);
-			FlxG.camera.flash(0xFFFF0000, 1);  
-			FunkinSound.playOnce(Paths.sound("robot"));
-		}));
-		
-		cutsceneTimers.push(new FlxTimer().start(2, function(tmr) {
+		// Sequence cutscene events with callbacks
+		FunkinSound.playOnce(Paths.sound("robot"));
+		PlayState.instance.tweenCameraZoom(1.1, 1, true, {ease: FlxEase.quadInOut});
+		FlxG.camera.flash(0xFFFF0000, 1);
+
+		cutsceneTimer = new FlxTimer().start(2, function(_) {
 			FunkinSound.playOnce(Paths.sound("sonic"));
 			chamber.animation.play('wowSonic');
-		}));
-		
-		cutsceneTimers.push(new FlxTimer().start(5, function(tmr) {
-			PlayState.instance.tweenCameraZoom(0.7, 0.3, true, FlxEase.quadInOut);
-			FunkinSound.playOnce(Paths.sound("beam"));
-			chamberEmerald1.zIndex = -4;
-			chamberEmerald2.zIndex = -3;
-			PlayState.instance.currentStage.refresh();
-		}));
-		
-		cutsceneTimers.push(new FlxTimer().start(6, function(tmr) {
-			PlayState.instance.isInCutscene = false;
-			PlayState.instance.startCountdown();
-			enableHud();
-		}));
-		
-		cutsceneTimers.push(new FlxTimer().start(7.85, function(tmr) {
-			FlxTween.tween(dad, {y: -800}, 0.6);
-			
-			new FlxTimer().start(0.15, function(innerTmr) {
-				dad.visible = true;
-				PlayState.instance.tweenCameraToPosition(-100, -300, 0.85);
+
+			cutsceneTimer = new FlxTimer().start(3, function(_) {
+				PlayState.instance.tweenCameraZoom(0.7, 0.3, true, FlxEase.quadInOut);
+				FunkinSound.playOnce(Paths.sound("beam"));
+				emerald1.zIndex = -4;
+				emerald2.zIndex = -3;
+				PlayState.instance.currentStage.refresh();
+
+				cutsceneTimer = new FlxTimer().start(1, function(_) {
+					PlayState.instance.isInCutscene = false;
+					PlayState.instance.startCountdown();
+					FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 0.5);
+
+					cutsceneTimer = new FlxTimer().start(1.85, function(_) {
+						FlxTween.tween(PlayState.instance.currentStage.getDad(), {y: -800}, 0.6);
+						PlayState.instance.currentStage.getDad().visible = true;
+						PlayState.instance.tweenCameraToPosition(-100, -300, 0.85);
+					});
+				});
 			});
-		}));
+		});
 	}
 
-	override function buildStage()
+	function cleanupCutscene():Void
 	{
-		super.buildStage();
+		if (cutsceneTimer != null && cutsceneTimer.active) {
+			cutsceneTimer.cancel();
+		}
 	}
 
-	function disableHud() {
-		PlayState.instance.camHUD.alpha = 0;
-	}
-
-	function enableHud() {
-		FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
-	}
-	
-	function onSongRetry(event:ScriptEvent)
+	function onSongRetry(event:ScriptEvent):Void
 	{
 		super.onSongRetry(event);
+		cleanupCutscene();
 		hasPlayedInGameCutscene = true;
-		
-		cleanupTimers();
 	}
-	
-	function cleanupTimers():Void {
-		for (timer in cutsceneTimers) {
-			if (timer != null && timer.active) {
-				timer.cancel();
-			}
-		}
-		cutsceneTimers = [];
-	}
-	
-	override function onDestroy(event:ScriptEvent):Void {
-		cleanupTimers();
+
+	override function onDestroy(event:ScriptEvent):Void
+	{
+		cleanupCutscene();
 		super.onDestroy(event);
 	}
 }

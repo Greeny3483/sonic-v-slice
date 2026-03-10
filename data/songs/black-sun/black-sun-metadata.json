@@ -4,9 +4,9 @@
 	"artist": "Jamangar",
 	"charter": "Madzilla & MarStarBro",
 	"playData": {
-		"album": "exeVol2OST",
-		"stage": "deadHill",
-		"noteStyle": "exeFourKey",
+		"album": "exeOST",
+		"stage": "zoneAct2",
+		"noteStyle": "exe",
 		"difficulties": ["easy", "normal", "hard"],
 		"ratings": {"easy": 4, "normal": 5, "hard": 7},
 		"previewStart": 0,

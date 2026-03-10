@@ -1,0 +1,36 @@
+{
+    "version": "2.2.2",
+    "songName": "Soulless",
+    "artist": "Unknown",
+    "charter": "",
+    "playData": {
+        "album": "exeOST",
+        "songVariations": [],
+        "difficulties": [
+            "easy",
+            "normal",
+            "hard"
+        ],
+        "characters": {
+            "player": "bf",
+            "opponent": "p2doll"
+        },
+        "stage": "darkness",
+        "noteStyle": "exe",
+        "ratings": {
+            "easy": 6,
+            "normal": 6,
+            "hard": 7
+        },
+        "previewStart": 0,
+        "previewEnd": 15000
+    },
+    "generatedBy": "FelixBand's Legacy Chart Converter",
+    "timeFormat": "ms",
+    "timeChanges": [
+        {
+            "t": 0,
+            "bpm": 180
+        }
+    ]
+}

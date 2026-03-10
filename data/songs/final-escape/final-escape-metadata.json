@@ -1,12 +1,12 @@
 {
     "version": "2.2.2",
-    "songName": "Final Escape",
-    "artist": "MiiniStar / KIRB0 + Saster + MarStarBro",
+    "songName": "Final Escape (KIRB0 Mix)",
+    "artist": "MiiniStar/KIRB0 + MarStarBro & Saster",
     "looped": false,
     "offsets": {},
     "playData": {
         "songVariations": [],
-        "album": "exeEncoreOST",
+        "album": "exeOST",
         "difficulties": [
             "easy",
             "normal",
@@ -18,8 +18,8 @@
             "opponent": "introxeno",
             "instrumental": ""
         },
-        "stage": "finalstageErect",
-        "noteStyle": "exeFourKey",
+        "stage": "finalZoneErect",
+        "noteStyle": "exe",
         "ratings": {
             "easy": 9,
             "normal": 10,

@@ -3,7 +3,7 @@
   "songName": "Too Slow Encore",
   "artist": "MarStarBro + Saster",
   "playData": {
-    "album": "exeEncoreOST",
+    "album": "exeOST",
     "difficulties": ["encore"],
     "characters": {
       "player": "bf-encore",
@@ -11,8 +11,8 @@
       "opponent": "sonicexefake",
       "instrumental": "encore"
     },
-    "stage": "hillZone",
-    "noteStyle": "exeFourKey",
+    "stage": "hill",
+    "noteStyle": "exe",
     "ratings": {"encore": 8},
     "previewStart": 0,
     "previewEnd": 15000

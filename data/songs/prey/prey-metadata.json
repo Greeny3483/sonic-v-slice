@@ -3,14 +3,8 @@
   "songName": "Prey",
   "artist": "Armydillo",
   "looped": false,
-  "offsets": {
-    "instrumental": 0,
-    "altInstrumentals": {    },
-    "vocals": {    },
-    "altVocals": {    }
-  },
   "playData": {
-    "album": "exeVol3OST",
+    "album": "exeOST",
     "songVariations": [    ],
     "difficulties": [
       "easy",
@@ -30,7 +24,7 @@
       ]
     },
     "stage": "stardustSpeedway",
-    "noteStyle": "exePrey",
+    "noteStyle": "cd",
     "ratings": {
       "easy": 5,
       "normal": 7,

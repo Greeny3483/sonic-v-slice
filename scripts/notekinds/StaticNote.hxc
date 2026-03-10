@@ -15,7 +15,7 @@ class StaticNote extends NoteKind
 		super("staticnote", "Static Note (EXE)", "staticnote", []);
 
         staticFlash = new FlxSprite(-100, -100);
-        staticFlash.frames = Paths.getSparrowAtlas("hitStatic");
+        staticFlash.frames = Paths.getSparrowAtlas("notekinds/staticnote/hitStatic");
         staticFlash.animation.addByPrefix("flash", "staticANIMATION000", 30, false);
         staticFlash.scale.set(1.25, 1.25);
         staticFlash.updateHitbox();

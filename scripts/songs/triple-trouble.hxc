@@ -20,11 +20,10 @@ class TripleTroubleSong extends Song {
 
         hasPlayedCutscene = false;
 
-        doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
-        if (!doBloodSplash) {
-            ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapStrumlines', ['exeSemi']);
+        if (PlayStatePlaylist.isStoryMode && !hasPlayedCutscene) {
+            var intro = ModuleHandler.getModule('EXEIntros');
+            if (intro != null) intro.scriptSet('skipNextIntro', true);
         }
-
     }
 
     // Reset the script state on game over

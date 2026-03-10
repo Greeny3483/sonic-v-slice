@@ -1,12 +1,8 @@
 import flixel.FlxG;
 import flixel.util.FlxTimer;
-import flixel.FlxSprite;
-import funkin.Paths;
-import funkin.play.PlayState;
-import funkin.audio.FunkinSound;
-import funkin.graphics.FunkinSprite;
-import funkin.play.notes.notekind.NoteKind;
 import funkin.Highscore;
+import funkin.play.PlayState;
+import funkin.play.notes.notekind.NoteKind;
 
 class PhantomNote extends NoteKind
 {
@@ -29,10 +25,13 @@ class PhantomNote extends NoteKind
 
 	function onNoteHit(event:HitNoteScriptEvent)
 	{
-    	if (event.judgement == "perfect" || "good") {
+    	if (event.judgement == "perfect" || event.judgement == "good") {
     		super.onNoteHit(event);
 			return;
 		}
+
+        // For bad, shit, or miss judgments, cancel the hit to prevent any effects
+        event.cancel();
 
         rate += 0.06;
 
@@ -55,11 +54,10 @@ class PhantomNote extends NoteKind
             });
         }
 	}
+
 	function onNoteMiss(event:NoteScriptEvent)
 	{
-		if (event.note.noteKind == "phantomnote")
-		{
-			event.cancel();
-		}
-	}
+        Highscore.tallies.totalNotes--;
+		event.cancelEvent();
+    }
 }

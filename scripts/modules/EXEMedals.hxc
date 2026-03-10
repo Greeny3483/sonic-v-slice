@@ -1,0 +1,81 @@
+import funkin.modding.module.Module;
+import flixel.FlxG;
+import funkin.Paths;
+import flixel.util.FlxTimer;
+import funkin.util.Constants;
+import funkin.save.Save;
+import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
+import openfl.utils.Assets;
+import funkin.play.PlayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.save.Save;
+import funkin.data.story.level.LevelRegistry;
+
+#if !mobile 
+import funkin.util.plugins.NewgroundsMedalPlugin as NGMedal;
+#end
+
+class EXEMedals extends Module {
+
+	public function new(){
+		super('EXEMedals');
+		if (FlxG.onMobile) active = false;
+	}
+
+
+	function onSongEnd(event:ScriptEvent) {
+		super.onSongEnd(event);
+		if (event.eventCanceled) return;
+		if (PlayState.instance.isMinimalMode) return;
+
+		var playlist = LevelRegistry.instance.fetchEntry(PlayStatePlaylist.campaignId).getSongs();
+		if (PlayStatePlaylist.isStoryMode && !hasBeatenLevel('1round1', null) && PlayStatePlaylist.campaignId == '1round1' && playlist[playlist.length - 1] == PlayState.instance.currentSong.id) {
+			new FlxTimer().start(0.6, _ -> {
+				if (event.eventCanceled) return;
+   				giveMedal(10, 'Faster Than Fear', Paths.image("medals/round1"));
+			});
+		}
+
+		if (PlayState.instance.currentSong.id == 'black-sun' && Save.instance.hasBeatenSong('faker') && !Save.instance.hasBeatenSong('black-sun')) {
+			new FlxTimer().start(0.6, _ -> {
+				if (event.eventCanceled) return;
+   				giveMedal(15, "Beyond the Black Sun", Paths.image("medals/faker"));
+			});
+		}
+
+		if (PlayState.instance.currentSong.id == 'fight-or-flight' && Save.instance.hasBeatenSong('prey') && !Save.instance.hasBeatenSong('fight-or-flight')) {
+			new FlxTimer().start(0.6, _ -> {
+				if (event.eventCanceled) return;
+   				giveMedal(15, "I Die Hard", Paths.image("medals/malice"));
+			});
+		}
+	}
+	public function hasBeatenLevel(levelId:String, difficultyList:Array<String>) {
+		if (difficultyList == null) {
+			difficultyList = ['easy', 'normal', 'hard'];
+		}
+		for (difficulty in difficultyList) {
+			var score = Save.instance.getLevelScore(levelId, difficulty);
+			if (score != null) {
+				if (score.score > 0) return true;
+				else continue;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Plays the Newgrounds medal popup
+	 * @param points The amount of points to give (Only visual)
+	 * @param title The name of the achievement
+	 * @param graphic The path to the medal graphic
+	 */
+	public static function giveMedal(points:Int, title:String, graphic:String) {
+		var medalGraphic:FlxGraphic;
+		var image = Assets.getBitmapData(graphic);
+        medalGraphic = FlxGraphic.fromBitmapData(image);
+        medalGraphic.persist = true;
+		NGMedal.play(points, title, medalGraphic);
+	}
+}

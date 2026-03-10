@@ -1,0 +1,42 @@
+import flixel.FlxG;
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import flixel.math.FlxPoint;
+import flixel.util.FlxTimer;
+import funkin.save.Save;
+
+class EXENoteCamera extends Module {
+
+    public function new() {
+        super("EXENoteCamera");
+    }
+
+    override function onNoteHit(event) {
+        super.onNoteHit(event);
+                
+        doCamMovement = Save.instance.modOptions["doCamMovement"];
+        var intensity:Int = 20;
+        if (doCamMovement) {
+            var mod = ModuleHandler.getModule("EXEOptions");
+            var val = mod.scriptGet("camMovementIntensity");
+            if (val != null) intensity = Std.int(val);
+        }
+
+        if (PlayState.instance == null || !doCamMovement)
+            return;
+
+        FlxG.camera.targetOffset.set(0, 0);
+
+        switch(event.note.direction) {
+            case 0:
+                FlxG.camera.targetOffset.x = -intensity;
+            case 1:
+                FlxG.camera.targetOffset.y = intensity;
+            case 2:
+                FlxG.camera.targetOffset.y = -intensity;
+            case 3:
+                FlxG.camera.targetOffset.x = intensity;
+        }
+    }
+}

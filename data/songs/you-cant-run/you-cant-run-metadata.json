@@ -4,7 +4,7 @@
   "artist": "MarStarBro",
   "charter": "Razencro",
   "playData": {
-    "album": "exeVol2OST",
+    "album": "exeOST",
     "difficulties": ["easy", "normal", "hard"],
     "characters": {
       "player": "bf",
@@ -13,8 +13,8 @@
       "instrumental": ""
     },
     "songVariations": ["encore"],
-    "stage": "hillZonePhase2",
-    "noteStyle": "exeFourKey",
+    "stage": "hillAct2",
+    "noteStyle": "exe",
     "ratings": {"easy": 6, "normal": 8, "hard": 10},
     "previewStart": 0,
     "previewEnd": 15000

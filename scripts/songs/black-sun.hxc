@@ -12,11 +12,6 @@ class BlackSunSong extends Song {
         super.onCreate(event);
 
         PlayState.instance.opponentStrumline.visible = false;
-
-        doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
-        if (!doBloodSplash) {
-            ModuleHandler.getModule('SwappingNotestyles').scriptCall('swapStrumlines', ['exeSemi']);
-        }
     }
 }
 

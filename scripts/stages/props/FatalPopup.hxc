@@ -42,7 +42,7 @@ class FatalPopup extends FlxTypedSpriteGroup
 			case 1:
 				clickDetector = new FlxSprite((88 + 34) * scale, (75 + 46) * scale);
 				popup = new FlxSprite();
-				popup.frames = Paths.getSparrowAtlas("error_popups");
+				popup.frames = Paths.getSparrowAtlas("events/fatalpopups/error_popups");
 				popup.animation.addByPrefix("a", "idle", 24, false);
 				add(popup);
 				popup.animation.play('a', true);

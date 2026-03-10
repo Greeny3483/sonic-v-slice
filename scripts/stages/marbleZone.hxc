@@ -30,7 +30,7 @@ class MarbleZone extends Stage
     override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
-        ShaderHandler.initShader("vcr");
+        EXEShaders.initShader("vcr");
 
         if (PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             sarah = CharacterDataParser.fetchCharacter('Sarah');
@@ -47,7 +47,7 @@ class MarbleZone extends Stage
     override function onUpdate(event:UpdateScriptEvent):Void {
         super.onUpdate(event);
 
-        ShaderHandler.updateShader("vcr");
+        EXEShaders.updateShader("vcr");
 
         if (PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             if (sarah != null) {

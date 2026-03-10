@@ -1,0 +1,16 @@
+import funkin.Paths;
+import funkin.FunkinMemory;
+import funkin.play.character.SparrowCharacter;
+
+class TailsDoll extends SparrowCharacter {
+	public function new() {
+		super("tailsdoll");
+	}
+
+    override function onCreate(event:ScriptEvent) {
+        super.onCreate(event);
+
+        FunkinMemory.cacheTexture(Paths.image("characters/specialAnims/Tails_Doll_Alt"));
+    }
+
+}

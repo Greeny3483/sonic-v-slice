@@ -1,0 +1,124 @@
+import flixel.FlxG;
+import funkin.Conductor;
+import funkin.play.PlayState;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.module.Module;
+import Math;
+import Std;
+
+class FearBar extends Module {
+
+    public static var currentBarPercent:Float = 0.01;
+    public static var fearBarBG:FunkinSprite;
+	public static var fearBar:FunkinSprite;
+	public static var fearBarFill:FunkinSprite;
+
+    public function new() {
+        super("FearBar");
+    }
+
+    public static function createFearBar():Void
+    {
+        fearBar = FunkinSprite.create(FlxG.width - 100, 100, 'events/fearbar/fearbar');
+		fearBar.cameras = [PlayState.instance.camHUD];
+		fearBar.zIndex = 1002;
+		fearBar.scale.set(0.82, 1.1);
+		PlayState.instance.add(fearBar);
+
+		fearBarBG = FunkinSprite.create(fearBar.x, fearBar.y, 'events/fearbar/fearbarBG');
+		fearBarBG.cameras = [PlayState.instance.camHUD];
+		fearBarBG.zIndex = 1000;
+		fearBarBG.scale.set(0.82, 1.1);
+		PlayState.instance.add(fearBarBG);
+
+		fearBarFill = FunkinSprite.create(fearBar.x + 15, fearBar.y + 20);
+		fearBarFill.makeGraphic(40, 250, 0xFFFF0000);
+		fearBarFill.offset.set(0, 10);
+		fearBarFill.scale.set(0.65, 1.0);
+		fearBarFill.cameras = [PlayState.instance.camHUD];
+		fearBarFill.zIndex = 1001;
+		PlayState.instance.add(fearBarFill);
+    }
+
+    public static function updateFearBar():Void
+	{
+		if (fearBarFill == null) return;
+		
+		if (currentBarPercent < 1.0)
+		{
+			currentBarPercent += 0.000015;
+		}
+		
+		if (currentBarPercent > 1.0) currentBarPercent = 1.0;
+		if (currentBarPercent < 0.0) currentBarPercent = 0.0;
+		
+		if (currentBarPercent >= 1.0)
+		{
+			PlayState.instance.health = 0;
+		}
+		
+		var maxHeight = 280;
+		var newHeight = Math.max(1, Std.int(maxHeight * currentBarPercent));
+		
+		fearBarFill.makeGraphic(40, newHeight, 0xFFFF0000);
+		fearBarFill.y = fearBar.y + 20 + (maxHeight - newHeight);
+	}
+	
+	override function onNoteHit(event:NoteScriptEvent):Void
+	{
+		super.onNoteHit(event);
+		
+		if (event.note.noteData.getMustHitNote())
+		{
+			if (currentBarPercent > 0)
+			{
+				currentBarPercent -= 0.0004;
+			}
+		}
+		else
+		{
+			if (currentBarPercent < 1.0)
+			{
+				currentBarPercent += 0.0003;
+			}
+		}
+	}
+	
+	override function onNoteMiss(event:NoteScriptEvent):Void
+	{
+		super.onNoteMiss(event);
+		
+		if (event.note.noteData.getMustHitNote() && event.note.noteType == '' && currentBarPercent < 1.0)
+		{
+			currentBarPercent += 0.025;
+		}
+	}
+	
+	override function onNoteGhostMiss(event:GhostMissNoteScriptEvent):Void
+	{
+		super.onNoteGhostMiss(event);
+		
+		// Ghost miss - increase fear
+		if (currentBarPercent < 1.0)
+		{
+			currentBarPercent += 0.015;
+		}
+	}
+	
+	override function onBeatHit(event:SongTimeScriptEvent):Void
+	{
+		super.onBeatHit(event);
+
+		if (PlayState.instance == null) return;
+		
+        if (PlayState.instance.currentSong.id.toLowerCase() != "fight-or-flight") return;
+
+		if (currentBarPercent > 0.53 && Conductor.instance.currentStep < 2144)
+		{
+			if (PlayState.instance.health > 0.08 && currentBarPercent < 1.0)
+			{
+				PlayState.instance.health -= 0.046;
+			}
+		}
+	}
+}

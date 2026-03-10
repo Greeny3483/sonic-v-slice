@@ -13,100 +13,70 @@ import funkin.ui.freeplay.SongMenuItem;
 import funkin.ui.freeplay.FreeplayState;
 import funkin.PlayerSettings;
 import funkin.save.Save;
+import funkin.modding.module.ModuleHandler;
 
 class EXEOptions extends Module
 {
-    public var char:BaseCharacter;
-
-    public var fatalpopups:Bool = true;
-    public var screenstatic:Bool = true;
-    public var screenratio:Bool = true;
-    public var dojumpscares:Bool = true;
-    public var cameramove:Bool = true;
-    public var dolyrics:Bool = true;
-    public var forcemiddlescroll:Bool = true;
-    public var modcharts:Bool = true;
-    public var exehud:Bool = true;
-    public var hpcolors:Bool = true;
-    public var cameramoveIntensity:Int = 20; // New: Intensity value
-    public var ghosttap:Bool = false;
-    public var encoreshaders:Bool = true;
-    public var encoreSkin:String = "Encore Only";
-    public var maxhpdrain:Bool = true;
-    public var bloodsplashes:Bool = true;
-    public var cinematiceffect:Bool = true;
-    public var intensivegore:Bool = true;
-    public var bonusfeatures:Bool = true;
-    public var exebackingCard:String = "Dad";
-    public var quickTimeEvents:Bool = true;
-    public var doSongIntroCards:Bool = true;
-    public var doCameraShake:Bool = true;
+    // Gameplay
+    public var doJumpscares:Bool = true;
+    public var doCameraShakes:Bool = true;
+    public var doScreenStatic:Bool = true;
+    public var doModcharts:Bool = true;
+    public var doStrumSwap:Bool = true;
+    public var doQTES:Bool = true;
+    public var doCinematics:Bool = true;
+    public var doFatalPopups:Bool = true;
     public var doWindowMovement:Bool = true;
-    //public var doWarningScreen:Bool = true; // Mobile Warning Screen
+    public var doGhostTapping:Bool = true;
+    public var doSongTransitions:Bool = true;
+    public var doCamMovement:Bool = true;
+    public var camMovementIntensity:Int = 20;
+
+    // Graphics
+    public var allowGore:Bool = true;
+    public var doShaders:Bool = true;
+
+    // HUD
+    public var doGenesisHUD:Bool = true;
+    public var doColoredHealthBar:Bool = true;
+
+    // Menu
+    public var freeplayBG:String = "Dad";
+
+    // Bonus Content
+    public var doGenesisMode:Bool = false;
 
 
     public function new(){
         super("EXEOptions", 1);
 
-        if (!FlxG.onMobile) {
-            if(Save.instance.modOptions["exehud"] == null) Save.instance.modOptions["exehud"] = true;
-            if(Save.instance.modOptions["modcharts"] == null) Save.instance.modOptions["modcharts"] = true;
-            if(Save.instance.modOptions["forcemiddlescroll"] == null) Save.instance.modOptions["forcemiddlescroll"] = true;      
-            if(Save.instance.modOptions["cinematiceffect"] == null) Save.instance.modOptions["cinematiceffect"] = true;
-            if(Save.instance.modOptions["ghosttap"] == null) Save.instance.modOptions["ghosttap"] = false;
-        }
-        if (FlxG.onMobile) {
-            if(Save.instance.modOptions["doWarningScreen"] == null) Save.instance.modOptions["doWarningScreen"] = true;
-        }
-        if(Save.instance.modOptions["fatalpopups"] == null) Save.instance.modOptions["fatalpopups"] = true;
-        if(Save.instance.modOptions["screenstatic"] == null) Save.instance.modOptions["screenstatic"] = true;
-        if(Save.instance.modOptions["screenratio"] == null) Save.instance.modOptions["screenratio"] = true;
-        if(Save.instance.modOptions["dojumpscares"] == null) Save.instance.modOptions["dojumpscares"] = true;
-        if(Save.instance.modOptions["cameramove"] == null) Save.instance.modOptions["cameramove"] = true;
-        if(Save.instance.modOptions["dolyrics"] == null) Save.instance.modOptions["dolyrics"] = true;
-        if(Save.instance.modOptions["forcemiddlescroll"] == null) Save.instance.modOptions["forcemiddlescroll"] = true;
-        if(Save.instance.modOptions["hpcolors"] == null) Save.instance.modOptions["hpcolors"] = true;
-        if(Save.instance.modOptions["cameramoveIntensity"] == null) Save.instance.modOptions["cameramoveIntensity"] = 20;
-        if(Save.instance.modOptions["encoreshaders"] == null) Save.instance.modOptions["encoreshaders"] = true;
-        if(Save.instance.modOptions["encoreSkin"] == null) Save.instance.modOptions["encoreSkin"] = "Encore Only";
-        if(Save.instance.modOptions["maxhpdrain"] == null) Save.instance.modOptions["maxhpdrain"] = true;
-        if(Save.instance.modOptions["bloodsplashes"] == null) Save.instance.modOptions["bloodsplashes"] = true;
-        if(Save.instance.modOptions["exebackingCard"] == null) Save.instance.modOptions["exebackingCard"] = "Dad";
-        if(Save.instance.modOptions["intensivegore"] == null) Save.instance.modOptions["intensivegore"] = true;
-        if(Save.instance.modOptions["doShaders"] == null) Save.instance.modOptions["doShaders"] = true;
-        if(Save.instance.modOptions["quickTimeEvents"] == null) Save.instance.modOptions["quickTimeEvents"] = true;
-        if(Save.instance.modOptions["doSongIntroCards"] == null) Save.instance.modOptions["doSongIntroCards"] = true;
-        if(Save.instance.modOptions["doCameraShake"] == null) Save.instance.modOptions["doCameraShake"] = true;
+        // Gameplay
+        if(Save.instance.modOptions["doJumpscares"] == null) Save.instance.modOptions["doJumpscares"] = true;
+        if(Save.instance.modOptions["doCameraShakes"] == null) Save.instance.modOptions["doCameraShakes"] = true;
+        if(Save.instance.modOptions["doScreenStatic"] == null) Save.instance.modOptions["doScreenStatic"] = true;
+        if(Save.instance.modOptions["doModcharts"] == null) Save.instance.modOptions["doModcharts"] = true;
+        if(Save.instance.modOptions["doQTES"] == null) Save.instance.modOptions["doQTES"] = true;
+        if(Save.instance.modOptions["doCinematics"] == null) Save.instance.modOptions["doCinematics"] = true;
+        if(Save.instance.modOptions["doFatalPopups"] == null) Save.instance.modOptions["doFatalPopups"] = true;
         if(Save.instance.modOptions["doWindowMovement"] == null) Save.instance.modOptions["doWindowMovement"] = true;
+        if(Save.instance.modOptions["doGhostTapping"] == null) Save.instance.modOptions["doGhostTapping"] = true;
+        if(Save.instance.modOptions["doSongTransitions"] == null) Save.instance.modOptions["doSongTransitions"] = true;
+        if(Save.instance.modOptions["doCamMovement"] == null) Save.instance.modOptions["doCamMovement"] = true;
+        if(Save.instance.modOptions["camMovementIntensity"] == null) Save.instance.modOptions["camMovementIntensity"] = 20;
 
-        if (!FlxG.onMobile) {
-            ghosttap = Save.instance.modOptions["ghosttap"];
-        }
-        
-        fatalpopups = Save.instance.modOptions["fatalpopups"];
-        screenstatic = Save.instance.modOptions["screenstatic"];
-        screenratio = Save.instance.modOptions["screenratio"];
-        dojumpscares = Save.instance.modOptions["dojumpscares"];
-        cameramove = Save.instance.modOptions["cameramove"];
-        dolyrics = Save.instance.modOptions["dolyrics"];
-        forcemiddlescroll = Save.instance.modOptions["forcemiddlescroll"];
-        cameramoveIntensity = Save.instance.modOptions["cameramoveIntensity"];
-        modcharts = Save.instance.modOptions["modcharts"];
-        exehud = Save.instance.modOptions["exehud"];
-        hpcolors = Save.instance.modOptions["hpcolors"];
-        encoreshaders = Save.instance.modOptions["encoreshaders"];
-        encoreSkin = Save.instance.modOptions["encoreSkin"];
-        maxhpdrain = Save.instance.modOptions["maxhpdrain"];
-        bloodsplashes = Save.instance.modOptions["bloodsplashes"];
-        cinematiceffect = Save.instance.modOptions["cinematiceffect"];
-        intensivegore = Save.instance.modOptions["intensivegore"];
-        doShaders = Save.instance.modOptions["doShaders"];
-        exebackingCard = Save.instance.modOptions["exebackingCard"];
-        quickTimeEvents = Save.instance.modOptions["quickTimeEvents"];
-        doSongIntroCards = Save.instance.modOptions["doSongIntroCards"];
-        doWarningScreen = Save.instance.modOptions["doWarningScreen"];
-        doCameraShake = Save.instance.modOptions["doCameraShake"];
-        doWindowMovement = Save.instance.modOptions["doWindowMovement"];
+        // Graphics
+        if(Save.instance.modOptions["allowGore"] == null) Save.instance.modOptions["allowGore"] = true;
+        if(Save.instance.modOptions["doShaders"] == null) Save.instance.modOptions["doShaders"] = true;
+
+        // HUD
+        if(Save.instance.modOptions["doGenesisHUD"] == null) Save.instance.modOptions["doGenesisHUD"] = true;
+        if(Save.instance.modOptions["doColoredHealthBar"] == null) Save.instance.modOptions["doColoredHealthBar"] = true;
+
+        // Menu
+        if(Save.instance.modOptions["freeplayBG"] == null) Save.instance.modOptions["freeplayBG"] = "Dad";
+
+        // Bonus Content
+        if(Save.instance.modOptions["doGenesisMode"] == null) Save.instance.modOptions["doGenesisMode"] = false;
     }
 
     public var inOptions:Bool = false;
@@ -118,180 +88,151 @@ class EXEOptions extends Module
             var prefs = event.targetState.optionsCodex.pages.get("preferences");
             inOptions = true;
 
-            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: HUD", "bold", () -> false); // Separate options from the default preferences OR modded preferences.
-			prefs.preferenceDesc.push("HUD options for VS Sonic.EXE");
-
-            prefs.createPrefItemCheckbox("Blood Note Splashes", "Replaces the default note splashes with blood splashes in most VS Sonic.Exe songs.", function(value) {
-                Save.instance.modOptions["bloodsplashes"] = value;
-                bloodsplashes = value;
-                Save.instance.flush();
-            }, Save.instance.modOptions["bloodsplashes"]);
-
-            if (!FlxG.onMobile) { // Exclude these options if playing on mobile
-                prefs.createPrefItemCheckbox("Icon Colored Healthbar", "Colors the healthbar based on the color of the icons. \nNote: Disabling requires restart", function(value) {
-                    Save.instance.modOptions["hpcolors"] = value;
-                    hpcolors = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["hpcolors"]);
-
-                prefs.createPrefItemCheckbox("RETRO SONIC HUD", "Enables the RETRO SONIC HUD for all songs.", function(value) {
-                    Save.instance.modOptions["exehud"] = value;
-                    exehud = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["exehud"]);
-            }
-
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: GAMEPLAY", "bold", () -> false); // Separate options from the default preferences OR modded preferences.
 			prefs.preferenceDesc.push("Gameplay options for VS Sonic.EXE");
 
-            if (!FlxG.onMobile) { // Exclude these options if playing on mobile
-                prefs.createPrefItemCheckbox("Ghost Tapping", "Allows key-presses without penalty when no notes are present.", function(value) {
-                    Save.instance.modOptions["ghosttap"] = value;
-                    ghosttap = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["ghosttap"]);
-
-                prefs.createPrefItemCheckbox("Mod Charts", "Allows certain songs to modify the Player or Opponent's strumlines.", function(value) {
-                    Save.instance.modOptions["modcharts"] = value;
-                    modcharts = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["modcharts"]);
-
-                prefs.createPrefItemCheckbox("Cinematics", "Allows the cinematic borders to appear during certain sections of certain songs.", function(value) {
-                    Save.instance.modOptions["cinematiceffect"] = value;
-                    cinematiceffect = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["cinematiceffect"]);
-
-                prefs.createPrefItemCheckbox("Window Movement", "Enables the moving and shaking of the game window. Used in Fatality.", function(value) {
-                    Save.instance.modOptions["doWindowMovement"] = value;
-                    doWindowMovement = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["doWindowMovement"]);
-            }
-
-            prefs.createPrefItemCheckbox("Fatal Error Popups", "Enables the visibility of the 'Fatal Error' popups used in Fatality.", function(value) {
-                Save.instance.modOptions["fatalpopups"] = value;
-                fatalpopups = value;
+            prefs.createPrefItemCheckbox("Jumpscares", "Toggles jumpscares.", function(value) {
+                Save.instance.modOptions["doJumpscares"] = value;
+                doJumpscares = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["fatalpopups"]);
+            }, Save.instance.modOptions["doJumpscares"]);
 
-            prefs.createPrefItemCheckbox("Quick Time Events", "Enables quick time events. \nNotably in Chaos.", function(value) {
-                Save.instance.modOptions["quickTimeEvents"] = value;
-                fatalpopups = value;
+            prefs.createPrefItemCheckbox("Camera Shake", "Toggles camera shakes.", function(value) {
+                Save.instance.modOptions["doCameraShakes"] = value;
+                doCameraShakes = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["quickTimeEvents"]);
+            }, Save.instance.modOptions["doCameraShakes"]);
 
-            prefs.createPrefItemCheckbox("Jumpscares", "Enables jumpscares for certain songs.", function(value) {
-                Save.instance.modOptions["dojumpscares"] = value;
-                dojumpscares = value;
+            prefs.createPrefItemCheckbox("Screen Static", "Toggles screen static effects.", function(value) {
+                Save.instance.modOptions["doScreenStatic"] = value;
+                doScreenStatic = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["dojumpscares"]);
+            }, Save.instance.modOptions["doScreenStatic"]);
 
-            prefs.createPrefItemCheckbox("Screen Static", "Enables the static overlay that appears throughout certain songs.", function(value) {
-                Save.instance.modOptions["screenstatic"] = value;
-                screenstatic = value;
+            prefs.createPrefItemCheckbox("Modcharts", "Toggles modchart effects such as strumline wiggle.", function(value) {
+                Save.instance.modOptions["doModcharts"] = value;
+                doModcharts = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["screenstatic"]);
+            }, Save.instance.modOptions["doModcharts"]);
 
-            prefs.createPrefItemCheckbox("Camera Shake", "Enables camera shake on note hit for certain characters. \nScripted camera shakes will not be affected.", function(value) {
-                Save.instance.modOptions["doCameraShake"] = value;
-                screenstatic = value;
+            prefs.createPrefItemCheckbox("QTEs", "Toggles quick time events.", function(value) {
+                Save.instance.modOptions["doQTES"] = value;
+                doQTES = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["doCameraShake"]);
+            }, Save.instance.modOptions["doQTES"]);
 
-            prefs.createPrefItemCheckbox("Note Camera Movement", "Makes the camera move depending on the direction of the note you hit.", function(value) {
-                Save.instance.modOptions["cameramove"] = value;
-                cameramove = value;
+            prefs.createPrefItemCheckbox("Cinematics", "Toggles cinematic effects.", function(value) {
+                Save.instance.modOptions["doCinematics"] = value;
+                doCinematics = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["cameramove"]);
+            }, Save.instance.modOptions["doCinematics"]);
+
+            prefs.createPrefItemCheckbox("Fatal Error Popups", "Toggles the 'Fatality Popups' event.", function(value) {
+                Save.instance.modOptions["doFatalPopups"] = value;
+                doFatalPopups = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doFatalPopups"]);
+
+            prefs.createPrefItemCheckbox("Window Movement", "Toggles window movement effects.", function(value) {
+                Save.instance.modOptions["doWindowMovement"] = value;
+                doWindowMovement = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doWindowMovement"]);
+
+            prefs.createPrefItemCheckbox("Ghost Tapping", "Toggles ghost tapping.", function(value) {
+                Save.instance.modOptions["doGhostTapping"] = value;
+                doGhostTapping = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doGhostTapping"]);
+
+            prefs.createPrefItemCheckbox("Song Transitions", "Toggles movement of the camera when hitting a note.", function(value) {
+                Save.instance.modOptions["doSongTransitions"] = value;
+                doSongTransitions = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doSongTransitions"]);
+
+            prefs.createPrefItemCheckbox("Camera Movement", "Toggles movement of the camera when hitting a note.", function(value) {
+                Save.instance.modOptions["doCamMovement"] = value;
+                doCamMovement = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doCamMovement"]);
 
             prefs.createPrefItemNumber(
-                "Movement Intensity",
-                "How far the camera moves when hitting a note. \nToo high a value can cause out of bounds issues.",
+                "Intensity",
+                "How far the camera moves when hitting a note.",
                 function(value:Float) {
-                    if (Save.instance.modOptions["cameramove"]) {
-                        Save.instance.modOptions["cameramoveIntensity"] = Std.int(value);
-                        cameramoveIntensity = Std.int(value);
+                    if (Save.instance.modOptions["camMovementIntensity"]) {
+                        Save.instance.modOptions["camMovementIntensity"] = Std.int(value);
+                        camMovementIntensity = Std.int(value);
                         Save.instance.flush();
                     }
                 },
                 null,
-                Save.instance.modOptions["cameramoveIntensity"],
+                Save.instance.modOptions["camMovementIntensity"],
                 5, 100, 5, 0
             );
 
-            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: GRAPHICS", "bold", () -> false); // Separate options from the default preferences OR modded preferences.
-			prefs.preferenceDesc.push("Graphic options for VS Sonic.EXE");
+            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: GRAPHICS", "bold", () -> false);
+			prefs.preferenceDesc.push("Graphical options for VS Sonic.EXE");
 
-            prefs.createPrefItemCheckbox("Shaders", "Adds custom shaders (VCR, etc) to certain songs.", function(value) {
+            prefs.createPrefItemCheckbox("Gore", "Toggles gore assets.", function(value) {
+                Save.instance.modOptions["allowGore"] = value;
+                allowGore = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["allowGore"]);
+
+            prefs.createPrefItemCheckbox("Shaders", "Toggles shaders. Disabling may improve performance.", function(value) {
                 Save.instance.modOptions["doShaders"] = value;
                 doShaders = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doShaders"]);
 
-            prefs.createPrefItemCheckbox("Song Intro Cards", "Enables intro cards for most songs.", function(value) {
-                Save.instance.modOptions["doSongIntroCards"] = value;
-                doSongIntroCards = value;
+            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: HUD", "bold", () -> false);
+            prefs.preferenceDesc.push("HUD options for VS Sonic.EXE");
+
+            prefs.createPrefItemCheckbox("Genesis HUD", "Toggles the genesis-styled HUD.", function(value) {
+                Save.instance.modOptions["doGenesisHUD"] = value;
+                doGenesisHUD = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["doSongIntroCards"]);
+            }, Save.instance.modOptions["doGenesisHUD"]);
 
-            prefs.createPrefItemCheckbox("Pillarbox", "Adds Pillarbox to certain songs. Forcefully moving the strumline to match the aspect ratio.", function(value) {
-                Save.instance.modOptions["screenratio"] = value;
-                screenratio = value;
+            prefs.createPrefItemCheckbox("Colored Health Bar", "Toggles icon based health bar colors.", function(value) {
+                Save.instance.modOptions["doColoredHealthBar"] = value;
+                doColoredHealthBar = value;
                 Save.instance.flush();
-            }, Save.instance.modOptions["screenratio"]);
+            }, Save.instance.modOptions["doColoredHealthBar"]);
 
-            prefs.createPrefItemCheckbox("Gore", "Removes intense aspects of gore from the mod. \nNotably the dead Sonic prop in Fight or Flight.", function(value) {
-                Save.instance.modOptions["intensivegore"] = value;
-                intensivegore = value;
-                Save.instance.flush();
-            }, Save.instance.modOptions["intensivegore"]);
-
-            if (!FlxG.onMobile) {
-                prefs.createPrefItemCheckbox("Lyrics", "Toggles lyrics/visible character dialogue for certain songs.", function(value) {
-                    Save.instance.modOptions["dolyrics"] = value;
-                    dolyrics = value;
-                    Save.instance.flush();
-                }, Save.instance.modOptions["dolyrics"]);
-            }
-
-			prefs.createPrefItemEnum("Encore Skins", "Enables Encore skins when Boyfriend is the player.", [
-				"Encore Only" => "Encore Only",
-				"Always" => "Always",
-                "Never" => "Never"
-			], function(key:String, value:String) {
-				Save.instance.modOptions["encoreSkin"] = value;
-				encoreSkin = value;
-				Save.instance.flush();
-			}, Save.instance.modOptions["encoreSkin"]);
-
-            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: MENU", "bold", () -> false); // Separate options from the default preferences OR modded preferences.
+            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: MENU", "bold", () -> false);
 			prefs.preferenceDesc.push("Menu options for VS Sonic.EXE");
 
-            /* prefs.createPrefItemCheckbox("Mobile Warning Screen", "Enables the warning screen for mobile devices.", function(value) {
-                Save.instance.modOptions["doWarningScreen"] = value;
-                doWarningScreen = value;
-                Save.instance.flush();
-            }, Save.instance.modOptions["doWarningScreen"]); */
-
-			prefs.createPrefItemEnum("Freeplay BG", "Allows switching between different freeplay BGs (Backing Cards).", [
-                "Dad" => "Dad",
-                "Sonic.exe (Phase 1)" => "Sonic.exe (Phase 1)",
-				"Sonic.exe (Phase 2)" => "Sonic.exe (Phase 2)",
-				"Sonic.exe (Phase 3)" => "Sonic.exe (Phase 3)",
-				"Majin Sonic" => "Majin Sonic",
-				"Lord X" => "Lord X",
+            prefs.createPrefItemEnum("Freeplay BG", "Switch between different freeplay backgrounds.", [
+                "Default" => "Default",
+                "Too Slow" => "Too Slow",
+                "You Can't Run" => "You Can't Run",
+				"Triple Trouble" => "Triple Trouble",
+				"Endless" => "Endless",
+				"Cycles" => "Cycles",
 				"Faker" => "Faker",
-				"Needlemouse" => "Needlemouse",
-				"Furnace" => "Furnace",
-				"Fatal Error" => "Fatal Error",
-                "Coldsteel" => "Coldsteel"
+				"Relax" => "Relax",
+				"Prey" => "Prey",
+				"Fatality" => "Fatality",
+                "Personnel" => "Personnel",
+                "Soulless" => "Soulless",
+                "Fight or Flight" => "Fight or Flight"
 			], function(key:String, value:String) {
-				Save.instance.modOptions["exebackingCard"] = value;
+				Save.instance.modOptions["freeplayBG"] = value;
 				exebackingCard = value;
 				Save.instance.flush();
-			}, Save.instance.modOptions["exebackingCard"]);
+			}, Save.instance.modOptions["freeplayBG"]);
+
+            prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: EXTRAS", "bold", () -> false);
+            prefs.preferenceDesc.push("Bonus content options for VS Sonic.EXE");
+
+            prefs.createPrefItemCheckbox("Genesis Mode", "Toggles extra visuals not typically seen in some songs.", function(value) {
+                Save.instance.modOptions["doGenesisMode"] = value;
+                doGenesisMode = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doGenesisMode"]);
         }
     }
 }

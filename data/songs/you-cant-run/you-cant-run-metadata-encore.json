@@ -3,7 +3,7 @@
   "songName": "You Can't Run Encore",
   "artist": "MarStarBro & Saster",
   "playData": {
-    "album": "exeEncoreOST",
+    "album": "exeOST",
     "difficulties": ["encore"],
     "characters": {
       "player": "bf-encore",
@@ -11,8 +11,8 @@
       "opponent": "sonicexep2",
       "instrumental": "encore"
     },
-    "stage": "hillZonePhase2",
-    "noteStyle": "exeFourKey",
+    "stage": "hillAct2",
+    "noteStyle": "exe",
     "ratings": {"encore": 11},
     "previewStart": 0,
     "previewEnd": 15000

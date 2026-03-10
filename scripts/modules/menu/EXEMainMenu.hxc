@@ -1,0 +1,23 @@
+import flixel.FlxG;
+import funkin.ui.mainmenu.MainMenuState;
+import funkin.modding.module.Module;
+
+class EXEMainMenu extends Module
+{
+    public var vnum:String = '0.3.0';
+
+    public function new()
+    {
+        super('EXEMainMenu');
+    }
+  
+    override function onUpdate(event:UpdateScriptEvent)
+    {
+	    super.onUpdate(event);
+
+        if (FlxG.state is MainMenuState)
+        {
+            FlxG.state.rightWatermarkText.text = "EXE V-SLICE " + vnum;
+        }
+    }
+}
