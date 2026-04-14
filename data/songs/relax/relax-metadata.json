@@ -2,16 +2,8 @@
   "version": "2.2.4",
   "songName": "Relax",
   "artist": "DanlyDaMusician",
-  "looped": false,
-  "offsets": {
-    "instrumental": 0,
-    "altInstrumentals": {    },
-    "vocals": {    },
-    "altVocals": {    }
-  },
   "playData": {
     "album": "exeOST",
-    "songVariations": [    ],
     "difficulties": [
       "easy",
       "normal",

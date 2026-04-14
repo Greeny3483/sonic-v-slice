@@ -110,6 +110,10 @@ class MarbleZone extends Stage
     function onStepHit(event:SongTimeScriptEvent):Void {
         super.onStepHit(event);
 
+        if (event.step == 110 && PlayState.instance.currentSong.id.toLowerCase() == "relax") {
+            //EXEScripts.triggerGlitchTransition();
+        }
+
         if (event.step == 761 && PlayState.instance.currentSong.id.toLowerCase() == "round-a-bout") {
             sarah.zIndex = 100;
             PlayState.instance.add(sarah);
@@ -129,5 +133,8 @@ class MarbleZone extends Stage
                 PlayState.instance.remove(sarah);
             }
         }
+
+        EXEShaders.clearShaders(); // prevent duplication
+        EXEShaders.initShader("vcr");
     }
 }

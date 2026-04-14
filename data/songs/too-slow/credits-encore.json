@@ -1,0 +1,32 @@
+{
+  "sections": [
+    {
+      "title": "CODE",
+      "names": ["Greeny3483", "(org.) Jackie.exe"]
+    },
+    {
+      "title": "ARTWORK",
+      "names": ["Cherribun", "Comgaming"]
+    },
+    {
+      "title": "MUSIC",
+      "names": ["MarStarBro", "Saster"]
+    },
+    {
+      "title": "CHARTING",
+      "names": ["Wilde"]
+    }
+  ],
+  "options": {
+    "startStep": 1,
+    "exitTimer": 5,
+    "tweenSpeed": 0.8,
+    "alpha": 0.8,
+    "color": "0xFF7A00AD",
+    "textColor": "0xFFC438FF",
+    "font": "sonic-1-hud-font.ttf",
+    "titleSize": 50,
+    "sectionSize": 35,
+    "nameSize": 25
+  }
+}

@@ -12,22 +12,32 @@ import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.modding.module.Module;
 import funkin.modding.module.ModuleHandler;
+import funkin.FunkinMemory;
 
 class EXEIntros extends Module {
     public var songIntroCircle:FunkinSprite;
     public var songIntroText:FunkinSprite;
     public var encoreText:FunkinSprite;
     public var blackBackground:FlxSprite;
-    public var songName:String;
     public var skipNextIntro:Bool = false;
 
     // These are the songs that will have a custom intro card
     // If listed here, the script will look for the assets in 'songIntros/songname/'
     public var supportedSongs = [
-        'too-slow', 'you-cant-run', 'triple-trouble',
-        'endless', 'cycles', 'execution', 'faker', 'black-sun', 
-        'relax', 'round-a-bout', 'spike-trap', 'prey', 
-        'fight-or-flight', 'slaybells'
+        'too-slow', 
+        'you-cant-run', 
+        'triple-trouble',
+        'endless',
+        'endless-og',
+        'cycles', 
+        'execution', 'faker', 
+        'black-sun', 
+        'relax', 
+        'round-a-bout', 
+        'spike-trap', 
+        'prey', 
+        'fight-or-flight', 
+        'slaybells'
     ];
 
     public function new() {
@@ -36,43 +46,46 @@ class EXEIntros extends Module {
 
     function fetchIntroAssets():Void {
         songName = PlayState.instance.currentSong.id.toLowerCase();
+        FunkinMemory.permanentCacheSound(Paths.sound("flatBONK"));
 
         if (songIntroCircle != null) songIntroCircle.destroy();
         songIntroCircle = FunkinSprite.create(0, 0, "songIntros/" + songName + "/circle");
-        songIntroCircle.cameras = [PlayState.instance.camCutscene];
-        songIntroCircle.zIndex = 1000;
-        songIntroCircle.visible = false;
-        PlayState.instance.add(songIntroCircle);
+        setupIntroSprite(songIntroCircle);
 
         if (songIntroText != null) songIntroText.destroy();
-        songIntroText = FunkinSprite.create(0, 0, "songIntros/" + songName + "/text");
-        songIntroText.cameras = [PlayState.instance.camCutscene];
-        songIntroText.zIndex = 1000;
-        songIntroText.visible = false;
-        PlayState.instance.add(songIntroText);
+        if (songName != "milk") { // save memory
+            songIntroText = FunkinSprite.create(0, 0, "songIntros/" + songName + "/text");
+            setupIntroSprite(songIntroText);
+        } else {
+            songIntroText = null;
+        }
 
         if (PlayState.instance.currentVariation == "encore") {
             if (encoreText != null) encoreText.destroy();
             encoreText = FunkinSprite.create(0, 0, "songIntros/encore");
-            encoreText.cameras = [PlayState.instance.camCutscene];
-            encoreText.zIndex = 1000;
-            encoreText.visible = false;
-            PlayState.instance.add(encoreText);
+            setupIntroSprite(encoreText);
         }
 
         if (blackBackground != null) blackBackground.destroy();
-        blackBackground = new FlxSprite(0, 0);
-        blackBackground.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+        blackBackground = new FlxSprite(0, 0).makeGraphic(FlxG.width + 1, FlxG.height, 0xFF000000);
         blackBackground.cameras = [PlayState.instance.camCutscene];
         blackBackground.zIndex = 999;
         blackBackground.visible = false;
         PlayState.instance.add(blackBackground);
     }
 
+    function setupIntroSprite(sprite:FunkinSprite):Void {
+        if (sprite == null) return;
+        sprite.cameras = [PlayState.instance.camCutscene];
+        sprite.zIndex = 1000;
+        sprite.visible = false;
+        PlayState.instance.add(sprite);
+    }
+
     override function onCountdownStart(event:CountdownScriptEvent):Void {
         super.onCountdownStart(event);
 
-        if (PlayState.instance == null || PlayState.instance.currentSong == null || event.cancelled) return;
+        if (PlayState.instance?.currentSong == null || event.cancelled) return;
 
         if (skipNextIntro) {
             skipNextIntro = false;
@@ -81,85 +94,103 @@ class EXEIntros extends Module {
 
         fetchIntroAssets();
 
-        // Checks that the option is enabled and that it's one of the supported songs
-        // If the song is Sunshine, force a lower BPM to slow down the countdown
-        if (PlayState.instance.currentSong.id.toLowerCase() == "sunshine") {
-            Conductor.instance.forceBPM(70);
-        } else if (supportedSongs.indexOf(PlayState.instance.currentSong.id.toLowerCase()) != -1) {
-            Constants.COUNTDOWN_VOLUME = 0;
-            if (blackBackground != null) blackBackground.visible = true;
-            startIntro();
+        switch (PlayState.instance.currentSong.id.toLowerCase()) {
+            case "sunshine":
+                Conductor.instance.forceBPM(70); // slow the countdown
+                Constants.COUNTDOWN_VOLUME = 1;
+            case "chaos":
+                Constants.COUNTDOWN_VOLUME = 0;
+            case "milk":
+                Constants.COUNTDOWN_VOLUME = 0;
+                startMilkIntro();
+            default:
+                if (supportedSongs.contains(songName)) {
+                    Constants.COUNTDOWN_VOLUME = 0;
+                    if (blackBackground != null) blackBackground.visible = true;
+                    startIntro();
+                } else {
+                    Constants.COUNTDOWN_VOLUME = 1; // for every other song
+                }
         }
     }
 
     override function onCountdownEnd(event:CountdownScriptEvent):Void {
         super.onCountdownEnd(event);
 
-        if (PlayState.instance == null || PlayState.instance.currentSong == null) return;
-
-        if (PlayState.instance.currentSong.id.toLowerCase() == "sunshine") {
-            Conductor.instance.forceBPM(105);
-            return;
-        }
+        if (PlayState.instance.currentSong.id.toLowerCase() == "sunshine") Conductor.instance.forceBPM(105); // back to normal
     }
 
     public function startIntro():Void {
-        // Circle comes from the left, text comes from the right, encore, if present, comes from the bottom
+        if (blackBackground != null) {
+            blackBackground.visible = true;
+            blackBackground.alpha = 1;
+        }
 
         if (songIntroCircle != null) {
             songIntroCircle.x = FlxG.width;
-            songIntroCircle.alpha = 1;
-            songIntroCircle.visible = true;
-
-            FlxTween.tween(songIntroCircle, {x: (FlxG.width / 2) - (songIntroCircle.width / 2)}, 1.5, {
-                ease: FlxEase.quadOut,
-                onComplete: function(tween:FlxTween) {
-                    FlxTween.tween(songIntroCircle, {alpha: 0}, 1, {
-                        ease: FlxEase.quadOut,
-                    });
-                }
-            });
+            tweenIntroSprite(songIntroCircle, {x: (FlxG.width - songIntroCircle.width) / 2});
         }
 
         if (songIntroText != null) {
             songIntroText.x = -songIntroText.width;
-            songIntroText.alpha = 1;
-            songIntroText.visible = true;
-
-            FlxTween.tween(songIntroText, {x: (FlxG.width / 2) - (songIntroText.width / 2)}, 1.5, {
-                ease: FlxEase.quadOut,
-                onComplete: function(tween:FlxTween) {
-                    FlxTween.tween(songIntroText, {alpha: 0}, 1, {
-                        ease: FlxEase.quadOut,
-                    });
-
-                    if (blackBackground != null) {
-                        FlxTween.tween(blackBackground, {alpha: 0}, 1, {
-                            ease: FlxEase.quadOut,
-                        });
-                    }
-                }
-            });
+            tweenIntroSprite(songIntroText, {x: (FlxG.width - songIntroText.width) / 2}, true);
         }
 
         if (encoreText != null && PlayState.instance.currentVariation == "encore") {
             encoreText.y = FlxG.height;
-            encoreText.alpha = 1;
-            encoreText.visible = true;
-
-            FlxTween.tween(encoreText, {y: (FlxG.height / 2) - (encoreText.height / 2)}, 1.5, {
-                ease: FlxEase.quadOut,
-                onComplete: function(tween:FlxTween) {
-                    FlxTween.tween(encoreText, {alpha: 0}, 1, {
-                        ease: FlxEase.quadOut,
-                    });
-                }
-            });
+            tweenIntroSprite(encoreText, {y: (FlxG.height - encoreText.height) / 2});
         }
+    }
+
+    function tweenIntroSprite(sprite:FlxSprite, values:Dynamic, fadeBlack:Bool = false):Void {
+        sprite.alpha = 1;
+        sprite.visible = true;
+
+        FlxTween.tween(sprite, values, 1.5, {
+            ease: FlxEase.quadOut,
+            onComplete: function(_) {
+                FlxTween.tween(sprite, {alpha: 0}, 1, {ease: FlxEase.quadOut});
+                if (fadeBlack && blackBackground != null) {
+                    FlxTween.tween(blackBackground, {alpha: 0}, 1, {ease: FlxEase.quadOut});
+                }
+            }
+        });
+    }
+
+    function startMilkIntro():Void {
+        if (songIntroCircle == null) return;
 
         if (blackBackground != null) {
             blackBackground.visible = true;
             blackBackground.alpha = 1;
         }
+
+        songIntroCircle.x = (FlxG.width - songIntroCircle.width) / 2 + 40;
+        songIntroCircle.y = (FlxG.height - songIntroCircle.height) / 2;
+        songIntroCircle.alpha = 0;
+        songIntroCircle.scale.set(0, 0);
+        songIntroCircle.visible = true;
+
+        FlxTween.tween(songIntroCircle, {alpha: 1}, 0.01, {
+            startDelay: 0.5,
+            onComplete: function(_) {
+                FunkinSound.playOnce(Paths.sound("flatBONK"));
+                FlxTween.tween(songIntroCircle.scale, {x: 1, y: 1}, 0.5, {
+                    ease: FlxEase.bounceOut,
+                    onComplete: function(_) {
+                        FlxTween.tween(songIntroCircle, {alpha: 0}, 0.3, {
+                            ease: FlxEase.quadOut,
+                            startDelay: 1.5,
+                            onComplete: function(_) {
+                                if (blackBackground != null) {
+                                    FlxTween.tween(blackBackground, {alpha: 0}, 0.3, {ease: FlxEase.quadOut});
+                                    PlayState.instance.startSong(); // start early
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 }

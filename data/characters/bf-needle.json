@@ -1,7 +1,8 @@
 {
     "version": "1.0.0",
-    "name": "Boyfriend (Needlemouse)",
+    "name": "Boyfriend (Vs. Needlemouse)",
     "assetPath": "characters/needle-bf",
+    "renderType": "multisparrow",
     "singTime": 4,
     "isPixel": false,
     "scale": 0.5,
@@ -91,6 +92,25 @@
                 0,
                 0
             ]
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
         }
     ],
     "flipX": true

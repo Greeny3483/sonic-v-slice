@@ -10,7 +10,7 @@
       "t": 1501.32275132275,
       "e": "PlayAnimation",
       "v": {
-	"force": false,
+	"force": true,
 	"anim": "fastanim",
 	"target": "dad"
 }
@@ -85,7 +85,7 @@
       "t": 30482.8042328042,
       "e": "PlayAnimation",
       "v": {
-	"force": false,
+	"force": true,
 	"anim": "Step it up",
 	"target": "dad"
 }
@@ -139,7 +139,7 @@
       "t": 40562.1693121693,
       "e": "PlayAnimation",
       "v": {
-	"force": false,
+	"force": true,
 	"anim": "lmao",
 	"target": "dad"
 }
@@ -221,7 +221,7 @@
       "t": 51408.7301587302,
       "e": "PlayAnimation",
       "v": {
-	"force": false,
+	"force": true,
 	"anim": "fatphobia",
 	"target": "dad"
 }
@@ -268,7 +268,7 @@
       "t": 61514.5502645503,
       "e": "PlayAnimation",
       "v": {
-	"force": false,
+	"force": true,
 	"anim": "Finished",
 	"target": "dad"
 }
@@ -309,7 +309,7 @@
       "v": {
 	"target": "dad",
 	"anim": "WHAT",
-	"force": false
+	"force": true
 }
     },
     {
@@ -339,7 +339,7 @@
       "v": {
 	"target": "dad",
 	"anim": "Grrr",
-	"force": false
+	"force": true
 }
     },
     {
@@ -369,7 +369,7 @@
       "v": {
 	"target": "dad",
 	"anim": "Ill show you",
-	"force": false
+	"force": true
 }
     },
     {
@@ -521,7 +521,7 @@
       "v": {
 	"target": "dad",
 	"anim": "Growl",
-	"force": false
+	"force": true
 }
     },
     {
@@ -537,7 +537,7 @@
       "v": {
 	"target": "dad",
 	"anim": "Shut up",
-	"force": false
+	"force": true
 }
     },
     {

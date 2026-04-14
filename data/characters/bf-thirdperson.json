@@ -1,6 +1,6 @@
 {
 	"danceEvery": 1,
-	"renderType": "sparrow",
+	"renderType": "multisparrow",
 	"offsets": [
 		0,
 		0
@@ -117,6 +117,25 @@
 			"prefix": "Right_Miss_Flip",
 			"name": "singRIGHTmiss",
 			"looped": false
-		}
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
+        }
 	]
 }

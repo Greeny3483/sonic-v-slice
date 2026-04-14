@@ -1,0 +1,19 @@
+{
+  "version": "2.2.4",
+  "songName": "Endless (OG)",
+  "artist": "MarStarBro",
+  "charter": "MarStarBro",
+  "playData": {
+    "difficulties": ["extra"],
+    "characters": {"player": "bf-endless", "opponent": "majin_new"},
+    "stage": "majinForest",
+    "noteStyle": "exeSemi",
+    "ratings": {"extra": 7},
+    "album": "exeOST",
+    "previewStart": 0,
+    "previewEnd": 15000
+  },
+  "generatedBy": "Friday Night Funkin' - v0.7.5",
+  "timeFormat": "ms",
+  "timeChanges": [{"t": 0, "bpm": 155}]
+}

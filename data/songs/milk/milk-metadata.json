@@ -1,0 +1,23 @@
+{
+	"timeFormat": "ms",
+	"artist": "Squeak",
+	"charter": "niffirg",
+	"playData": {
+		"stage": "dancefloor",
+		"noteStyle": "milk",
+		"difficulties": ["easy", "normal", "hard"],
+		"characters": {"girlfriend": "gf", "opponent": "sunky", "player": "bf-sunkeh"},
+        "album": "exeOST",
+        "ratings": {"easy": 4, "normal": 4, "hard": 5},
+        "previewStart": 0,
+        "previewEnd": 15000
+	},
+	"songName": "Milk",
+	"timeChanges": [
+		{"t": 0, "bpm": 180},
+		{"t": 0, "bpm": 90},
+		{"t": 21333.3333333333, "bpm": 180}
+	],
+	"generatedBy": "Psych Engine v1.0.4 - Chart Editor V-Slice Exporter",
+	"version": "2.2.3"
+}

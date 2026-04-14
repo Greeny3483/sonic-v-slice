@@ -1,48 +1,167 @@
+import flixel.FlxG;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import funkin.modding.events.ScriptEvent;
-import funkin.modding.events.SongTimeScriptEvent;
+import funkin.Paths;
+import funkin.util.TouchUtil;
+import funkin.FunkinMemory;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
-import funkin.play.character.CharacterType;
-import funkin.play.character.BaseCharacter;
-import funkin.play.character.CharacterDataParser;
-import flixel.FlxG;
-import funkin.graphics.FunkinSprite;
 import funkin.audio.FunkinSound;
+import funkin.graphics.FunkinSprite;
 
-class EmeraldChamberStage extends Stage 
+class EmeraldChamber extends Stage 
 {
-	public var opponentFloatOffset:Float = 0;
+    // do not overcomplicated your scripts guys
+
+	var hasPlayedInGameCutscene:Bool = false;
+	var cutsceneTimer:FlxTimer;
+	var quickTime:FunkinSprite;
 
 	public function new()
 	{
 		super('emeraldChamber');
 	}
 
-    override function onCreate(event:ScriptEvent):Void {
+	override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
-        game = PlayState.instance;
-    }
 
-	override function update(elapsed:Float):Void {
-		super.update(elapsed);
+        // (might) prevent lag?
+		FunkinMemory.permanentCacheTexture("characters/Super_BoyFriend_Assets", "shared");
 
-		if (PlayState.instance != null) {
-			opponentFloatOffset += elapsed * 1.5;
-			game.currentStage.getDad().y += Math.sin(opponentFloatOffset) * 0.4;
+		FunkinMemory.permanentCacheSound(Paths.sound("robot", "shared"));
+		FunkinMemory.permanentCacheSound(Paths.sound("sonic", "shared"));
+		FunkinMemory.permanentCacheSound(Paths.sound("PowerUp", "shared"));
+
+		quickTime = FunkinSprite.create(500, 80);
+        quickTime.frames = Paths.getSparrowAtlas('events/spacebar_icon');
+        quickTime.animation.addByPrefix('idle', 'spacebar00', 24, false);
+		quickTime.scale.set(0.45, 0.45);
+        quickTime.zIndex = 5000;
+		quickTime.cameras = [PlayState.instance.camCutscene];
+		PlayState.instance.add(quickTime);
+		quickTime.alpha = 0;
+		quickTime.updateHitbox();
+	}
+
+	override function onCountdownStart(event:CountdownScriptEvent):Void
+	{
+		super.onCountdownStart(event);
+
+		getDad().x = getDad().x + 30;
+		getDad().y = 1000;
+		getDad().visible = false;
+
+		if (!hasPlayedInGameCutscene && PlayState.instance.currentSong.id.toLowerCase() == "chaos") {
+			hasPlayedInGameCutscene = true;
+			event.cancel();
+			playCutscene();
+		}
+	}
+
+	function playCutscene():Void
+	{
+		PlayState.instance.isInCutscene = true;
+
+		chamber = getNamedProp('Chamber');
+		emerald1 = getNamedProp('ChamberRainEmerald');
+		emerald2 = getNamedProp('ChamberRainEmerald2');
+		floor = getNamedProp('ChamberFloor');
+
+		PlayState.instance.camHUD.alpha = 0;
+		PlayState.instance.tweenCameraToPosition(-50, 100, 0);
+
+		FunkinSound.playOnce(Paths.sound("robot"));
+		PlayState.instance.tweenCameraZoom(1.1, 1, true, {ease: FlxEase.quadInOut});
+		FlxG.camera.flash(0xFFFF0000, 1);
+
+		cutsceneTimer = new FlxTimer().start(2, function(_) {
+			FunkinSound.playOnce(Paths.sound("sonic"));
+			if (chamber != null) chamber.animation.play('wowSonic');
+
+			cutsceneTimer = new FlxTimer().start(3, function(_) {
+				PlayState.instance.tweenCameraZoom(0.7, 0.3, true, FlxEase.quadInOut);
+				FunkinSound.playOnce(Paths.sound("beam"));
+				FlxG.camera.shake(0.03, 0.3);
+				
+				if (emerald1 != null) emerald1.zIndex = -4;
+				if (emerald2 != null) emerald2.zIndex = -3;
+				if (floor != null) floor.animation.play('yellow');
+
+				refresh();
+
+				cutsceneTimer = new FlxTimer().start(1, function(_) {
+					PlayState.instance.isInCutscene = false;
+					PlayState.instance.startCountdown();
+					FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 0.5);
+
+					cutsceneTimer = new FlxTimer().start(1.85, function(_) {
+						FlxTween.tween(getDad(), {y: -800}, 0.6, {ease: FlxEase.expoOut});
+						FlxTween.tween(getDad(), {x: getDad().x - 100}, 1.3);
+						getDad().visible = true;
+						PlayState.instance.tweenCameraToPosition(-100, -300, 0.50, FlxEase.quadInOut);
+					});
+				});
+			});
+		});
+	}
+
+	function cleanupCutscene():Void
+	{
+		if (cutsceneTimer != null && cutsceneTimer.active) {
+			cutsceneTimer.cancel();
+		}
+	}
+
+	function onSongRetry(event:ScriptEvent):Void
+	{
+		super.onSongRetry(event);
+		cleanupCutscene();
+		hasPlayedInGameCutscene = true;
+	}
+
+	override function onDestroy(event:ScriptEvent):Void
+	{
+		cleanupCutscene();
+		super.onDestroy(event);
+	}
+
+    public var inQTWindow:Bool = false;
+
+	override function onUpdate(event:UpdateScriptEvent):Void {
+		super.onUpdate(event);
+
+		if (inQTWindow) {
+			if (FlxG.keys.justPressed.SPACE || (TouchUtil.overlaps(quickTime) && TouchUtil.justPressed)) {
+				//getBoyfriend().playAnimation('dodge', true, true);
+				quickTime.alpha = 0;
+				inQTWindow = false;
+			}
 		}
 	}
 
 	function onStepHit(event:SongTimeScriptEvent):Void {
 		super.onStepHit(event);
 
-		if (!PlayState.instance.currentSong.id.toLowerCase() == 'chaos') return;
+		if (PlayState.instance.currentSong.id.toLowerCase() != 'chaos') return;
 
-		if (event.step == 1008) {
-			FlxG.camera.flash(0xFFFFDD00, 1);
-			FlxG.camera.shake(0.02, 0.2);
-			FunkinSound.playOnce(Paths.sound("PowerUp"), 1);
+		switch (event.step) {
+			case 258:
+				quickTime.alpha = 1;
+				quickTime.animation.play('idle');
+				inQTWindow = true;
+			case 275:
+				if (inQTWindow) {
+					PlayState.instance.health = -500;
+				}
+				inQTWindow = false;
+				quickTime.alpha = 0;
+			case 1008:
+			    FlxG.camera.flash(0xFFFFDD00, 1);
+			    FlxG.camera.shake(0.05, 0.5);
+			    PlayState.instance.camHUD.shake(0.03, 0.5);
+			    FunkinSound.playOnce(Paths.sound("PowerUp"), 1);
 		}
 	}
 }

@@ -1,5 +1,7 @@
 import flixel.FlxG;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import funkin.play.PlayState;
 import funkin.graphics.FunkinSprite;
@@ -12,14 +14,14 @@ class MajinForest extends Stage
 		super('majinForest');
 	}
 
-	var endCount1:FunkinSprite;
-	var endCount2:FunkinSprite;
-	var endCount3:FunkinSprite;
-	var endCount4:FunkinSprite;
+	public var endCount1:FunkinSprite;
+	public var endCount2:FunkinSprite;
+	public var endCount3:FunkinSprite;
+	public var endCount4:FunkinSprite;
 
-	var camDefaultZoom:Float = 0;
-	var camZoomEnable:Bool = false;
-	var hudAlphaChanged:Bool = false;
+    public var blueVignette:FunkinSprite;
+
+	public var hudAlphaChanged:Bool = false;
 
 	var majinCounts:Array<FunkinSprite> = [];
 
@@ -27,29 +29,42 @@ class MajinForest extends Stage
 	{
 		super.onCreate(event);
 
-		endCount1 = FunkinSprite.create(250, 0, 'events/majin-count/three');
+		endCount1 = FunkinSprite.create(50, 0, 'events/majin-count/three');
+		endCount1.screenCenter("x");
 		endCount1.alpha = 0;
 		endCount1.cameras = [PlayState.instance.camCutscene];
 		endCount1.visible = false;
 		endCount1.scrollFactor.set(0, 0);
 
-		endCount2 = FunkinSprite.create(250, 0, 'events/majin-count/two');
+		endCount2 = FunkinSprite.create(50, 0, 'events/majin-count/two');
+		endCount2.screenCenter("x");
 		endCount2.alpha = 0;
 		endCount2.cameras = [PlayState.instance.camCutscene];
 		endCount2.visible = false;
 		endCount2.scrollFactor.set(0, 0);
 
-		endCount3 = FunkinSprite.create(250, 0, 'events/majin-count/one');
+		endCount3 = FunkinSprite.create(50, 0, 'events/majin-count/one');
+		endCount3.screenCenter("x");
 		endCount3.alpha = 0;
 		endCount3.cameras = [PlayState.instance.camCutscene];
 		endCount3.visible = false;
 		endCount3.scrollFactor.set(0, 0);
 
-		endCount4 = FunkinSprite.create(250, 0, 'events/majin-count/gofun');
+		endCount4 = FunkinSprite.create(50, 0, 'events/majin-count/gofun');
+		endCount4.screenCenter("x");
 		endCount4.alpha = 0;
 		endCount4.cameras = [PlayState.instance.camCutscene];
 		endCount4.visible = false;
 		endCount4.scrollFactor.set(0, 0);
+
+		blueVignette = FunkinSprite.create(0, 0, 'BlueVG');
+		blueVignette.zIndex = 1000;
+        blueVignette.setGraphicSize(FlxG.width, FlxG.height);
+        blueVignette.updateHitbox();
+        blueVignette.screenCenter();
+		blueVignette.cameras = [PlayState.instance.camCutscene];
+        blueVignette.alpha = 0;
+		PlayState.instance.add(blueVignette);
 
 		majinCounts = [endCount1, endCount2, endCount3, endCount4];
 
@@ -80,48 +95,101 @@ class MajinForest extends Stage
 		});
 	}
 
-	override function buildStage()
-	{
-		super.buildStage();
-	}
+    function triggerVignette():Void {
+        FlxTween.tween(blueVignette, { alpha: 0.5 }, 0.75, {
+            ease: FlxEase.quadInOut,
+            onComplete: function(tween:FlxTween) {
+                FlxTween.tween(blueVignette, { alpha: 0 }, 0.75, {
+                    ease: FlxEase.quadInOut,
+                });
+            }
+        });
+    }
 
 	function onStepHit(event:SongTimeScriptEvent):Void
 	{
-        if (!PlayState.instance.currentSong.id.toLowerCase() == "endless") return;
+        if (PlayState.instance.currentSong.id.toLowerCase() != "endless") return;
 
-		if (event.step == 884) {
-			FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 0.5, {
-				onComplete: function(_) {
-					PlayState.instance.camHUD.alpha = 0;
-				}
-			});
+		if (PlayState.instance.currentVariation == "default" || PlayState.instance.currentVariation == "extra") {
+			switch (event.step) {
+			    case 884:
+				    FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, 0.5, {
+				        onComplete: function(_) {
+					        PlayState.instance.camHUD.alpha = 0;
+				        }
+			        });
+			    case 888:
+				    majinCountEvent(1, true);
+			    case 892:
+					majinCountEvent(2, false);
+				case 896:
+					majinCountEvent(3, false);
+				case 900:
+					majinCountEvent(4, false);
+					FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 0.5, {
+				        onComplete: function(_) {
+					        PlayState.instance.camHUD.alpha = 1;
+				        }
+			        });
+			}
 		}
-
-		if (event.step == 888) {
-			majinCountEvent(1, true);
-		} else if (event.step == 892) {
-			majinCountEvent(2, false);
-		} else if (event.step == 896) {
-			majinCountEvent(3, false);
-		} else if (event.step == 900) {
-			majinCountEvent(4, false);
+		if (PlayState.instance.currentVariation == "encore") {
+            if (event.step >= 15 && event.step % 16 == 0) { // bpm and song time is the same on both variations
+                triggerVignette();
+            }
+			switch (event.step) {
+				case 528:
+					FlxG.camera.flash(FlxColor.WHITE);
+				case 786:
+					majinCountEvent(1, true);
+				case 790:
+					majinCountEvent(2, false);
+				case 794:
+					majinCountEvent(3, false);
+				case 798:
+					majinCountEvent(4, false);
+				case 800:
+					PlayState.instance.camCutscene.flash(0xFFFFFFFF, 1);
+					if (!FlxG.onMobile) EXEScripts.triggerCinematics(50, 1, "instant", false, true);
+					EXEStrumlines.startWiggleModchart();
+				case 1056:
+					FlxG.camera.flash(FlxColor.WHITE);
+					if (!FlxG.onMobile) EXEScripts.disableCinematics(1, "instant");
+					EXEStrumlines.stopWiggleModchart();
+					//EXEStrumlines.resetStrumlines("both");
+				case 1328:
+					PlayState.instance.camCutscene.flash(0xFFFFFFFF, 1);
+					if (!FlxG.onMobile) EXEScripts.triggerCinematics(50, 1, "instant", false, true);
+					EXEStrumlines.startWiggleModchart();
+			}
 		}
-		if (event.step == 900) {
-			FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 0.5, {
-				onComplete: function(_) {
-					PlayState.instance.camHUD.alpha = 1;
-				}
-			});
-		}
-		
 	}
 
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		if (!camZoomEnable) camDefaultZoom = PlayState.instance.camGame.zoom;
 		for (sprite in majinCounts) {
 			if (sprite.visible) sprite.y += 5;
 		}
 	}
+
+    override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+
+        EXEStrumlines.updateModchart("wiggle");
+    }
+
+    override function onSongEnd(event) {
+        super.onSongEnd(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        EXEStrumlines.resetStrumlines("both");
+    }
+
+    override function onDestroy(event) {
+        super.onDestroy(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        EXEStrumlines.resetStrumlines("both");
+    }
 }

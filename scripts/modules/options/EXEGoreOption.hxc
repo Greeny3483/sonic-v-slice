@@ -1,0 +1,29 @@
+import funkin.save.Save;
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+
+class EXEGoreOption extends Module
+{
+    public function new()
+    {
+        super("EXEGoreOption");
+    }
+
+    override function onCountdownStart(event:CountdownScriptEvent):Void
+    {
+        super.onCountdownStart(event);
+
+        if (PlayState.instance == null) return;
+
+        var allowGore = Save.instance.modOptions["allowGore"];
+        var curStage = PlayState.instance.currentStage;
+
+        switch (PlayState.instance.currentStage.id) {
+            case "eggLab":
+                if (!allowGore) curStage.getNamedProp('StarvedSonicDead').visible = false;
+            case "hill":
+                if (!allowGore) curStage.getNamedProp('TooSlowTail1').visible = false;
+        }
+    }
+}

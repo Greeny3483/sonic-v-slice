@@ -1,0 +1,232 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
+import funkin.Paths;
+import funkin.Conductor;
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import funkin.modding.events.ScriptEvent;
+
+import openfl.Assets;
+import haxe.Json;
+
+class EXECredits extends Module {
+
+	// Script by Greeny3483
+
+	// Adds the credits from v2.5 of the mod
+	// unused in most songs though
+
+	public var creditsBG:FlxSprite;
+	public var borderLeft:FlxSprite;
+	public var borderRight:FlxSprite;
+	public var creditsTitle:FlxText;
+
+	public var sectionTitles:Array<FlxText> = [];
+	public var sectionNames:Array<Array<FlxText>> = [];
+
+	public var creditsData:Dynamic;
+	public var creditsActivated:Bool = false;
+
+	public function new() {
+		super("EXECredits");
+	}
+
+	override function onSongStart(ev:ScriptEvent) {
+		super.onSongStart(ev);
+		
+		if (PlayState.instance == null) return;
+
+		cleanup();
+
+		var songId:String = PlayState.instance.currentSong.id.toLowerCase();
+		var variation:String = PlayState.instance.currentVariation;
+		var creditsPath:String = "";
+
+		var possiblePaths:Array<String> = [];
+
+		if (variation != null && variation != "" && variation != "default") {
+			possiblePaths.push(Paths.json("songs/" + songId + "/credits-" + variation));
+			possiblePaths.push(Paths.json("data/songs/" + songId + "/credits-" + variation));
+		} else {
+			if (variation == "default") {
+				possiblePaths.push(Paths.json("songs/" + songId + "/credits-default"));
+				possiblePaths.push(Paths.json("data/songs/" + songId + "/credits-default"));
+			}
+			possiblePaths.push(Paths.json("songs/" + songId + "/credits"));
+			possiblePaths.push(Paths.json("data/songs/" + songId + "/credits"));
+		}
+
+		for (path in possiblePaths) {
+			if (Assets.exists(path)) {
+				creditsPath = path;
+				break;
+			}
+		}
+
+		if (creditsPath == "") return;
+
+		try {
+			creditsData = Json.parse(Assets.getText(creditsPath));
+		} catch (e:Dynamic) {
+			return;
+		}
+
+		createUI();
+	}
+
+	function createUI() {
+		var options = creditsData.options;
+		
+		var bgColor:Int = parseOption(options.color, 0xFF808080);
+		var textColor:Int = parseOption(options.textColor, 0xFFFFFFFF);
+		var titleSize:Int = parseOption(options.titleSize, 50);
+		var sectionSize:Int = parseOption(options.sectionSize, 35);
+		var nameSize:Int = parseOption(options.nameSize, 25);
+		var alpha:Float = parseOption(options.alpha, 0.6);
+		var font:String = options.font != null ? options.font : "vcr.ttf";
+
+		creditsBG = new FlxSprite((FlxG.width / 2) - (570 / 2), -1300);
+		creditsBG.makeGraphic(570, 1300, bgColor);
+		creditsBG.alpha = alpha - 0.2;
+		creditsBG.cameras = [PlayState.instance.camHUD];
+		creditsBG.zIndex = 10000;
+		PlayState.instance.add(creditsBG);
+
+		borderLeft = new FlxSprite(((FlxG.width / 2) - (4 / 2) - 285), -1300);
+		borderLeft.makeGraphic(4, 1300, textColor);
+		borderLeft.alpha = alpha;
+		borderLeft.cameras = [PlayState.instance.camHUD];
+		borderLeft.zIndex = 10001;
+		PlayState.instance.add(borderLeft);
+
+		borderRight = new FlxSprite(((FlxG.width / 2) - (4 / 2) + 285), -1300);
+		borderRight.makeGraphic(4, 1300, textColor);
+		borderRight.alpha = alpha;
+		borderRight.cameras = [PlayState.instance.camHUD];
+		borderRight.zIndex = 10001;
+		PlayState.instance.add(borderRight);
+
+		creditsTitle = new FlxText(0, -1000, FlxG.width, "CREDITS");
+		creditsTitle.setFormat(Paths.font(font), titleSize, textColor, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+		creditsTitle.cameras = [PlayState.instance.camHUD];
+		creditsTitle.zIndex = 10002;
+		PlayState.instance.add(creditsTitle);
+
+		for (i in 0...creditsData.sections.length) {
+			var section = creditsData.sections[i];
+			var titleText = new FlxText(0, -1000, FlxG.width, section.title);
+			titleText.setFormat(Paths.font(font), sectionSize, textColor, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+			titleText.cameras = [PlayState.instance.camHUD];
+			titleText.zIndex = 10002;
+			PlayState.instance.add(titleText);
+			sectionTitles.push(titleText);
+
+			var namesList:Array<FlxText> = [];
+			for (j in 0...section.names.length) {
+				var nameText = new FlxText(0, -1000, FlxG.width, section.names[j]);
+				nameText.setFormat(Paths.font(font), nameSize, textColor, "center", FlxTextBorderStyle.OUTLINE, 0xFF000000);
+				nameText.cameras = [PlayState.instance.camHUD];
+				nameText.zIndex = 10002;
+				PlayState.instance.add(nameText);
+				namesList.push(nameText);
+			}
+			sectionNames.push(namesList);
+		}
+		
+		PlayState.instance.refresh();
+	}
+
+	function parseOption(val:Dynamic, fallback:Dynamic):Dynamic {
+		if (val == null) return fallback;
+		if (Std.isOfType(val, String)) {
+			if (Std.isOfType(fallback, Int)) return Std.parseInt(val);
+			if (Std.isOfType(fallback, Float)) return Std.parseFloat(val);
+		}
+		return val;
+	}
+
+	function activateCredits() {
+		if (creditsActivated) return;
+		creditsActivated = true;
+
+		var options = creditsData.options;
+		var tweenSpeed:Float = parseOption(options.tweenSpeed, 0.8);
+		var exitTimer:Float = parseOption(options.exitTimer, 5);
+
+		FlxTween.tween(creditsBG, {y: 0}, tweenSpeed, {ease: FlxEase.quadOut});
+		FlxTween.tween(borderLeft, {y: 0}, tweenSpeed, {ease: FlxEase.quadOut});
+		FlxTween.tween(borderRight, {y: 0}, tweenSpeed, {ease: FlxEase.quadOut});
+
+		FlxTween.tween(creditsTitle, {y: 60}, tweenSpeed / 1.6, {ease: FlxEase.quadOut});
+
+		var currentYPos:Float = 140;
+		for (i in 0...sectionTitles.length) {
+			FlxTween.tween(sectionTitles[i], {y: currentYPos}, tweenSpeed / 1.6, {ease: FlxEase.quadOut});
+			currentYPos += 40;
+
+			for (j in 0...sectionNames[i].length) {
+				FlxTween.tween(sectionNames[i][j], {y: currentYPos}, tweenSpeed / 1.6, {ease: FlxEase.quadOut});
+				currentYPos += 30;
+			}
+			currentYPos += 10;
+		}
+
+		new FlxTimer().start(exitTimer, function(tmr) {
+			removeCredits();
+		});
+	}
+
+	function removeCredits() {
+		var tweenSpeed:Float = parseOption(creditsData.options.tweenSpeed, 0.8);
+
+		FlxTween.tween(creditsBG, {y: -1300}, tweenSpeed / 2.5, {ease: FlxEase.quadIn});
+		FlxTween.tween(borderLeft, {y: -1300}, tweenSpeed / 2.5, {ease: FlxEase.quadIn});
+		FlxTween.tween(borderRight, {y: -1300}, tweenSpeed / 2.5, {ease: FlxEase.quadIn});
+
+		FlxTween.tween(creditsTitle, {y: -1000}, tweenSpeed / 1.6, {ease: FlxEase.quadIn});
+
+		for (i in 0...sectionTitles.length) {
+			FlxTween.tween(sectionTitles[i], {y: -1000}, tweenSpeed / 1.6, {ease: FlxEase.quadIn});
+			for (j in 0...sectionNames[i].length) {
+				FlxTween.tween(sectionNames[i][j], {y: -1000}, tweenSpeed / 1.6, {ease: FlxEase.quadIn});
+			}
+		}
+	}
+
+	override function onStepHit(ev:SongTimeScriptEvent) {
+		super.onStepHit(ev);
+		if (creditsData == null || creditsActivated) return;
+
+		var startStep:Int = parseOption(creditsData.options.startStep, 1);
+		if (ev.step >= startStep) {
+			activateCredits();
+		}
+	}
+
+	function cleanup() {
+		if (creditsBG != null) creditsBG.destroy();
+		if (borderLeft != null) borderLeft.destroy();
+		if (borderRight != null) borderRight.destroy();
+		if (creditsTitle != null) creditsTitle.destroy();
+
+		for (i in 0...sectionTitles.length) if (sectionTitles[i] != null) sectionTitles[i].destroy();
+		for (i in 0...sectionNames.length) {
+			for (j in 0...sectionNames[i].length) if (sectionNames[i][j] != null) sectionNames[i][j].destroy();
+		}
+
+		sectionTitles = [];
+		sectionNames = [];
+		creditsActivated = false;
+		creditsData = null;
+	}
+
+	override function onDestroy(ev:ScriptEvent) {
+		super.onDestroy(ev);
+		cleanup();
+	}
+}

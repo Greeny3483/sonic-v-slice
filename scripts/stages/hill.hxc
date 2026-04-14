@@ -35,11 +35,11 @@ class Hill extends Stage {
                 case 761:
                     FlxG.camera.flash(FlxColor.RED);
                 case 1166:
-                    EXEScripts.triggerCinematics();
+                    EXEScripts.triggerCinematics(100, 1, "slide", true, false);
                 case 1190:
                     EXEScripts.triggerJumpscare("sonic");
                 case 1261:
-                    EXEScripts.disableCinematics();
+                    EXEScripts.disableCinematics(1, "slide");
                     EXEStrumlines.startWiggleModchart();
                 case 1472:
                     EXEScripts.triggerAnimatedJumpscare();
@@ -56,11 +56,11 @@ class Hill extends Stage {
                     EXEOverlays.removeOverlay(0);
                     FlxG.camera.flash(FlxColor.RED);
                 case 837:
-                    EXEScripts.triggerCinematics();
+                    EXEScripts.triggerCinematics(100, 1, "slide", true, false);
                 case 863:
                     EXEScripts.triggerJumpscare("sonic");
                 case 934:
-                    EXEScripts.disableCinematics();
+                    EXEScripts.disableCinematics(1, "slide");
                     EXEStrumlines.startWiggleModchart();
                 case 1129:
                     PlayState.instance.camCutscene.flash(FlxColor.WHITE, 1);

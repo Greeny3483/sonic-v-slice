@@ -1,8 +1,9 @@
 {
   "version": "1.0.0",
-  "name": "VS SONIC.EXE OST",
+  "name": "VS SONIC.EXE",
   "artists": ["MarStarBro, Saster, SimplyCrispy, UpTaunt, Jacaris, Squeak, Jamangar, Punkett, KGBEPIS"],
   "albumArtAsset": "freeplay/albumRoll/exeOST",
   "albumTitleAsset": "freeplay/albumRoll/exeOST-text",
+  "albumOSTName": "VS.EXE OST",
   "albumTitleOffsets": [-22, -3]
 }

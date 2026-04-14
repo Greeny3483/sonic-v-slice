@@ -16,10 +16,6 @@ class EggLab extends Stage
 	override function onCreate(event:ScriptEvent):Void
 	{
 		super.onCreate(event);
-
-		allowGore = Save.instance.modOptions["allowGore"];
-		if (!allowGore) getNamedProp('StarvedSonicDead').visible = false;
-
 		FearBar.createFearBar();
 	}
 
@@ -33,8 +29,6 @@ class EggLab extends Stage
 		PlayState.instance.healthBarBG.visible = false;
 		PlayState.instance.iconP1.visible = false;
 		PlayState.instance.iconP2.visible = false;
-
-		EXEStrumlines.changeStrumlineMode("middlescroll");
 	}
 
 	override function onUpdate(event:UpdateScriptEvent):Void

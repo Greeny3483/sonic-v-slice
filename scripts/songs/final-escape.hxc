@@ -11,7 +11,7 @@ class FinalEscapeSong extends Song {
     }
 
 	public function listDifficulties(variationId:String, variationIds:Array<String>, showLocked:Bool):Array<String> {
-		if (showLocked || Save.instance.hasBeatenLevel('1round1')) {
+		if (showLocked || Save.instance.hasBeatenLevel('1round1') || !FlxG.onMobile) { // no final escape on mobile for now, fell short
 			return super.listDifficulties(variationId, variationIds);
 		}
 

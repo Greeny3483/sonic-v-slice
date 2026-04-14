@@ -155,7 +155,7 @@
 				0
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway2",
+			"assetPath": "characters/specialAnims/fleetway2",
 			"prefix": "Fleetway Growl",
 			"flipX": false,
 			"looped": false,
@@ -168,7 +168,7 @@
 				-60
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway2",
+			"assetPath": "characters/specialAnims/fleetway2",
 			"prefix": "Fleetway Right Alt",
 			"flipX": false,
 			"looped": false,
@@ -181,7 +181,7 @@
 				-40
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway2",
+			"assetPath": "characters/specialAnims/fleetway2",
 			"prefix": "Fleetway Scream",
 			"flipX": false,
 			"looped": false,
@@ -194,7 +194,7 @@
 				90
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway2",
+			"assetPath": "characters/specialAnims/fleetway2",
 			"prefix": "Fleetway Show You",
 			"flipX": false,
 			"looped": false,
@@ -207,7 +207,7 @@
 				26
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway2",
+			"assetPath": "characters/specialAnims/fleetway2",
 			"prefix": "Fleetway Shut Up",
 			"flipX": false,
 			"looped": false,
@@ -220,7 +220,7 @@
 				-40
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway Scream",
 			"flipX": false,
 			"looped": false,
@@ -233,7 +233,7 @@
 				26
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway Shut Up",
 			"flipX": false,
 			"looped": false,
@@ -246,7 +246,7 @@
 				120
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway Grrr",
 			"flipX": false,
 			"looped": false,
@@ -259,7 +259,7 @@
 				10
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway Laser Blast",
 			"flipX": false,
 			"looped": false,
@@ -272,7 +272,7 @@
 				-49
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway Laugh",
 			"flipX": false,
 			"looped": false,
@@ -285,7 +285,7 @@
 				90
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway StepItUp",
 			"flipX": false,
 			"looped": false,
@@ -298,7 +298,7 @@
 				78
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway Too Slow",
 			"flipX": false,
 			"looped": false,
@@ -311,7 +311,7 @@
 				90
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway WHAT?!",
 			"flipX": false,
 			"looped": false,
@@ -324,7 +324,7 @@
 				0
 			],
 			"frameRate": 24,
-			"assetPath": "characters/fleetway1",
+			"assetPath": "characters/specialAnims/fleetway1",
 			"prefix": "Fleetway YoureFinished",
 			"flipX": false,
 			"looped": false,

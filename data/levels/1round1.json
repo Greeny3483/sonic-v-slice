@@ -2,6 +2,9 @@
   "version": "1.0.0",
   "name": "VS SONIC.EXE",
   "titleAsset": "storymenu/titles/round1",
+  "capsule": {
+    "name": "ROUND 1"
+  },
   "props": [
     {
       "assetPath": "storymenu/props/menu_exe",

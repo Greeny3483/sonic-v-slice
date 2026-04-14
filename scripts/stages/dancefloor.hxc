@@ -1,0 +1,119 @@
+import flixel.FlxG;
+import flixel.tweens.FlxTween;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import funkin.save.Save;
+import funkin.play.stage.Stage;
+
+import EXEWindow;
+
+class DanceFloor extends Stage
+{
+    public var sunker:FunkinSprite;
+	public var cereal:FunkinSprite;
+    public var sunkyMunch:FunkinSprite;
+	public var sunkyMunch2:FunkinSprite;
+	public var sunkage:FunkinSprite;
+
+	public function new() {
+		super('dancefloor');
+	}
+
+    override function onCreate(event:ScriptEvent):Void {
+		super.onCreate(event);
+
+		EXEWindow.resizeWindow(960, 720);
+
+		sunker = FunkinSprite.create(420, 250);
+        sunker.frames = Paths.getSparrowAtlas('events/sunky/sunker');
+		sunker.animation.addByPrefix('idle', 'sunker', 24, true);
+		sunker.animation.play('idle');
+		sunker.zIndex = 10000;
+		sunker.scale.set(4, 4);
+		sunker.alpha = 0;
+		sunker.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(sunker);
+
+		cereal = FunkinSprite.create(-700, 0, "events/sunky/cereal"); // hide offscreen
+		cereal.zIndex = 10000;
+		cereal.cameras = [PlayState.instance.camHUD];
+		cereal.alpha = 0;
+		PlayState.instance.add(cereal);
+
+		sunkyMunch = FunkinSprite.create(350, -700, "events/sunky/sunkyMunch"); // hide offscreen
+		sunkyMunch.zIndex = 10000;
+		sunkyMunch.cameras = [PlayState.instance.camHUD];
+		sunkyMunch.alpha = 0;
+		PlayState.instance.add(sunkyMunch);
+
+		sunkyMunch2 = FunkinSprite.create(-500, -700, "events/sunky/sunkyMunch"); // hide offscreen
+		sunkyMunch2.zIndex = 10000;
+		sunkyMunch2.cameras = [PlayState.instance.camHUD];
+		sunkyMunch2.alpha = 0;
+		PlayState.instance.add(sunkyMunch2);
+
+		sunkage = FunkinSprite.create(-190, 0, "events/sunky/sunkage"); // hide offscreen
+		sunkage.zIndex = 2;
+		sunkage.alpha = 0;
+		sunkage.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(sunkage);
+	}
+
+	override function onCountdownStart(event:CountdownScriptEvent):Void {
+		super.onCountdownStart(event);
+
+		if (FlxG.onMobile) return;
+
+		PlayState.instance.playerStrumline.x = PlayState.instance.playerStrumline.x - 20;
+		PlayState.instance.opponentStrumline.x = PlayState.instance.opponentStrumline.x - 35;
+	}
+
+	override function onStepHit(event:SongTimeScriptEvent):Void {
+		super.onStepHit(event);
+
+		doCameraShakes = Save.instance.modOptions["doCameraShakes"];
+
+		// pretty sure sunky's pop-ins are randomized, but who cares
+
+		switch (event.step) {
+			case 131:
+				if (doCameraShakes) FlxG.camera.shake(0.06, 1);
+
+                FlxTween.tween(sunker, { alpha: 1 }, 1.0, {
+                    onComplete: function(tween:FlxTween) {
+						PlayState.instance.remove(sunker);
+                    }
+                });
+			case 591:
+				cereal.alpha = 1;
+				FlxTween.tween(cereal, { x: 1100 }, 10, {
+                    onComplete: function(tween:FlxTween) {
+						PlayState.instance.remove(cereal);
+                    }
+                });
+			case 810:
+				sunkyMunch.alpha = 1;
+				FlxTween.tween(sunkyMunch, { y: 1000 }, 11, {
+                    onComplete: function(tween:FlxTween) {
+						PlayState.instance.remove(sunkyMunch);
+                    }
+                });
+			case 938:
+				sunkyMunch2.alpha = 1;
+				FlxTween.tween(sunkyMunch2, { x: 1000, y: 1000 }, 11, {
+                    onComplete: function(tween:FlxTween) {
+						PlayState.instance.remove(sunkyMunch2);
+                    }
+                });
+			case 1425:
+				EXEOverlays.createOverlay(0, "", 1, 1, 5); // id, camera, zIndex, alpha
+			case 1440:
+				FlxTween.tween(sunkage, { alpha: 1 }, 1.4, {
+                    onComplete: function(tween:FlxTween) {
+						PlayState.instance.remove(sunkage);
+						EXEOverlays.removeOverlay(0);
+                    }
+                });
+		}
+	}
+}

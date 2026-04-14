@@ -1,11 +1,12 @@
 {
   "title": "VS SONIC.EXE [V-Slice Add-On]",
   "description": "Port of VS SONIC.EXE to the base game engine through softcode!",
+  "id": "greeny.exe",
   "homepage": "https://gamebanana.com/mods/600193",
   "contributors": [
     {
       "name": "Greeny3483",
-      "role": "Port Author",
+      "role": "Port",
       "url": "https://gamebanana.com/members/1895178"
     },
     {
@@ -24,7 +25,7 @@
       "url": "https://gamebanana.com/mods/316022"
     }
   ],
-  "api_version": "0.8.0",
+  "api_version": "0.8.4",
   "mod_version": "0.3.0",
   "license": "Apache-2.0"
 }

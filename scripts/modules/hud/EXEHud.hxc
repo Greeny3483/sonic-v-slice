@@ -1,5 +1,6 @@
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxStringUtil;
 import funkin.Paths;
 import funkin.play.PlayState;
 import funkin.Preferences;
@@ -8,138 +9,148 @@ import funkin.modding.module.Module;
 import funkin.modding.module.ModuleHandler;
 import funkin.modding.events.ScriptEvent;
 import haxe.ds.StringMap;
-import Math;
-import Std;
 
-class EXEHud extends Module
-{
-    var sonicMissesSprite:FlxSprite;
-    var sonicTimeSprite:FlxSprite;
-    var sonicScoreSprite:FlxSprite;
-    var sonicColonSprite:FlxSprite;
-    var sonicHealthSprite:FlxSprite;
+class EXEHud extends Module {
+    public static var sonicMissesSprite:FlxSprite = null;
+    public static var sonicTimeSprite:FlxSprite = null;
+    public static var sonicScoreSprite:FlxSprite = null;
+    public static var sonicColonSprite:FlxSprite = null;
+    public static var sonicHealthSprite:FlxSprite = null;
 
-    var scoreNumbers:Array<FlxSprite> = [];
-    var missesNumbers:Array<FlxSprite> = [];
-    var timeNumbers:Array<FlxSprite> = [];
-    var healthNumbers:Array<FlxSprite> = [];
+    public static var scoreNumbers:Array<FlxSprite> = null;
+    public static var missesNumbers:Array<FlxSprite> = null;
+    public static var timeNumbers:Array<FlxSprite> = null;
+    public static var healthNumbers:Array<FlxSprite> = null;
 
-    var misses:Int = 0;
+    public static var currentMisses:Int = 0;
 
-    var textX:Float = 20;
-    var textY:Float = 0;
-    var hudOffset:Float = 50;
-    var fontStyle:String = "sonic1";
-    var numbersOffset:Array<Int> = [7, 11];
-    var inPlay:Bool = false;
+    public static var hudStartX:Float = 20;
+    public static var hudStartY:Float = 0;
+    public static var verticalSpacing:Float = 50;
+    public static var fontStyle:String = "sonic1";
+    public static var digitSize:Array<Int> = [7, 11];
+    public static var isModuleActive:Bool = false;
 
-    public function new()
-    {
+    public static var isHudEnabled:Bool = false;
+    public static var isWideScreenEnabled:Bool = false;
+    public static var isGhostTappingEnabled:Bool = false;
+
+    var cachedHudEnabled:Bool = false;
+    
+    public function new() {
         super('EXEHud');
     }
 
-    override function onCountdownStart(ev:ScriptEvent)
-    {
-        super.onCountdownStart(ev);
+    function updateHudSetting():Bool {
+        var current = false;
+        try {
+            current = Save.instance != null ? Save.instance.modOptions["doGenesisHUD"] : false;
+        } catch (e:Dynamic) {
+            current = false;
+        }
+        if (current != cachedHudEnabled) {
+            cachedHudEnabled = current;
+            EXEHud.isHudEnabled = current;
+        }
+        return EXEHud.isHudEnabled;
     }
 
-    function onPlayStateEnter()
-    {
-        var playState = PlayState.instance;
-        if (playState == null) return;
+    function safePlayState():Null<PlayState> {
+        return PlayState.instance;
+    }
 
-        doEXEHud = Save.instance.modOptions["doGenesisHUD"];
+    override function onCountdownStart(event:ScriptEvent) {
+        super.onCountdownStart(event);
+    }
+
+    function onPlayStateEnter() {
+        var ps = safePlayState();
+        if (ps == null) return;
+
+        updateHudSetting();
 
         cleanup();
 
-        if (!doEXEHud)
-        {
-            if (playState.scoreText != null) playState.scoreText.visible = true;
+        EXEHud.isModuleActive = EXEHud.isHudEnabled;
+
+        if (!EXEHud.isHudEnabled) {
+            if (ps.scoreText != null) ps.scoreText.visible = true;
             return;
         }
 
-        fontStyle = getFontStyle();
+        EXEHud.fontStyle = getFontStyle();
         setupPositioning();
 
-        if (playState.scoreText != null) playState.scoreText.visible = false;
-        var healthBarAsset = (playState.currentStage.id == "launchbase") ? 'sonicUI/sonic3/healthbar' : 'sonicUI/healthbar-light';
+        if (ps.scoreText != null) ps.scoreText.visible = false;
 
-        if (playState.healthBarBG != null)
-        {
-            playState.healthBarBG.loadGraphic(Paths.image(healthBarAsset));
-            playState.healthBarBG.cameras = [playState.camHUD];
+        if (FlxG.onMobile && ps.opponentStrumline != null) ps.opponentStrumline.visible = false;
+
+        var healthBarAsset = (ps.currentStage.id == "launchbase") ? 'sonicUI/sonic3/healthbar' : 'sonicUI/healthbar-light';
+
+        if (ps.healthBarBG != null) {
+            ps.healthBarBG.loadGraphic(Paths.image(healthBarAsset));
+            ps.healthBarBG.cameras = [ps.camHUD];
         }
 
-        if (playState.healthBar != null)
-        {
-            playState.healthBar.y = FlxG.height * (!Preferences.downscroll ? 0.88 : 0.12);
-            playState.healthBar.screenCenter(0x01);
-            playState.healthBar.cameras = [playState.camHUD];
-             playState.healthBar.x += 100;
+        if (ps.healthBar != null) {
+            ps.healthBar.y = FlxG.height * (!(Preferences.downscroll || FlxG.onMobile) ? 0.88 : 0.12);
+            ps.healthBar.screenCenter(0x01);
+            ps.healthBar.cameras = [ps.camHUD];
+            ps.healthBar.x += 100;
 
-            if (playState.currentStage.id == "launchbase")
-            {
-                playState.healthBar.setPosition(310, 633);
-                playState.healthBarBG.setPosition(303, 630); // The white bar
-                playState.healthBarBG.scale.set(1.3, 1.3);
-                playState.healthBar.scale.set(0.865, 1.1);
-            }
-            else
-            {
-                playState.healthBarBG.setPosition(playState.healthBar.x - 28, playState.healthBar.y - 7);
-                playState.healthBar.scale.set(1.010, 1.2);
+            if (ps.currentStage.id == "launchbase") {
+                ps.healthBar.setPosition(310, 633);
+                ps.healthBarBG.setPosition(303, 630);
+                ps.healthBarBG.scale.set(1.3, 1.3);
+                ps.healthBar.scale.set(0.865, 1.1);
+            } else {
+                ps.healthBarBG.setPosition(ps.healthBar.x - 28, ps.healthBar.y - 7);
+                ps.healthBar.scale.set(1.010, 1.2);
             }
         }
 
         createPixelHUD();
-        playState.refresh();
+        ps.refresh();
     }
 
-    function getFontStyle():String
-    {
+    function getFontStyle():String {
         if (PlayState.instance.currentStage.id == "launchbase") return "sonic3";
-        if (PlayState.instance.currentStage.id.indexOf("sonic2") != -1)
-        {
-            numbersOffset = [8, 11];
+        if (PlayState.instance.currentStage.id.indexOf("sonic2") != -1) {
+            EXEHud.digitSize = [8, 11];
             return "sonic2";
         }
-        numbersOffset = [7, 11];
+        EXEHud.digitSize = [7, 11];
         return "sonic1";
     }
 
-    function setupPositioning()
-    {
-        doScreenEdit = Save.instance.modOptions["screenratio"];
+    function setupPositioning() {
+        EXEHud.isWideScreenEnabled = Save.instance.modOptions["screenratio"];
 
-        textY = !Preferences.downscroll ? FlxG.height - 160 : hudOffset;
-        textX = (PlayState.instance.currentStage.id == "launchbase" && doScreenEdit && FlxG.onMobile) ? 160 : 20;
+        EXEHud.hudStartY = !(Preferences.downscroll || FlxG.onMobile) ? FlxG.height - 160 : EXEHud.verticalSpacing;
+        EXEHud.hudStartX = (PlayState.instance.currentStage.id == "launchbase" && EXEHud.isWideScreenEnabled && FlxG.onMobile) ? 160 : 20;
     }
 
-    function createPixelHUD()
-    {
-        var directory = 'sonicUI/' + fontStyle;
+    function createPixelHUD() {
+        var uiPath = 'sonicUI/' + EXEHud.fontStyle;
 
-        if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless')
-        {
-            sonicHealthSprite = createSprite('sonicUI/sonic1/health', textX, textY - hudOffset, 3.5);
+        if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless') {
+            EXEHud.sonicHealthSprite = createSprite('sonicUI/sonic1/health', EXEHud.hudStartX, EXEHud.hudStartY - EXEHud.verticalSpacing, 3.5);
         }
 
-        sonicMissesSprite = createSprite(directory + '/misses', textX, textY, 3.5);
-        sonicTimeSprite = createSprite(directory + '/time', textX, textY + hudOffset, 3.5);
-        sonicScoreSprite = createSprite(directory + '/score', textX, textY + (hudOffset * 2), 3.5);
-        sonicColonSprite = createSprite(directory + '/colon', 0, 0, 3);
+        EXEHud.sonicMissesSprite = createSprite(uiPath + '/misses', EXEHud.hudStartX, EXEHud.hudStartY, 3.5);
+        EXEHud.sonicTimeSprite = createSprite(uiPath + '/time', EXEHud.hudStartX, EXEHud.hudStartY + EXEHud.verticalSpacing, 3.5);
+        EXEHud.sonicScoreSprite = createSprite(uiPath + '/score', EXEHud.hudStartX, EXEHud.hudStartY + (EXEHud.verticalSpacing * 2), 3.5);
+        EXEHud.sonicColonSprite = createSprite(uiPath + '/colon', 0, 0, 3);
 
-        var timeLabels = ['TenMinutes', 'Minutes', 'TenSeconds', 'Seconds'];
-        for (i in 0...timeLabels.length)
-        {
-            timeNumbers.push(createNumberSprite(directory + '/numbers'));
+        if (EXEHud.timeNumbers == null) EXEHud.timeNumbers = [];
+        for (index in 0...4) {
+            EXEHud.timeNumbers.push(createNumberSprite(uiPath + '/numbers'));
         }
 
         updatePixelHUDPositions();
     }
 
-    function createSprite(path:String, x:Float, y:Float, scale:Float):FlxSprite
-    {
+    function createSprite(path:String, x:Float, y:Float, scale:Float):FlxSprite {
         var sprite = new FlxSprite(x, y);
         sprite.loadGraphic(Paths.image(path));
         sprite.antialiasing = false;
@@ -151,105 +162,121 @@ class EXEHud extends Module
         return sprite;
     }
 
-    function createNumberSprite(graphicPath:String):FlxSprite
-    {
-        var sprite = new FlxSprite();
-        sprite.loadGraphic(Paths.image(graphicPath), true, numbersOffset[0], numbersOffset[1]);
-        sprite.animation.add('numbers', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 0, false);
-        sprite.antialiasing = false;
-        sprite.scale.set(3, 3);
-        sprite.updateHitbox();
-        sprite.zIndex = 10000;
-        sprite.cameras = [PlayState.instance.camHUD];
-        PlayState.instance.add(sprite);
-        return sprite;
+    function createNumberSprite(graphicPath:String):FlxSprite {
+        var numberSprite = new FlxSprite();
+        numberSprite.loadGraphic(Paths.image(graphicPath), true, EXEHud.digitSize[0], EXEHud.digitSize[1]);
+        numberSprite.animation.add('numbers', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 0, false);
+        numberSprite.antialiasing = false;
+        numberSprite.scale.set(3, 3);
+        numberSprite.updateHitbox();
+        numberSprite.zIndex = 10000;
+        numberSprite.cameras = [PlayState.instance.camHUD];
+        PlayState.instance.add(numberSprite);
+        return numberSprite;
     }
 
-    function updatePixelHUDPositions()
-    {
-        if (sonicColonSprite != null && sonicTimeSprite != null)
-        {
-            sonicColonSprite.setPosition(sonicTimeSprite.x + sonicTimeSprite.width + 44, sonicTimeSprite.y);
+    function updatePixelHUDPositions() {
+        if (EXEHud.sonicColonSprite != null && EXEHud.sonicTimeSprite != null) {
+            EXEHud.sonicColonSprite.setPosition(EXEHud.sonicTimeSprite.x + EXEHud.sonicTimeSprite.width + 44, EXEHud.sonicTimeSprite.y);
+            EXEHud.sonicColonSprite.alpha = EXEHud.sonicTimeSprite.alpha;
+            EXEHud.sonicColonSprite.visible = EXEHud.sonicTimeSprite.visible;
         }
 
-        var hudTimeOffsets = [22, 22, 28, 27];
-        for (i in 0...timeNumbers.length)
-        {
-            if (timeNumbers[i] != null && sonicTimeSprite != null)
-            {
-                timeNumbers[i].setPosition(sonicTimeSprite.x + sonicTimeSprite.width - 26 + (hudTimeOffsets[i] * (i + 1)), sonicTimeSprite.y + 2);
+        var timeOffsets = [22, 22, 28, 27];
+        if (EXEHud.timeNumbers != null) {
+            for (index in 0...EXEHud.timeNumbers.length) {
+                var digitSprite = EXEHud.timeNumbers[index];
+                if (digitSprite != null && EXEHud.sonicTimeSprite != null) {
+                    digitSprite.setPosition(EXEHud.sonicTimeSprite.x + EXEHud.sonicTimeSprite.width - 26 + (timeOffsets[index] * (index + 1)), EXEHud.sonicTimeSprite.y + 2);
+                    digitSprite.alpha = EXEHud.sonicTimeSprite.alpha;
+                    digitSprite.visible = EXEHud.sonicTimeSprite.visible;
+                }
             }
         }
     }
 
-    function updatePixelNumbers()
-    {
-        var directory = 'sonicUI/' + fontStyle;
+    function updatePixelNumbers() {
+        if (EXEHud.sonicMissesSprite == null || EXEHud.sonicScoreSprite == null || EXEHud.sonicTimeSprite == null) return;
 
-        if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless' && sonicHealthSprite != null)
-        {
-            var healthPercent = Math.round((PlayState.instance.health / 2) * 100);
+        var uiPath = 'sonicUI/' + EXEHud.fontStyle;
+
+        var ps = safePlayState();
+        if (ps == null) return;
+
+        if (ps.currentSong.id.toLowerCase() == 'fight-or-flight' || ps.currentSong.id.toLowerCase() == 'soulless' && EXEHud.sonicHealthSprite != null) {
+            var healthPercent = Math.round((ps.health / 2) * 100);
             if (healthPercent < 0) healthPercent = 0;
             if (healthPercent > 100) healthPercent = 100;
-            var healthStr = Std.string(healthPercent);
-            ensureNumberSprites(healthNumbers, healthStr.length, directory + '/numbers');
-            for (i in 0...healthStr.length)
-            {
-                var digit = Std.parseInt(healthStr.charAt(i));
+            var healthString = Std.string(healthPercent);
+            if (EXEHud.healthNumbers == null) EXEHud.healthNumbers = [];
+            ensureNumberSprites(EXEHud.healthNumbers, healthString.length, uiPath + '/numbers');
+            for (index in 0...healthString.length) {
+                var digit = Std.parseInt(healthString.charAt(index));
                 if (digit == null) digit = 0;
-                if (i < healthNumbers.length && healthNumbers[i] != null && healthNumbers[i].animation != null)
-                {
-                    healthNumbers[i].animation.play('numbers');
-                    if (healthNumbers[i].animation.curAnim != null) healthNumbers[i].animation.curAnim.curFrame = digit;
-                    healthNumbers[i].setPosition(sonicHealthSprite.x + sonicHealthSprite.width + 22 + (22 * i), sonicHealthSprite.y + 2);
+                var digitSprite = EXEHud.healthNumbers[index];
+                if (digitSprite != null && digitSprite.animation != null && EXEHud.sonicHealthSprite != null) {
+                    digitSprite.animation.play('numbers');
+                    if (digitSprite.animation.curAnim != null) digitSprite.animation.curAnim.curFrame = digit;
+                    digitSprite.setPosition(EXEHud.sonicHealthSprite.x + EXEHud.sonicHealthSprite.width + 22 + (22 * index), EXEHud.sonicHealthSprite.y + 2);
+                    digitSprite.alpha = EXEHud.sonicHealthSprite.alpha;
+                    digitSprite.visible = EXEHud.sonicHealthSprite.visible;
                 }
             }
         }
 
-        var missesStr = Std.string(misses);
-        ensureNumberSprites(missesNumbers, missesStr.length, directory + '/numbers');
-        for (i in 0...missesStr.length)
-        {
-            var digit = Std.parseInt(missesStr.charAt(i));
+        var missesString = Std.string(EXEHud.currentMisses);
+        if (EXEHud.missesNumbers == null) EXEHud.missesNumbers = [];
+        ensureNumberSprites(EXEHud.missesNumbers, missesString.length, uiPath + '/numbers');
+        for (index in 0...missesString.length) {
+            var digit = Std.parseInt(missesString.charAt(index));
             if (digit == null) digit = 0;
-            if (i < missesNumbers.length && missesNumbers[i] != null && missesNumbers[i].animation != null)
-            {
-                missesNumbers[i].animation.play('numbers');
-                if (missesNumbers[i].animation.curAnim != null) missesNumbers[i].animation.curAnim.curFrame = digit;
-                missesNumbers[i].setPosition(sonicMissesSprite.x + sonicMissesSprite.width + 22 + (22 * i), sonicMissesSprite.y + 2);
+            var digitSprite = EXEHud.missesNumbers[index];
+            if (digitSprite != null && digitSprite.animation != null) {
+                digitSprite.animation.play('numbers');
+                if (digitSprite.animation.curAnim != null) digitSprite.animation.curAnim.curFrame = digit;
+                digitSprite.setPosition(EXEHud.sonicMissesSprite.x + EXEHud.sonicMissesSprite.width + 22 + (22 * index), EXEHud.sonicMissesSprite.y + 2);
+                digitSprite.alpha = EXEHud.sonicMissesSprite.alpha;
+                digitSprite.visible = EXEHud.sonicMissesSprite.visible;
             }
         }
 
-        var scoreStr = Std.string(PlayState.instance.songScore);
-        ensureNumberSprites(scoreNumbers, scoreStr.length, directory + '/numbers');
-        for (i in 0...scoreStr.length)
-        {
-            var digit = Std.parseInt(scoreStr.charAt(i));
+        var formattedScore:String = FlxStringUtil.formatMoney(ps.songScore, false, true);
+        var digitString:String = '';
+        for (i in 0...formattedScore.length) {
+            var char:String = formattedScore.charAt(i);
+            var num = Std.parseInt(char);
+            if (num != null) digitString += char;
+        }
+        var scoreString:String = (digitString == '' ? '0' : digitString);
+        if (EXEHud.scoreNumbers == null) EXEHud.scoreNumbers = [];
+        ensureNumberSprites(EXEHud.scoreNumbers, scoreString.length, uiPath + '/numbers');
+        for (index in 0...scoreString.length) {
+            var digit = Std.parseInt(scoreString.charAt(index));
             if (digit == null) digit = 0;
-            if (i < scoreNumbers.length && scoreNumbers[i] != null && scoreNumbers[i].animation != null)
-            {
-                scoreNumbers[i].animation.play('numbers');
-                if (scoreNumbers[i].animation.curAnim != null) scoreNumbers[i].animation.curAnim.curFrame = digit;
-                scoreNumbers[i].setPosition(sonicScoreSprite.x + sonicScoreSprite.width + 22 + (22 * i), sonicScoreSprite.y + 2);
+            var digitSprite = EXEHud.scoreNumbers[index];
+            if (digitSprite != null && digitSprite.animation != null) {
+                digitSprite.animation.play('numbers');
+                if (digitSprite.animation.curAnim != null) digitSprite.animation.curAnim.curFrame = digit;
+                digitSprite.setPosition(EXEHud.sonicScoreSprite.x + EXEHud.sonicScoreSprite.width + 22 + (22 * index), EXEHud.sonicScoreSprite.y + 2);
+                digitSprite.alpha = EXEHud.sonicScoreSprite.alpha;
+                digitSprite.visible = EXEHud.sonicScoreSprite.visible;
             }
         }
 
-        var songPos = Math.max(0, PlayState.instance.conductorInUse.songPosition);
-        if (timeNumbers.length >= 4)
-        {
-            for (i in 0...4)
-            {
-                if (timeNumbers[i] != null && timeNumbers[i].animation != null)
-                {
-                    timeNumbers[i].animation.play('numbers');
-                    if (timeNumbers[i].animation.curAnim != null)
-                    {
-                        switch (i)
-                        {
-                            case 0: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 600000) % 10);
-                            case 1: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 60000) % 10);
-                            case 2: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 10000) % 6);
-                            case 3: timeNumbers[i].animation.curAnim.curFrame = Math.floor((songPos / 1000) % 10);
+        updatePixelHUDPositions();
+
+        var songPosition = Math.max(0, ps.conductorInUse.songPosition);
+        if (EXEHud.timeNumbers != null && EXEHud.timeNumbers.length >= 4) {
+            for (index in 0...4) {
+                var digitSprite = EXEHud.timeNumbers[index];
+                if (digitSprite != null && digitSprite.animation != null) {
+                    digitSprite.animation.play('numbers');
+                    if (digitSprite.animation.curAnim != null) {
+                        switch (index) {
+                            case 0: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 600000) % 10);
+                            case 1: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 60000) % 10);
+                            case 2: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 10000) % 6);
+                            case 3: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 1000) % 10);
                         }
                     }
                 }
@@ -257,102 +284,91 @@ class EXEHud extends Module
         }
     }
 
-    function ensureNumberSprites(array:Array<FlxSprite>, count:Int, graphicPath:String)
-    {
-        while (array.length < count)
-        {
-            array.push(createNumberSprite(graphicPath));
+    function ensureNumberSprites(numberArray:Array<FlxSprite>, count:Int, graphicPath:String) {
+        if (numberArray == null) return;
+        while (numberArray.length < count) {
+            numberArray.push(createNumberSprite(graphicPath));
         }
-        for (i in count...array.length)
-        {
-            if (array[i] != null) array[i].visible = false;
+        for (index in count...numberArray.length) {
+            if (numberArray[index] != null) numberArray[index].visible = false;
         }
-        for (i in 0...count)
-        {
-            if (array[i] != null) array[i].visible = true;
+        for (index in 0...count) {
+            if (numberArray[index] != null) numberArray[index].visible = true;
         }
     }
 
-    function cleanup()
-    {
-        var stuffToRemove = [sonicMissesSprite, sonicTimeSprite, sonicScoreSprite, sonicColonSprite, sonicHealthSprite];
-        for (thing in stuffToRemove)
-        {
-            if (thing != null) thing.destroy();
+    function cleanup() {
+        var spritesToDestroy = [EXEHud.sonicMissesSprite, EXEHud.sonicTimeSprite, EXEHud.sonicScoreSprite, EXEHud.sonicColonSprite, EXEHud.sonicHealthSprite];
+        for (sprite in spritesToDestroy) {
+            if (sprite != null) sprite.destroy();
         }
 
-        for (sprite in scoreNumbers) if (sprite != null) sprite.destroy();
-        for (sprite in missesNumbers) if (sprite != null) sprite.destroy();
-        for (sprite in timeNumbers) if (sprite != null) sprite.destroy();
-        for (sprite in healthNumbers) if (sprite != null) sprite.destroy();
+        if (EXEHud.scoreNumbers != null) for (sprite in EXEHud.scoreNumbers) if (sprite != null) sprite.destroy();
+        if (EXEHud.missesNumbers != null) for (sprite in EXEHud.missesNumbers) if (sprite != null) sprite.destroy();
+        if (EXEHud.timeNumbers != null) for (sprite in EXEHud.timeNumbers) if (sprite != null) sprite.destroy();
+        if (EXEHud.healthNumbers != null) for (sprite in EXEHud.healthNumbers) if (sprite != null) sprite.destroy();
 
-        misses = 0;
+        EXEHud.currentMisses = 0;
 
-        sonicMissesSprite = null;
-        sonicTimeSprite = null;
-        sonicScoreSprite = null;
-        sonicColonSprite = null;
-        sonicHealthSprite = null;
+        EXEHud.sonicMissesSprite = null;
+        EXEHud.sonicTimeSprite = null;
+        EXEHud.sonicScoreSprite = null;
+        EXEHud.sonicColonSprite = null;
+        EXEHud.sonicHealthSprite = null;
 
-        scoreNumbers = [];
-        missesNumbers = [];
-        timeNumbers = [];
-        healthNumbers = [];
+        EXEHud.scoreNumbers = [];
+        EXEHud.missesNumbers = [];
+        EXEHud.timeNumbers = [];
+        EXEHud.healthNumbers = [];
     }
 
-    override function onDestroy(ev:ScriptEvent)
-    {
-        super.onDestroy(ev);
+    override function onDestroy(event:ScriptEvent) {
+        super.onDestroy(event);
         cleanup();
     }
 
-    override function onUpdate(ev:ScriptEvent)
-    {
-        super.onUpdate(ev);
-        if (!inPlay) return;
+    override function onUpdate(event:ScriptEvent) {
+        updateHudSetting();
+        if (!EXEHud.isHudEnabled || !EXEHud.isModuleActive) return;
+        super.onUpdate(event);
 
         updatePixelNumbers();
     }
 
-    override function onNoteMiss(ev:ScriptEvent)
-    {
-        super.onNoteMiss(ev);
-        if (!inPlay || ev.healthChange == 0 || ev.note.noteData.kind == "phantomnote" || ev.note.noteData.kind == "ringnote") return;
-        misses++;
+    override function onNoteMiss(event:ScriptEvent) {
+        if (!updateHudSetting()) return;
+        if (!EXEHud.isModuleActive || event.healthChange == 0 || event.note.noteData.kind == "phantomnote" || event.note.noteData.kind == "ringnote") return;
+        super.onNoteMiss(event);
+        EXEHud.currentMisses++;
     }
 
-    override function onNoteGhostMiss(ev:ScriptEvent)
-    {
-        super.onNoteGhostMiss(ev);
+    override function onNoteGhostMiss(event:ScriptEvent) {
+        if (!updateHudSetting()) return;
+        super.onNoteGhostMiss(event);
 
-        doGhostTapping = Save.instance.modOptions["ghosttap"];
-        if (!inPlay || ev.healthChange == 0 || doGhostTapping) return;
-        misses++;
+        EXEHud.isGhostTappingEnabled = Save.instance.modOptions["ghosttap"];
+        if (!EXEHud.isModuleActive || event.healthChange == 0 || EXEHud.isGhostTappingEnabled) return;
+        EXEHud.currentMisses++;
     }
 
-    override function onSongRetry(ev:ScriptEvent)
-    {
-        super.onSongRetry(ev);
-        misses = 0;
+    override function onSongRetry(event:ScriptEvent) {
+        super.onSongRetry(event);
+        EXEHud.currentMisses = 0;
     }
 
-    override function onStateChangeBegin(ev:ScriptEvent)
-    {
-        super.onStateChangeBegin(ev);
-        if (ev.targetState == null || !Std.isOfType(ev.targetState, PlayState))
-        {
+    override function onStateChangeBegin(event:ScriptEvent) {
+        super.onStateChangeBegin(event);
+        if (event.targetState == null || !Std.isOfType(event.targetState, PlayState)) {
             cleanup();
-            inPlay = false;
+            EXEHud.isModuleActive = false;
         }
     }
 
-    override function onStateChangeEnd(ev:ScriptEvent)
-    {
-        super.onStateChangeEnd(ev);
-        if (ev.targetState != null && Std.isOfType(ev.targetState, PlayState))
-        {
+    override function onStateChangeEnd(event:ScriptEvent) {
+        super.onStateChangeEnd(event);
+        if (event.targetState != null && Std.isOfType(event.targetState, PlayState)) {
             onPlayStateEnter();
-            inPlay = true;
+            EXEHud.isModuleActive = true;
         }
     }
 }

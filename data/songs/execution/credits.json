@@ -1,0 +1,32 @@
+{
+  "sections": [
+    {
+      "title": "CODE",
+      "names": ["CoderNumber1", "CoderNumber2", "CoderNumber3"]
+    },
+    {
+      "title": "ARTWORK",
+      "names": ["ArtistNumber1", "ArtistNumber2", "ArtistNumber3"]
+    },
+    {
+      "title": "MUSIC",
+      "names": ["MusicianNumber1", "MusicianNumber2", "MusicianNumber3"]
+    },
+    {
+      "title": "CHARTING",
+      "names": ["CharterNumber1", "CharterNumber2", "CharterNumber3"]
+    }
+  ],
+  "options": {
+    "startStep": 1,
+    "exitTimer": 5,
+    "tweenSpeed": 0.8,
+    "alpha": 0.6,
+    "color": "0xFF808080",
+    "textColor": "0xFFFFFFFF",
+    "font": "vcr.ttf",
+    "titleSize": 50,
+    "sectionSize": 35,
+    "nameSize": 25
+  }
+}

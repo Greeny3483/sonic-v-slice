@@ -17,4 +17,14 @@ class FleetwaySuperSonic extends MultiSparrowCharacter {
         FunkinMemory.cacheTexture(Paths.image("characters/specialAnims/fleetway2"));
     }
 
+    public var opponentFloatOffset:Float = 0;
+
+    override function update(elapsed:Float):Void {
+        super.update(elapsed);
+
+        opponentFloatOffset += elapsed * 1.5;
+        var floatVal:Float = Math.sin(opponentFloatOffset) * 0.5;
+        this.y += floatVal;
+        this.cameraFocusPoint.y += floatVal;
+    }
 }

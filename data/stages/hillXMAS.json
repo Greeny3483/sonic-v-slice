@@ -164,42 +164,6 @@
 			]
 		},
 		{
-			"zIndex": 30,
-			"position": [
-				1100,
-				-160
-			],
-			"scale": [
-				1,
-				1
-			],
-			"animType": "sparrow",
-			"name": "Requital",
-			"flipX": false,
-			"startingAnimation": "boom",
-			"flipY": false,
-			"isPixel": false,
-			"assetPath": "stages/hillXMAS/christma-requital",
-			"scroll": [
-				1,
-				1
-			],
-			"animations": [
-				{
-					"offsets": [
-						0,
-						0
-					],
-					"flipY": false,
-					"frameRate": 24,
-					"prefix": "Requital",
-					"looped": true,
-					"flipX": false,
-					"name": "boom"
-				}
-			]
-		},
-		{
 			"zIndex": 32,
 			"position": [
 				1400,

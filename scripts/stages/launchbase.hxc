@@ -50,13 +50,11 @@ class LaunchBase extends Stage
 	{
 		super.onCreate(event);
         
-		doScreenEdit = Save.instance.modOptions["doWindowEditing"];
-		doModcharts = Save.instance.modOptions["doModcharts"];
 		doFatalPopups = Save.instance.modOptions["doFatalPopups"];
 		doWindowMovement = Save.instance.modOptions["doWindowMovement"];
 
-		doExtraShaders = Save.instance.modOptions["doExtraShaders"];
-		if (doExtraShaders) ShaderHandler.initShader("vcr");
+		doGenesisMode = Save.instance.modOptions["doGenesisMode"];
+		if (doGenesisMode) ShaderHandler.initShader("vcr");
 
 		FunkinMemory.cacheTexture(Paths.image('events/fatalpopups/error_popups'));
 
@@ -72,22 +70,20 @@ class LaunchBase extends Stage
 			statix.visible = false;
 		};
 
-		if (doScreenEdit) {
-			if (FlxG.onMobile) {
-				leftBorder = new FlxSprite(0, 0).makeGraphic(50, FlxG.height, 0xFF000000);
-				leftBorder.scrollFactor.set(0, 0);
-				leftBorder.scale.set(5, 3);
-				leftBorder.cameras = [PlayState.instance.camHUD];
-				PlayState.instance.add(leftBorder);
+		if (FlxG.onMobile) {
+			leftBorder = new FlxSprite(0, 0).makeGraphic(50, FlxG.height, 0xFF000000);
+			leftBorder.scrollFactor.set(0, 0);
+			leftBorder.scale.set(5, 3);
+			leftBorder.cameras = [PlayState.instance.camHUD];
+			PlayState.instance.add(leftBorder);
 
-				rightBorder = new FlxSprite(FlxG.width - 50, 0).makeGraphic(50, FlxG.height, 0xFF000000);
-				rightBorder.scrollFactor.set(0, 0);
-				rightBorder.scale.set(5, 3);
-				rightBorder.cameras = [PlayState.instance.camHUD];
-				PlayState.instance.add(rightBorder);
-			} else {
-				EXEWindow.resizeWindow(960, 720);
-			}
+			rightBorder = new FlxSprite(FlxG.width - 50, 0).makeGraphic(50, FlxG.height, 0xFF000000);
+			rightBorder.scrollFactor.set(0, 0);
+			rightBorder.scale.set(5, 3);
+			rightBorder.cameras = [PlayState.instance.camHUD];
+			PlayState.instance.add(rightBorder);
+		} else {
+			EXEWindow.resizeWindow(960, 720);
 		}
 
 		if (doFatalPopups) {
@@ -101,7 +97,7 @@ class LaunchBase extends Stage
 
 	function clearPopups():Void
 	{
-		if (doFatalPopups) {
+		if (FlxG.keys.justPressed.F6 || doFatalPopups) {
 			while(FatalPopup.popups.length>0)
 				FatalPopup.popups[0].close();
 		}
@@ -139,6 +135,12 @@ class LaunchBase extends Stage
 		if (doFatalPopups) Cursor.hide();
 	}
 
+	public override function onSongRetry(event) {
+		super.onSongRetry(event);
+		if (doFatalPopups) clearPopups();
+		//EXEStrumlines.resetStrumlines("playerY");
+	}
+
 	public override function onSongEvent(scriptEvent:SongEventScriptEvent) {
 		super.onSongEvent(scriptEvent);
 		switch (scriptEvent.eventData.eventKind) {
@@ -173,7 +175,7 @@ class LaunchBase extends Stage
 	override function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		if (IsWindowMoving && doModcharts && !FlxG.onMobile) {
+		if (IsWindowMoving && !FlxG.onMobile) {
 			var thisX:Float = Math.sin(Xamount * (Xamount)) * 100;
 			var thisY:Float = Math.sin(Yamount * (Yamount)) * 100;
 			var yVal = Std.int(windowY + thisY);
@@ -190,7 +192,7 @@ class LaunchBase extends Stage
 	override function onUpdate(event:ScriptEvent):Void {
 		super.onUpdate(event);
 		
-		if (doExtraShaders) ShaderHandler.updateShader("vcr");
+		if (doGenesisMode) ShaderHandler.updateShader("vcr");
 	}
 
 	function onCountdownStart()
@@ -204,11 +206,9 @@ class LaunchBase extends Stage
 			originalOpponentStrumlineX = PlayState.instance.opponentStrumline.x;
 			originalOpponentStrumlineVisible = PlayState.instance.opponentStrumline.visible;
 			
-			if (doScreenEdit && !FlxG.onMobile) {
+			if (!FlxG.onMobile) {
 				PlayState.instance.playerStrumline.x = (FlxG.width / 2 + 24);
 				PlayState.instance.opponentStrumline.x = 24;
-				//PlayState.instance.opponentStrumline.x = 150;
-				//PlayState.instance.playerStrumline.x = 692;
 			}
 		}
 	}
@@ -252,7 +252,7 @@ class LaunchBase extends Stage
 				phase2bg.zIndex = 11;
 				phase2.zIndex = 12;
 				PlayState.instance.currentStage.refresh();
-			case 1984:
+			case 1984: // switch to true fatal
 				if (doWindowMovement) Xamount += 2;
 				if (doWindowMovement) Yamount += 2;
 				if (doWindowMovement) windowX = Application.current.window.x;
@@ -260,6 +260,7 @@ class LaunchBase extends Stage
 				if (doWindowMovement) IsWindowMoving = true;
 				statix.visible = true;
 				statix.animation.play('static');
+				clearPopups();
 
 				if (statix != null) {
 					var timer2 = new FlxTimer();

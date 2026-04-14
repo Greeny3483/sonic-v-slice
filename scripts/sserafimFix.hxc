@@ -1,0 +1,25 @@
+import funkin.play.stage.Stage;
+import funkin.play.PlayState;
+import EXEHud;
+
+class SserafimFix extends SserafimStage {
+    public function new() {
+        super("sserafimFix");
+    }
+
+    override function onCountdownStart(event:CountdownScriptEvent) {
+        super.onCountdownStart(event);
+
+        exeSprites = [EXEHud.sonicMissesSprite, EXEHud.sonicTimeSprite, EXEHud.sonicColonSprite, EXEHud.sonicScoreSprite];
+        exeNums = [EXEHud.missesNumbers, EXEHud.timeNumbers, EXEHud.scoreNumbers, EXEHud.healthNumbers];
+
+        if (!hasPlayedCutscene) {
+            for (sprite in exeSprites) {
+                if (sprite != null) sprite.visible = false;
+            }
+            for (num in exeNums) {
+                if (num != null) num.visible = false;
+            }
+        }
+    }
+}

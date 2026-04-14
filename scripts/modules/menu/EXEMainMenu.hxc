@@ -1,6 +1,7 @@
 import flixel.FlxG;
 import funkin.ui.mainmenu.MainMenuState;
 import funkin.modding.module.Module;
+import funkin.ui.ScriptedMusicBeatState;
 
 class EXEMainMenu extends Module
 {

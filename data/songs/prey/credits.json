@@ -1,0 +1,32 @@
+{
+  "sections": [
+    {
+      "title": "CODE",
+      "names": ["Greeny3483", "(org.) Avery", "(org.) Crybit"]
+    },
+    {
+      "title": "ARTWORK",
+      "names": ["AnarakWarriors"]
+    },
+    {
+      "title": "MUSIC",
+      "names": ["Armydillo"]
+    },
+    {
+      "title": "CHARTING",
+      "names": ["VentiVR"]
+    }
+  ],
+  "options": {
+    "startStep": 266,
+    "exitTimer": 3,
+    "tweenSpeed": 0.8,
+    "alpha": 0.8,
+    "color": "0xFF808080",
+    "textColor": "0xFFFFFFFF",
+    "font": "sonic-1-hud-font.ttf",
+    "titleSize": 50,
+    "sectionSize": 35,
+    "nameSize": 25
+  }
+}

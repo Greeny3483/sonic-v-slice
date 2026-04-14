@@ -1,0 +1,139 @@
+{
+    "assetPath": "characters/bf-sunkeh",
+    "name": "Boyfriend (Milk)",
+    "singTime": 5,
+    "version": "1.0.0",
+    "renderType": "multisparrow",
+    "scale": 1,
+    "flipX": true,
+    "isPixel": false,
+    "offsets": [
+        0,
+        230
+    ],
+    "cameraOffsets": [
+        140,
+        10
+    ],
+    "healthIcon": {
+        "id": "bf",
+        "offsets": [
+            0,
+            0
+        ],
+        "flipX": false,
+        "isPixel": false,
+        "scale": 1
+    },
+    "animations": [
+        {
+            "name": "singLEFT",
+            "prefix": "singLEFT0",
+            "looped": false,
+            "offsets": [
+                -25,
+                -8
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singDOWN",
+            "prefix": "singDOWN0",
+            "looped": false,
+            "offsets": [
+                -2,
+                -83
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singRIGHT",
+            "prefix": "singRIGHT0",
+            "looped": false,
+            "offsets": [
+                -27,
+                6
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singUP",
+            "prefix": "singUP0",
+            "looped": false,
+            "offsets": [
+                -46,
+                87
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singLEFTmiss",
+            "prefix": "singLEFTmiss",
+            "looped": false,
+            "offsets": [
+                -21,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singDOWNmiss",
+            "prefix": "singDOWNmiss",
+            "looped": false,
+            "offsets": [
+                10,
+                -80
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singRIGHTmiss",
+            "prefix": "singRIGHTmiss",
+            "looped": false,
+            "offsets": [
+                -17,
+                9
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singUPmiss",
+            "prefix": "singUPmiss",
+            "looped": false,
+            "offsets": [
+                -50,
+                87
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "idle",
+            "prefix": "idle",
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+  "sections": [
+    {
+      "title": "CODE",
+      "names": ["Greeny3483", "Comedy Lost", "(org.) Jackie.exe", "(org.) Nebula", "(org.) Crybit"]
+    },
+    {
+      "title": "ARTWORK",
+      "names": ["AnarakWarriors"]
+    },
+    {
+      "title": "MUSIC",
+      "names": ["Saster"]
+    },
+    {
+      "title": "CHARTING",
+      "names": ["niffirg"]
+    }
+  ],
+  "options": {
+    "startStep": 1,
+    "exitTimer": 5,
+    "tweenSpeed": 0.8,
+    "transparency": 0.8,
+    "font": "sonic-1-hud-font.ttf"
+  }
+}

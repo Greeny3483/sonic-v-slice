@@ -1,174 +1,24 @@
-import flixel.FlxG;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
-import funkin.audio.FunkinSound;
-import funkin.graphics.FunkinSprite;
-import funkin.modding.events.ScriptEvent;
-import funkin.Paths;
-import funkin.play.PlayState;
+import funkin.play.Countdown;
 import funkin.play.song.Song;
 import funkin.modding.module.ModuleHandler;
 
-class ChaosSong extends Song
-{
-	var hasPlayedInGameCutscene:Bool = false;
-	var quickTimeActive:Bool = false;
-	var spacePressed:Bool = false;
-	var quickTime:FunkinSprite;
-	var cutsceneTimer:FlxTimer;
+import funkin.save.Save;
 
-	public function new()
-	{
-		super('chaos');
-	}
-
-	override function onCreate(event:ScriptEvent):Void
-	{
-		super.onCreate(event);
-
-		swappingNotestylesModule = ModuleHandler.getModule('SwappingNotestyles');
-		doQuickTime = ModuleHandler.getModule("EXEOptions").scriptGet("quickTimeEvents");
-		doBloodSplash = ModuleHandler.getModule("EXEOptions").scriptGet("bloodsplashes");
-
-		if (doQuickTime) {
-			initializeQuickTime();
-		}
-
-	}
-	
-	function initializeQuickTime():Void {
-		quickTime = FunkinSprite.create(170, 30);
-        quickTime.frames = Paths.getSparrowAtlas('spacebar_icon');
-        quickTime.animation.addByPrefix('idle', 'spacebar00', 24, false);
-		quickTime.scale.set(0.45, 0.45);
-        quickTime.zIndex = 5000;
-		quickTime.cameras = [PlayState.instance.camCutscene];
-		PlayState.instance.add(quickTime);
-		quickTime.visible = false;
-		quickTime.updateHitbox();
-	}
-
-	function onStepHit(event:SongTimeScriptEvent):Void {
-		super.onStepHit(event);
-
-		if (doQuickTime) {
-			if (event.step == 258) {
-				quickTime.visible = true;
-				quickTime.animation.play('idle');
-				quickTimeActive = true;
-				spacePressed = false;
-			}
-			
-			var endStep = FlxG.onMobile ? 285 : 275;
-			
-			if (event.step == endStep) {
-				quickTime.visible = false;
-				if (quickTimeActive && !spacePressed) {
-					PlayState.instance.health = 0;
-				}
-				quickTimeActive = false;
-			}
-		}
-		
-		if (event.step == 1008) {
-			
-			FlxG.camera.shake(0.05, 0.5);
-			PlayState.instance.camHUD.shake(0.03, 0.5);
-		}
-	}
-
-	function onUpdate(event:UpdateScriptEvent):Void {
-		super.onUpdate(event);
-		
-		if (doQuickTime && quickTimeActive) {
-			if (FlxG.keys.justPressed.SPACE) {
-				handleQuickTimeSuccess();
-			}
-			
-			if (quickTime.visible && FlxG.mouse.justPressed && FlxG.mouse.overlaps(quickTime)) {
-				handleQuickTimeSuccess();
-			}
-		}
-	}
-	
-	function handleQuickTimeSuccess():Void {
-		spacePressed = true;
-		quickTime.visible = false;
-		quickTimeActive = false;
-	}
+class Chaos extends Song {
+    public function new() {
+        super("chaos");
+    }
 
 	public override function onCountdownStart(event:CountdownScriptEvent):Void
 	{
 		super.onCountdownStart(event);
 
-		if (!hasPlayedInGameCutscene) {
-			hasPlayedInGameCutscene = true;
-			event.cancel();
-			playCutscene();
-		}
+        new FlxTimer().start(1, function(tmr) // small delay
+        {
+            Countdown.skipCountdown();
+        });
 	}
 
-	function playCutscene():Void
-	{
-		var chamber = PlayState.instance.currentStage.getNamedProp('Chamber');
-		var emerald1 = PlayState.instance.currentStage.getNamedProp('ChamberRainEmerald');
-		var emerald2 = PlayState.instance.currentStage.getNamedProp('ChamberRainEmerald2');
-
-		PlayState.instance.currentStage.getDad().y = 1000;
-		PlayState.instance.currentStage.getDad().visible = false;
-		PlayState.instance.currentStage.refresh();
-		PlayState.instance.camHUD.alpha = 0;
-		PlayState.instance.tweenCameraToPosition(-50, 100, 0);
-
-		// Sequence cutscene events with callbacks
-		FunkinSound.playOnce(Paths.sound("robot"));
-		PlayState.instance.tweenCameraZoom(1.1, 1, true, {ease: FlxEase.quadInOut});
-		FlxG.camera.flash(0xFFFF0000, 1);
-
-		cutsceneTimer = new FlxTimer().start(2, function(_) {
-			FunkinSound.playOnce(Paths.sound("sonic"));
-			chamber.animation.play('wowSonic');
-
-			cutsceneTimer = new FlxTimer().start(3, function(_) {
-				PlayState.instance.tweenCameraZoom(0.7, 0.3, true, FlxEase.quadInOut);
-				FunkinSound.playOnce(Paths.sound("beam"));
-				emerald1.zIndex = -4;
-				emerald2.zIndex = -3;
-				PlayState.instance.currentStage.refresh();
-
-				cutsceneTimer = new FlxTimer().start(1, function(_) {
-					PlayState.instance.isInCutscene = false;
-					PlayState.instance.startCountdown();
-					FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 0.5);
-
-					cutsceneTimer = new FlxTimer().start(1.85, function(_) {
-						FlxTween.tween(PlayState.instance.currentStage.getDad(), {y: -800}, 0.6);
-						PlayState.instance.currentStage.getDad().visible = true;
-						PlayState.instance.tweenCameraToPosition(-100, -300, 0.85);
-					});
-				});
-			});
-		});
-	}
-
-	function cleanupCutscene():Void
-	{
-		if (cutsceneTimer != null && cutsceneTimer.active) {
-			cutsceneTimer.cancel();
-		}
-	}
-
-	function onSongRetry(event:ScriptEvent):Void
-	{
-		super.onSongRetry(event);
-		cleanupCutscene();
-		hasPlayedInGameCutscene = true;
-	}
-
-	override function onDestroy(event:ScriptEvent):Void
-	{
-		cleanupCutscene();
-		super.onDestroy(event);
-	}
 }
+

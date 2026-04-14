@@ -15,43 +15,72 @@ import Math;
 class EXEStrumlines extends Module {
     // Contains code for most strumline related functions within the EXE mod
 
-    public static var noteStyle:NoteStyle;
-    public static var PLAYER_STRUM_X = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + (PlayState.instance.cutoutSize / 2.0);
-    public static var PLAYER_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.playerStrumline.height - Constants.STRUMLINE_Y_OFFSET - noteStyle.getStrumlineOffsets()[1] : Constants.STRUMLINE_Y_OFFSET;
+    public static var PLAYER_STRUM_X = 0.0;
+    public static var PLAYER_STRUM_Y = 0.0;
 
-    public static var OPPONENT_STRUM_X = Constants.STRUMLINE_X_OFFSET + PlayState.instance.cutoutSize;
-    public static var OPPONENT_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.opponentStrumline.height - Constants.STRUMLINE_Y_OFFSET - noteStyle.getStrumlineOffsets()[1] : Constants.STRUMLINE_Y_OFFSET;
+    public static var OPPONENT_STRUM_X = 0.0;
+    public static var OPPONENT_STRUM_Y = 0.0;
 
     public function new() {
         super("EXEStrumlines");
     }
 
+    public override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        if (PlayState.instance == null) return;
+
+        PLAYER_STRUM_X = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + (PlayState.instance.cutoutSize / 2.0);
+        PLAYER_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.playerStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
+
+        OPPONENT_STRUM_X = Constants.STRUMLINE_X_OFFSET + PlayState.instance.cutoutSize;
+        OPPONENT_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.opponentStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
+    }
+
     public static function resetStrumlines(strumline:String):Void {
         // Resets specified strumline(s) completely
         // This SHOULD work with downscroll
-        if (FlxG.onMobile || PlayState.instance == null) return;
+        if (PlayState.instance == null) return;
+
+        PLAYER_STRUM_X = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + (PlayState.instance.cutoutSize / 2.0);
+        PLAYER_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.playerStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
+
+        OPPONENT_STRUM_X = Constants.STRUMLINE_X_OFFSET + PlayState.instance.cutoutSize;
+        OPPONENT_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.opponentStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
 
         switch (strumline) {
             case "player":
                 PlayState.instance.playerStrumline.x = PLAYER_STRUM_X;
                 PlayState.instance.playerStrumline.y = PLAYER_STRUM_Y;
+                for (note in PlayState.instance.playerStrumline.strumlineNotes.members) {
+                    if (note != null) note.y = PLAYER_STRUM_Y;
+                }
                 PlayState.instance.playerStrumline.visible = true;
                 PlayState.instance.playerStrumline.alpha = 1;
                 return;
             case "opponent":
                 PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
                 PlayState.instance.opponentStrumline.y = OPPONENT_STRUM_Y;
+                for (note in PlayState.instance.opponentStrumline.strumlineNotes.members) {
+                    if (note != null) note.y = OPPONENT_STRUM_Y;
+                }
                 PlayState.instance.opponentStrumline.visible = true;
                 PlayState.instance.opponentStrumline.alpha = 1;
                 return;
             case "both":
                 PlayState.instance.playerStrumline.x = PLAYER_STRUM_X;
                 PlayState.instance.playerStrumline.y = PLAYER_STRUM_Y;
+                for (note in PlayState.instance.playerStrumline.strumlineNotes.members) {
+                    if (note != null) note.y = PLAYER_STRUM_Y;
+                }
                 PlayState.instance.playerStrumline.visible = true;
                 PlayState.instance.playerStrumline.alpha = 1;
 
                 PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
                 PlayState.instance.opponentStrumline.y = OPPONENT_STRUM_Y;
+                for (note in PlayState.instance.opponentStrumline.strumlineNotes.members) {
+                    if (note != null) note.y = OPPONENT_STRUM_Y;
+                }
                 PlayState.instance.opponentStrumline.visible = true;
                 PlayState.instance.opponentStrumline.alpha = 1;
                 return;
@@ -61,7 +90,7 @@ class EXEStrumlines extends Module {
     }
 
     public static function changeStrumlineMode(mode:String):Void {
-        if (FlxG.onMobile || PlayState.instance == null) return;
+        if (PlayState.instance == null) return;
 
         switch (mode) {
             case "middlescroll":
@@ -73,8 +102,7 @@ class EXEStrumlines extends Module {
     }
 
     public static function swapStrumlines(position:String):Void {
-        doStrumSwap = Save.instance.modOptions["doStrumSwap"];
-        if (!doStrumSwap || FlxG.onMobile || PlayState.instance == null) return;
+        if (PlayState.instance == null) return;
     
         switch (position) {
             case "isDefault":
@@ -87,7 +115,7 @@ class EXEStrumlines extends Module {
                 PlayState.instance.opponentStrumline.y = PLAYER_STRUM_Y;
                 return;
             case "isCurrent":
-                var tempX = PlayState.instance.playerStrumline.x;
+                var tempX = PlayState.instance.playerStrumline.x; // temporarily store the positions
                 var tempY = PlayState.instance.playerStrumline.y;
                 
                 PlayState.instance.playerStrumline.x = PlayState.instance.opponentStrumline.x;
@@ -109,12 +137,13 @@ class EXEStrumlines extends Module {
 	public static var strumlinePositionSet:Bool = false;
 	public static var wiggleIntensity:Float = 8;
     public static var modchartWasActive:Bool = false;
+    public static var doModcharts:Bool = true;
 
     public static function startWiggleModchart():Void {
         // make sure you put updateModchart in onUpdate
-        doModcharts = Save.instance.modOptions["doModcharts"];
+        doModcharts = Save.instance.modOptions["modcharts"];
         if (!doModcharts) return;
-        if (FlxG.onMobile || PlayState.instance == null) return;
+        if (PlayState.instance == null) return;
 
         modchartWasActive = true;
 		doStrumlineWiggle = true;
@@ -124,9 +153,9 @@ class EXEStrumlines extends Module {
         // Stops the wiggle effect on both strumlines
         // After you call this, you should also call resetStrumlines()
 
-        doModcharts = Save.instance.modOptions["doModcharts"];
+        doModcharts = Save.instance.modOptions["modcharts"];
         if (!doModcharts) return;
-        if (FlxG.onMobile || PlayState.instance == null) return;
+        if (PlayState.instance == null) return;
 
         doStrumlineWiggle = false;
         strumlinePositionSet = false;
@@ -151,11 +180,11 @@ class EXEStrumlines extends Module {
 	public static function updateModchart(type:String):Void {
         doModcharts = Save.instance.modOptions["modcharts"];
         if (!doModcharts) return;
-        if (FlxG.onMobile || PlayState.instance == null) return;
+        if (PlayState.instance == null) return;
 
         switch (type) {
             case "wiggle":
-                if (!strumlinePositionSet && PlayState.instance.playerStrumline != null && PlayState.instance.opponentStrumline != null) {
+                if (doStrumlineWiggle && !strumlinePositionSet && PlayState.instance.playerStrumline != null && PlayState.instance.opponentStrumline != null) {
 			        basePlayerStrumPos = PlayState.instance.playerStrumline.x;
 			        baseOpponentStrumPos = PlayState.instance.opponentStrumline.x;
 			        basePlayerStrumPosY = PlayState.instance.playerStrumline.strumlineNotes.members[0] != null ? PlayState.instance.playerStrumline.strumlineNotes.members[0].y : 0;
@@ -178,16 +207,4 @@ class EXEStrumlines extends Module {
                 return;
         }
 	}
-
-    override function onSongRetry():Void {
-        super.onSongRetry();
-
-        resetStrumlines("both");
-    }
-
-    override function onDestroy():Void {
-        super.onDestroy();
-
-        resetStrumlines("both");
-    }
 }

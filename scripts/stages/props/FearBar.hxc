@@ -46,7 +46,7 @@ class FearBar extends Module {
 		
 		if (currentBarPercent < 1.0)
 		{
-			currentBarPercent += 0.000015;
+			currentBarPercent += 0.000015 * FlxG.elapsed * 60;
 		}
 		
 		if (currentBarPercent > 1.0) currentBarPercent = 1.0;
@@ -72,14 +72,14 @@ class FearBar extends Module {
 		{
 			if (currentBarPercent > 0)
 			{
-				currentBarPercent -= 0.0004;
+				currentBarPercent -= 0.0004 * FlxG.elapsed * 60;
 			}
 		}
 		else
 		{
 			if (currentBarPercent < 1.0)
 			{
-				currentBarPercent += 0.0003;
+				currentBarPercent += 0.0003 * FlxG.elapsed * 60;
 			}
 		}
 	}
@@ -88,7 +88,7 @@ class FearBar extends Module {
 	{
 		super.onNoteMiss(event);
 		
-		if (event.note.noteData.getMustHitNote() && event.note.noteType == '' && currentBarPercent < 1.0)
+		if (event.note.noteData.getMustHitNote() && currentBarPercent < 1.0)
 		{
 			currentBarPercent += 0.025;
 		}

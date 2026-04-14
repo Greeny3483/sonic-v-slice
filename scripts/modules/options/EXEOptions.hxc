@@ -29,6 +29,7 @@ class EXEOptions extends Module
     public var doWindowMovement:Bool = true;
     public var doGhostTapping:Bool = true;
     public var doSongTransitions:Bool = true;
+    public var doFreeplayCuts:Bool = false;
     public var doCamMovement:Bool = true;
     public var camMovementIntensity:Int = 20;
 
@@ -38,6 +39,7 @@ class EXEOptions extends Module
 
     // HUD
     public var doGenesisHUD:Bool = true;
+    public var showHealthText:Bool = false;
     public var doColoredHealthBar:Bool = true;
 
     // Menu
@@ -61,6 +63,7 @@ class EXEOptions extends Module
         if(Save.instance.modOptions["doWindowMovement"] == null) Save.instance.modOptions["doWindowMovement"] = true;
         if(Save.instance.modOptions["doGhostTapping"] == null) Save.instance.modOptions["doGhostTapping"] = true;
         if(Save.instance.modOptions["doSongTransitions"] == null) Save.instance.modOptions["doSongTransitions"] = true;
+        if(Save.instance.modOptions["doFreeplayCuts"] == null) Save.instance.modOptions["doFreeplayCuts"] = false;
         if(Save.instance.modOptions["doCamMovement"] == null) Save.instance.modOptions["doCamMovement"] = true;
         if(Save.instance.modOptions["camMovementIntensity"] == null) Save.instance.modOptions["camMovementIntensity"] = 20;
 
@@ -70,6 +73,7 @@ class EXEOptions extends Module
 
         // HUD
         if(Save.instance.modOptions["doGenesisHUD"] == null) Save.instance.modOptions["doGenesisHUD"] = true;
+        if(Save.instance.modOptions["showHealthText"] == null) Save.instance.modOptions["showHealthText"] = false;
         if(Save.instance.modOptions["doColoredHealthBar"] == null) Save.instance.modOptions["doColoredHealthBar"] = true;
 
         // Menu
@@ -145,11 +149,17 @@ class EXEOptions extends Module
                 Save.instance.flush();
             }, Save.instance.modOptions["doGhostTapping"]);
 
-            prefs.createPrefItemCheckbox("Song Transitions", "Toggles movement of the camera when hitting a note.", function(value) {
+            prefs.createPrefItemCheckbox("Song Transitions", "Toggles song transitions in freeplay.", function(value) {
                 Save.instance.modOptions["doSongTransitions"] = value;
                 doSongTransitions = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doSongTransitions"]);
+
+            prefs.createPrefItemCheckbox("Freeplay Cutscenes", "Toggles cutscenes for certain songs in freeplay.", function(value) {
+                Save.instance.modOptions["doFreeplayCuts"] = value;
+                doSongTransitions = value;
+                Save.instance.flush();
+            }, Save.instance.modOptions["doFreeplayCuts"]);
 
             prefs.createPrefItemCheckbox("Camera Movement", "Toggles movement of the camera when hitting a note.", function(value) {
                 Save.instance.modOptions["doCamMovement"] = value;
@@ -190,7 +200,7 @@ class EXEOptions extends Module
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: HUD", "bold", () -> false);
             prefs.preferenceDesc.push("HUD options for VS Sonic.EXE");
 
-            prefs.createPrefItemCheckbox("Genesis HUD", "Toggles the genesis-styled HUD.", function(value) {
+            prefs.createPrefItemCheckbox("GENESIS HUD", "Toggles the GENESIS-styled HUD.", function(value) {
                 Save.instance.modOptions["doGenesisHUD"] = value;
                 doGenesisHUD = value;
                 Save.instance.flush();

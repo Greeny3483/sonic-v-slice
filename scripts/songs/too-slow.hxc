@@ -1,4 +1,5 @@
 import flixel.FlxG;
+import funkin.Paths;
 import funkin.save.Save;
 import funkin.play.song.Song;
 import funkin.play.PlayStatePlaylist;
@@ -8,6 +9,7 @@ import funkin.modding.module.ModuleHandler;
 class TooSlowSong extends Song {
 
     var hasPlayedCutscene:Bool;
+    var doFreeplayCuts:Bool;
 
     public function new() {
         super("too-slow");
@@ -18,9 +20,11 @@ class TooSlowSong extends Song {
     override function onCreate(event:ScriptEvent):Void {
         super.onCreate(event);
 
+        doFreeplayCuts = Save.instance.modOptions["doFreeplayCuts"];
+
         hasPlayedCutscene = false;
 
-        if (PlayStatePlaylist.isStoryMode && !hasPlayedCutscene) {
+        if ((PlayStatePlaylist.isStoryMode || doFreeplayCuts) && !hasPlayedCutscene) {
             var intro = ModuleHandler.getModule('EXEIntros');
             if (intro != null) intro.scriptSet('skipNextIntro', true);
         }
@@ -35,7 +39,7 @@ class TooSlowSong extends Song {
     public override function onCountdownStart(event:CountdownScriptEvent):Void {
         super.onCountdownStart(event);
 
-        if (!PlayStatePlaylist.isStoryMode) hasPlayedCutscene = true;
+        if (!PlayStatePlaylist.isStoryMode && !doFreeplayCuts) hasPlayedCutscene = true;
 
         if (!hasPlayedCutscene) {
            trace('Pausing countdown to play a video cutscene (`too slow`)');

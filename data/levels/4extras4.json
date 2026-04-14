@@ -3,6 +3,9 @@
   "name": "EXTRAS MENU",
   "visible": false,
   "titleAsset": "storymenu/titles/badass",
+  "capsule": {
+    "name": "EXTRAS"
+  },
   "props": [
     {
       "assetPath": "storymenu/props/menu_placeholder",
@@ -18,5 +21,5 @@
     }
   ],
   "background": "#F9CF51",
-  "songs": ["execution", "personnel-serious"]
+  "songs": ["execution", "endless-og", "personnel-serious"]
 }

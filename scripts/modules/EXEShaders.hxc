@@ -9,9 +9,11 @@ import funkin.modding.module.Module;
 class EXEShaders extends Module {
     static var vcrShader:FlxRuntimeShader;
     static var vcrShaderTime:Float = 0;
+    static var setVCRShader:Bool = false;
 
     static var distortionShader:FlxRuntimeShader;
 	static var distortionShaderTime:Float = 0;
+    static var setDistortionShader:Bool = false;
 
     public function new() {
         super("EXEShaders");
@@ -20,6 +22,8 @@ class EXEShaders extends Module {
     public static function initShader(shaderType:String):Void {
         doShaders = Save.instance.modOptions["doShaders"];
         if (!doShaders) return;
+
+        wereShadersActive = true;
 
         switch (shaderType) {
             case "vcr":
@@ -32,6 +36,8 @@ class EXEShaders extends Module {
                 PlayState.instance.camGame.filters = [new ShaderFilter(vcrShader)];
                 PlayState.instance.camHUD.filters = [new ShaderFilter(vcrShader)];
 		        PlayState.instance.camCutscene.filters = [new ShaderFilter(vcrShader)];
+
+                setVCRShader = true;
             case "distortion":
                 var source2 = Assets.getText(Paths.frag("Distortion"));
                 distortionShader = new FlxRuntimeShader(source2);
@@ -65,34 +71,31 @@ class EXEShaders extends Module {
         }
     }
 
-    override function onGameOver():Void {
-        super.onGameOver();
-
-        // Shaders dont show on game over
+    public static function clearShaders():Void {
         if (PlayState.instance != null) {
             if (PlayState.instance.camGame != null) {
                 PlayState.instance.camGame.filters = null;
             }
             if (PlayState.instance.camHUD != null) {
                 PlayState.instance.camHUD.filters = null;
+            }
+            if (PlayState.instance.camCutscene != null) {
+                PlayState.instance.camCutscene.filters = null;
             }
         }
         vcrShader = null;
         distortionShader = null;
     }
 
+    override function onGameOver():Void {
+        super.onGameOver();
+
+        clearShaders();
+    }
+
     override function onDestroy():Void {
         super.onDestroy();
 
-        if (PlayState.instance != null) {
-            if (PlayState.instance.camGame != null) {
-                PlayState.instance.camGame.filters = null;
-            }
-            if (PlayState.instance.camHUD != null) {
-                PlayState.instance.camHUD.filters = null;
-            }
-        }
-        vcrShader = null;
-        distortionShader = null;
+        clearShaders();
     }
 }

@@ -1,0 +1,19 @@
+{
+	"timeFormat": "ms",
+	"artist": "MarStarBro",
+	"charter": "Unknown",
+	"playData": {
+		"album": "exeOST",
+		"stage": "majinForest",
+		"noteStyle": "majin",
+		"difficulties": ["encore"],
+		"characters": {"girlfriend": "", "opponent": "majin_new", "player": "bf-encore-endless", "instrumental": "encore"},
+		"ratings": {"encore": 8}
+	},
+	"songName": "Endless Encore",
+	"timeChanges": [
+		{"t": 0, "bpm": 158}
+	],
+	"generatedBy": "Psych Engine v1.0.4 - Chart Editor V-Slice Exporter",
+	"version": "2.2.3"
+}

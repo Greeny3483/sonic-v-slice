@@ -1,163 +1,243 @@
 {
-    "assetPath": "characters/Starved_Tails",
-    "name": "Tails (Starved)",
-    "singTime": 4,
-    "version": "1.0.0",
-    "scale": 1,
-    "flipX": true,
-    "isPixel": false,
-    "offsets": [
-        -150,
-        150
-    ],
-    "cameraOffsets": [
-        -230,
-        -140
-    ],
-    "healthIcon": {
-        "id": "tailsstarved",
-        "offsets": [
-            0,
-            0
-        ],
-        "flipX": false,
-        "isPixel": false,
-        "scale": 1
-    },
-    "animations": [
-        {
-            "name": "idle",
-            "prefix": "idle",
-            "looped": true,
-            "offsets": [
-                -5,
-                0
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singRIGHTmiss",
-            "prefix": "singRIGHTmiss",
-            "looped": false,
-            "offsets": [
-                -34,
-                -43
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singLEFTmiss",
-            "prefix": "singLEFTmiss",
-            "looped": false,
-            "offsets": [
-                -63,
-                -21
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singDOWNmiss",
-            "prefix": "singDOWNmiss",
-            "looped": false,
-            "offsets": [
-                -15,
-                -49
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singUPmiss",
-            "prefix": "singUPmiss",
-            "looped": false,
-            "offsets": [
-                -23,
-                -2
-            ],
-            "frameRate": 24
-        },
-        {
-            "name": "singLEFT",
-            "prefix": "singLEFT",
-            "looped": false,
-            "offsets": [
-                -64,
-                -1
-            ],
-            "frameRate": 24,
-            "frameIndices": [
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10
-            ]
-        },
-        {
-            "name": "singDOWN",
-            "prefix": "singDOWN",
-            "looped": false,
-            "offsets": [
-                -10,
-                -31
-            ],
-            "frameRate": 24,
-            "frameIndices": [
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10
-            ]
-        },
-        {
-            "name": "singRIGHT",
-            "prefix": "singRIGHT",
-            "looped": false,
-            "offsets": [
-                -8,
-                -17
-            ],
-            "frameRate": 24,
-            "frameIndices": [
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10
-            ]
-        },
-        {
-            "name": "singUP",
-            "prefix": "singUP",
-            "looped": false,
-            "offsets": [
-                -7,
-                36
-            ],
-            "frameRate": 24,
-            "frameIndices": [
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10
-            ]
-        }
-    ]
+	"version": "1.0.0",
+	"renderType": "multisparrow",
+	"offsets": [
+		-150,
+		150
+	],
+	"danceEvery": 1,
+	"applyStageMatrix": false,
+	"scale": 1,
+	"name": "Tails (Fight or Flight)",
+	"flipX": true,
+	"cameraOffsets": [
+		-230,
+		-140
+	],
+	"isPixel": false,
+	"singTime": 4,
+	"startingAnimation": "idle",
+	"assetPath": "characters/Starved_Tails",
+	"healthIcon": {
+		"isPixel": false,
+		"offsets": [
+			0,
+			0
+		],
+		"scale": 1,
+		"id": "tailsstarved",
+		"flipX": false
+	},
+	"atlasSettings": {
+		"applyStageMatrix": false,
+		"useRenderTexture": false,
+		"filterQuality": 1,
+		"cacheOnLoad": false,
+		"swfMode": true
+	},
+	"animations": [
+		{
+			"flipY": false,
+			"offsets": [
+				-5,
+				0
+			],
+			"frameRate": 24,
+			"prefix": "idle",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "idle",
+			"looped": true
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-34,
+				-43
+			],
+			"frameRate": 24,
+			"prefix": "singRIGHTmiss",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singRIGHTmiss",
+			"looped": false
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-63,
+				-21
+			],
+			"frameRate": 24,
+			"prefix": "singLEFTmiss",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singLEFTmiss",
+			"looped": false
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-15,
+				-49
+			],
+			"frameRate": 24,
+			"prefix": "singDOWNmiss",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singDOWNmiss",
+			"looped": false
+		},
+		{
+			"flipY": false,
+			"offsets": [
+				-23,
+				-2
+			],
+			"frameRate": 24,
+			"prefix": "singUPmiss",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singUPmiss",
+			"looped": false
+		},
+		{
+			"offsets": [
+				-64,
+				-1
+			],
+			"frameIndices": [
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"prefix": "singLEFT",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singLEFT",
+			"looped": false,
+			"flipY": false,
+			"frameRate": 24
+		},
+		{
+			"offsets": [
+				-10,
+				-31
+			],
+			"frameIndices": [
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"prefix": "singDOWN",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singDOWN",
+			"looped": false,
+			"flipY": false,
+			"frameRate": 24
+		},
+		{
+			"offsets": [
+				-8,
+				-17
+			],
+			"frameIndices": [
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"prefix": "singRIGHT",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singRIGHT",
+			"looped": false,
+			"flipY": false,
+			"frameRate": 24
+		},
+		{
+			"offsets": [
+				-7,
+				36
+			],
+			"frameIndices": [
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10
+			],
+			"prefix": "singUP",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "singUP",
+			"looped": false,
+			"flipY": false,
+			"frameRate": 24
+		},
+		{
+			"offsets": [
+				200,
+				350
+			],
+			"prefix": "omnomnom",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "firstDeath",
+			"looped": false,
+			"flipY": false,
+			"assetPath": "characters/deathScreens/starved_die",
+			"frameRate": 24
+		},
+		{
+			"offsets": [
+				570,
+				200
+			],
+			"prefix": "spookman",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "deathLoop",
+			"looped": true,
+			"flipY": false,
+			"assetPath": "characters/deathScreens/starved_die",
+			"frameRate": 24
+		},
+		{
+			"offsets": [
+				570,
+				200
+			],
+			"prefix": "spookman",
+			"animType": "framelabel",
+			"flipX": false,
+			"name": "deathConfirm",
+			"looped": true,
+			"flipY": false,
+			"assetPath": "characters/deathScreens/starved_die",
+			"frameRate": 24
+		}
+	]
 }

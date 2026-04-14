@@ -1,0 +1,20 @@
+import funkin.FunkinMemory;
+import funkin.Paths;
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+
+class StarvedTails extends MultiSparrowCharacter {
+    public function new() {
+        super("starvedtails");
+	}
+
+	function onCreate(event:ScriptEvent) {
+		super.onCreate(event);
+
+        FunkinMemory.cacheTexture(Paths.image("characters/deathScreens/starved_die"));
+
+		GameOverSubState.musicSuffix = "Starved";
+		GameOverSubState.blueBallSuffix = "-starved";
+	}
+}

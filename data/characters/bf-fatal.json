@@ -1,8 +1,9 @@
 {
     "version": "1.0.0",
-    "name": "Boyfriend (Fatal Error)",
+    "name": "Boyfriend (Fatality)",
     "assetPath": "characters/fatal-bf",
     "singTime": 4,
+    "renderType": "multisparrow",
     "isPixel": true,
     "scale": 4,
     "healthIcon": {
@@ -83,6 +84,28 @@
                 6,
                 2
             ]
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "isPixel": false,
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "isPixel": false,
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "isPixel": false,
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
         }
     ],
     "flipX": true

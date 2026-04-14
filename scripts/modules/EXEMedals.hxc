@@ -11,6 +11,7 @@ import funkin.play.PlayState;
 import funkin.play.PlayStatePlaylist;
 import funkin.save.Save;
 import funkin.data.story.level.LevelRegistry;
+import funkin.ui.mainmenu.MainMenuState;
 
 #if !mobile 
 import funkin.util.plugins.NewgroundsMedalPlugin as NGMedal;
@@ -18,11 +19,23 @@ import funkin.util.plugins.NewgroundsMedalPlugin as NGMedal;
 
 class EXEMedals extends Module {
 
+	// medals are purely cosmetic and only show up once during gameplay
+
 	public function new(){
 		super('EXEMedals');
 		if (FlxG.onMobile) active = false;
 	}
 
+	// Test the medals
+	/*override function onUpdate(event:UpdateScriptEvent)
+    {
+	    super.onUpdate(event);
+
+        if (FlxG.state is MainMenuState)
+        {
+			if (FlxG.keys.pressed.H) giveMedal(15, "I Die Hard", Paths.image("medals/malice"));
+        }
+    }*/
 
 	function onSongEnd(event:ScriptEvent) {
 		super.onSongEnd(event);
@@ -37,6 +50,13 @@ class EXEMedals extends Module {
 			});
 		}
 
+		if (PlayState.instance.currentSong.id == 'final-escape' && !Save.instance.hasBeatenSong('final-escape')) {
+			new FlxTimer().start(0.6, _ -> { // this is the "secret medal" even though if you play through the sonic.exe week you'll get it naturally
+				if (event.eventCanceled) return;
+   				giveMedal(15, "Faster Than Fate", Paths.image("medals/escape"));
+			});
+		}
+
 		if (PlayState.instance.currentSong.id == 'black-sun' && Save.instance.hasBeatenSong('faker') && !Save.instance.hasBeatenSong('black-sun')) {
 			new FlxTimer().start(0.6, _ -> {
 				if (event.eventCanceled) return;
@@ -47,7 +67,21 @@ class EXEMedals extends Module {
 		if (PlayState.instance.currentSong.id == 'fight-or-flight' && Save.instance.hasBeatenSong('prey') && !Save.instance.hasBeatenSong('fight-or-flight')) {
 			new FlxTimer().start(0.6, _ -> {
 				if (event.eventCanceled) return;
-   				giveMedal(15, "I Die Hard", Paths.image("medals/malice"));
+   				giveMedal(15, "I Die Hard", Paths.image("medals/starved"));
+			});
+		}
+
+		if (PlayState.instance.currentSong.id == 'slaybells' && !Save.instance.hasBeatenSong('slaybells')) {
+			new FlxTimer().start(0.6, _ -> {
+				if (event.eventCanceled) return;
+   				giveMedal(15, "Silent Night", Paths.image("medals/faker"));
+			});
+		}
+
+		if (PlayState.instance.currentSong.id == 'spike-trap' && Save.instance.hasBeatenSong('relax') && Save.instance.hasBeatenSong('round-a-bout') && !Save.instance.hasBeatenSong('spike-trap')) {
+			new FlxTimer().start(0.6, _ -> { // Completed Spike Trap with both Relax and Round-a-Bout beaten
+				if (event.eventCanceled) return;
+   				giveMedal(15, "Silent Night", Paths.image("medals/mouse"));
 			});
 		}
 	}

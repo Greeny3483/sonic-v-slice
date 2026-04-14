@@ -34,12 +34,8 @@ class StardustSpeedway extends Stage {
 		doGenesisMode = Save.instance.modOptions["doGenesisMode"];
 		if (doGenesisMode) {
             EXEShaders.initShader("vcr");
-			WindowHandler.resizeWindow(960, 720);
+			EXEWindow.resizeWindow(960, 720);
 		}
-
-		// ID, camera, zIndex, alpha, size, color, fade
-		/*EXEOverlays.createOverlay(0, "", 100, 1, 10, 000000, 0.01);
-		EXEOverlays.createOverlay(1, "", 300, 1, 10, 000000, 0.01);*/
 
         getNamedProp('Background').visible = false;
         getNamedProp('Floor').visible = false; // we're going to disable these in favor of FlxBackdrop
@@ -57,8 +53,6 @@ class StardustSpeedway extends Stage {
         stardustFloor.velocity.x = -bgSpeed;
         stardustFloor.zIndex = 301;
         add(stardustFloor);
-
-		// Other
 
 		// layered perfectly on top of the actual sonic character, used for the intro sequence
 		sonicrunning = FunkinSprite.create(540, -170);
@@ -112,26 +106,26 @@ class StardustSpeedway extends Stage {
 				FlxG.camera.flash(0xFFFFFFFF, 1);
 				PlayState.instance.remove(sonicrunning);
 				EXEOverlays.removeOverlay(0, 0.000001); // fade out black overlay quickly
-				EXEScripts.triggerCinematics();
+				EXEScripts.triggerCinematics(100, 1, "instant", true, false);
 			case 256:
-				EXEScripts.disableCinematics();
+				EXEScripts.disableCinematics(1, "slide");
 				FlxTween.tween(getDad(), {x: -100}, 0.2);
 				FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, 1);
 			case 1539:
-				EXEScripts.triggerCinematics();
+				EXEScripts.triggerCinematics(100, 1, "slide", true, false);
 				FlxTween.tween(getDad(), {x: -4000}, 8);
 				FlxTween.tween(getDad(), {angle: -45}, 3, {ease: FlxEase.quadInOut});
 			case 1584:
 				getDad().angle = 0;
 				FlxTween.tween(getDad(), {x: 680}, 2.5);
 			case 1789:
-				EXEScripts.disableCinematics();
+				EXEScripts.disableCinematics(1, "slide");
 				bgSpeed = 5000;
 				updateBackgroundVelocity();
 			case 2432:
 				FlxTween.tween(furnaceflying, {x: 2200}, 10);
 			case 3333:
-				EXEScripts.triggerCinematics();
+				EXEScripts.triggerCinematics(100, 1, "slide", true, false);
 			case 3335:
 				FlxTween.tween(getDad(), {x: -2000}, 7);
 			case 3365:
@@ -158,7 +152,7 @@ class StardustSpeedway extends Stage {
 
 		if (PlayState.instance.currentSong.id.toLowerCase() != "prey") return;
 
-		EXEOverlays.clearEXEOverlays(); // Prevent EXEOverlays from stacking
+		EXEOverlays.clearOverlays(); // Prevent EXEOverlays from stacking
 
 		if (furnaceflying != null) {
 			furnaceflying.x = -1000;

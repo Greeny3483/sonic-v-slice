@@ -13,7 +13,14 @@ import funkin.modding.module.Module;
 import funkin.audio.FunkinSound;
 import funkin.data.song.SongRegistry;
 
-class EXESongTransitions extends Module {
+class EXETransitions extends Module {
+    /* Because I wanted VS SONIC.EXE to be the only (exe related) week in story mode,
+	    I felt this was a necessary addition. So that you can still experience the songs as if they were
+		connected.
+
+		And if it doesn't suit you, you can turn it off!
+	*/
+
 	var accepted:Bool = false;
 	var enteredSong:Bool = false;
 
@@ -24,7 +31,7 @@ class EXESongTransitions extends Module {
 	var doSongTransitions:Bool = true;
 
 	public function new() {
-		super('EXESongTransitions');
+		super('EXETransitions');
 	}
 
 	override function onUpdate(event:UpdateScriptEvent) {
@@ -42,9 +49,17 @@ class EXESongTransitions extends Module {
 				switchToNextSong = 'fight-or-flight';
 			}
 
-			if (PlayStatePlaylist.isStoryMode && PlayStatePlaylist.campaignId == '1round1' && FlxG.state.subState.params.songId.toLowerCase() == 'triple-trouble') {
+			if (PlayStatePlaylist.isStoryMode && PlayStatePlaylist.campaignId == '1round1' && FlxG.state.subState.params.songId.toLowerCase() == 'triple-trouble' && !FlxG.onMobile) {
 				switchToNextSong = 'final-escape';
 			}
+
+			if (FlxG.state.subState.params.songId.toLowerCase() == 'relax') {
+				switchToNextSong = 'round-a-bout';
+			}
+
+			if (FlxG.state.subState.params.songId.toLowerCase() == 'round-a-bout') {
+				switchToNextSong = 'spike-trap';
+			}		
 
 			if ((PlayerSettings.player1.controls.PAUSE || (FlxG.onMobile && TouchUtil.justPressed))
 				&& switchToNextSong != ""

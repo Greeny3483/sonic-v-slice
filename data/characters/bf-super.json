@@ -4,7 +4,7 @@
 		0,
 		40
 	],
-	"renderType": "sparrow",
+	"renderType": "multisparrow",
 	"danceEvery": 1,
 	"scale": 1,
 	"name": "Boyfriend (Super)",
@@ -233,6 +233,25 @@
 			"flipX": false,
 			"name": "singLEFT-loop",
 			"looped": true
-		}
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
+        }
 	]
 }

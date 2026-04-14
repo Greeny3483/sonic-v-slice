@@ -3,6 +3,7 @@
     "name": "Sonic.EXE (Christmas)",
     "singTime": 6.1,
     "version": "1.0.0",
+    "renderType": "multisparrow",
     "scale": 1,
     "flipX": true,
     "isPixel": false,
@@ -84,6 +85,25 @@
                 -30
             ],
             "frameRate": 24
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
         }
     ]
 }

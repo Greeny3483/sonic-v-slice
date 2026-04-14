@@ -3,49 +3,18 @@
   "songName": "Endless",
   "artist": "MarStarBro",
   "charter": "Echolocated",
-  "divisions": 96,
-  "looped": false,
   "playData": {
-    "songVariations": [
-      "extra"
-    ],
-    "difficulties": [
-      "easy",
-      "normal",
-      "hard"
-    ],
-    "characters": {
-      "player": "bf-endless",
-      "girlfriend": "",
-      "opponent": "majin",
-      "instrumental": "",
-      "altInstrumentals": [
-        "og"
-      ],
-      "opponentVocals": [
-        "majin"
-      ],
-      "playerVocals": [
-        "bf-endless"
-      ]
-    },
+    "songVariations": ["encore"],
+    "difficulties": ["easy", "normal", "hard" ],
+    "characters": {"player": "bf-endless", "girlfriend": "", "opponent": "majin", "instrumental": "", "altInstrumentals": ["og", "encore"]},
     "stage": "majinForest",
     "noteStyle": "exeSemi",
-    "ratings": {
-      "easy": 6,
-      "normal": 7,
-      "hard": 7
-    },
+    "ratings": {"easy": 6, "normal": 7, "hard": 7 },
     "album": "exeOST",
     "previewStart": 0,
     "previewEnd": 15000
   },
   "generatedBy": "Friday Night Funkin' - v0.7.5",
   "timeFormat": "ms",
-  "timeChanges": [
-    {
-      "t": 0,
-      "bpm": 155
-    }
-  ]
+  "timeChanges": [{"t": 0, "bpm": 155}]
 }

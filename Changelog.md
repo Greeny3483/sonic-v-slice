@@ -1,70 +1,79 @@
-## [0.8.3] - 2026
+## [0.3.0] - 2026-04-14
 
 #### Added:
 
-**Songs:**
+- **Songs:**
 
-- **You Can't Run *ENCORE***
+  - **Milk**
 
-- **Sunshine**
+  - **Sunshine**
 
-- **Soulless**
+  - **Soulless**
 
-- **Milk**
+  - **You Can't Run *ENCORE***
 
-**Options:**
+  - **Endless *ENCORE***
 
-- **Camera Shake**
+- **Options:**
+
+  - **Camera Shake**
   *(Toggles opponent + scripted camera shakes)*
 
-- **Window Movement**
-  *(Toggles the new features in **Fatality**)*
+  - **Window Movement**
+  *(Allows movement of the game window on PC)*
 
-- **Song Transitions**
-  *(Toggles transitions to other songs from certain songs.)*
+  - **Song Transitions**
+  *(Toggles transitions to other songs in freeplay)*
 
-- **EXE: BONUS CONTENT**
+  - **GENESIS Mode**
+
+- **Medals:**
+
+  - **Faster Than Fear**
+
+  - **Beyond the Black Sun**
+
+  - **I Die Hard**
+
+  - **Silent Night**
+
+- **General:**
+
+  - Added pixel (freeplay) icons for:
   
-  - **Extra Shaders**
-    *(Toggles shaders not typically seen in some songs)*
-
-**Medals:**
-
-- **Faster Than Fear**
-  *(Awarded for completing **ROUND 1**)*
-
-- **Faster Than Fate**
-  *(Awarded for completing **Final Escape**)*
-
-- **Beyond the Black Sun**
-  *(Awarded for completing **Faker** and **Black Sun**)*
-
-- **I Die Hard**
-  *(Awarded for completing **Prey** and **Fight or Flight**)*
-
-**General:**
-
-- Added freeplay icons for:
+    - **Sonic.EXE (Act 1)**
   
-  - **Sonic.EXE (Act 1)**
+    - **Sonic.EXE (Act 2)**
   
-  - **Sonic.EXE (Act 2)**
-  
-  - **Sonic.EXE (Act 3)**
+    - **Sonic.EXE (Act 3)**
 
-- Added death screens for custom playable characters
-
-- Added the 'Camera Bop' event to all songs
-
-- Added the following freeplay backgrounds:
+  - Added custom death screens for the following characters:
   
-  - Soulless
+    - **Sonic the Hedgehog**
   
-  - Fight or Flight
+    - **Tails (Fight or Flight)**
+
+    - Other playable characters (**Sonic.EXE (Christmas)**, BF variants) will use the default death screen
+
+  - Added the following song transitions:
+    - **Faker** to **Black Sun**
+    - **Prey** to **Fight or Flight**
+    - **Relax** to **Round-A-Bout**
+    - **Round-A-Bout** to **Spike Trap**
+
+  - Added use of the 'Camera Bop' event to all songs
+
+  - Added an in-game credits listing
+
+  - Added the following freeplay backgrounds:
+  
+    - **Soulless**
+  
+    - **Fight or Flight**
 
 #### Changes/Fixes:
 
-- Compatibility with version **0.8.3** of the game
+- Compatibility with version **0.8.4** of the game
 
 **Songs:**
 
@@ -72,7 +81,7 @@
 
 - **Too Slow**
   
-  - Fixed crashing on song start (mobile)
+  - Fixed crashing on song start **[MOBILE]**
   
   - Fixed modchart not stopping properly after restarting or quitting the song
   
@@ -97,6 +106,7 @@
   - Smoothed transitions between sections of gameplay
   
   - The player now uses the proper icon
+  - 
 * **Cycles**
   
   - Chart more accurately follows the vocals
@@ -106,6 +116,7 @@
   - Improved screen static at the end of the song
   
   - Fixed errors
+
 - **Chaos**
   
   - Improved loading times
@@ -134,6 +145,12 @@
 - **Slaybells**
   
   - Fixed opponent animations
+
+  - Removed the **Requital** stage prop
+
+  - Removed the **Luther** stage prop
+
+  - Song is in the extras variation
 
 - **Too Slow *ENCORE***
   
@@ -208,31 +225,33 @@
 
 **Improvements:**
 
+- The cinematic script functions have been revamped
+
 - Changed **Sonic.EXE (Fake)**'s health icons *(changes by **@Dibujos Creativos**)*
 
 - **Sonic.EXE (Act 2)**'s screen shaking logic is now located within the character script
 
 - Screen static now has a random set transparency
 
-- 'Custom Song Lyrics' have been replaced with the newly-added subtitiles system
+- The 'Custom Song Lyrics' event has been replaced with the newly-added subtitiles system
 
 - Custom intro text now adds on to the default intro text, rather than replacing it
 
 - Fixed various crediting issues *(#8, **@ThePootisBird**)*
 
+- Song intro cards now only appear after cutscenes
+
 - Reworked options menu
   
-  - Options that seemed pointless and/or bloated the options menu were removed
+  - Options that seemed pointless and/or bloated the options menu were removed:
     
-    - Blood Splashes
+    - **Blood Splashes**
     
-    - Encore Skins
+    - **Encore Skins**
     
-    - Song Intro Cards
+    - **Song Intro Cards**
     
-    - Change Aspect Ratio
-
-- The OST text in freeplay now changes when on an EXE song
+    - **Change Aspect Ratio**
 
 - Adjusted song order in freeplay
 

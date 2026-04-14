@@ -55,6 +55,7 @@ class FinalActErect extends Stage
         songIntroText.x = -songIntroText.width;
 
 		sonicJump = FunkinSprite.create(0, 0, 'events/jumpscares/Sonic');
+		sonicJump.screenCenter();
 		sonicJump.cameras = [PlayState.instance.camCutscene];
 		PlayState.instance.add(sonicJump);
 		sonicJump.visible = false;

@@ -5,7 +5,7 @@
 	"charter": "Ryzzon",
 	"playData": {
 	  "album": "exeOST",
-	  "difficulties": ["easy", "normal", "hard"],
+	  "difficulties": ["extra"],
 	  "characters": {
 		"player": "sonic_exenew",
 		"girlfriend": "lord_xchristmas",

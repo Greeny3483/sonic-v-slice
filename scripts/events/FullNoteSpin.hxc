@@ -33,10 +33,6 @@ class FullNoteSpin extends ScriptedSongEvent {
         if (PlayState.instance == null || PlayState.instance.currentStage == null) return;
         if (PlayState.instance.isMinimalMode) return;
         
-        // Check if mod charts are enabled
-        var modChartsEnabled = ModuleHandler.getModule("EXEOptions").scriptGet("modcharts");
-        if (!modChartsEnabled) return; // Don't spin if mod charts are disabled
-        
         // Prevent multiple spins at once
         if (isSpinning) return;
         

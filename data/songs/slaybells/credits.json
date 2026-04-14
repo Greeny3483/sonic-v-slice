@@ -1,0 +1,32 @@
+{
+  "sections": [
+    {
+      "title": "CODE",
+      "names": ["Greeny3483"]
+    },
+    {
+      "title": "ARTWORK",
+      "names": ["SereBeat", "Estaguy24"]
+    },
+    {
+      "title": "MUSIC",
+      "names": ["Saster", "Madame McHummus"]
+    },
+    {
+      "title": "CHARTING",
+      "names": ["Ryzzon"]
+    }
+  ],
+  "options": {
+    "startStep": 1,
+    "exitTimer": 5,
+    "tweenSpeed": 0.8,
+    "alpha": 0.8,
+    "color": "0xFF808080",
+    "textColor": "0xFFFFFFFF",
+    "font": "sonic-1-hud-font.ttf",
+    "titleSize": 50,
+    "sectionSize": 35,
+    "nameSize": 25
+  }
+}

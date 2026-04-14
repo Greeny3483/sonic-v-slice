@@ -1,0 +1,34 @@
+import funkin.FunkinMemory;
+import funkin.Paths;
+import funkin.play.character.MultiSparrowCharacter;
+import funkin.play.GameOverSubState;
+import funkin.play.PlayState;
+
+class ExtraBoyfriendCharacters extends MultiSparrowCharacter {
+    public function new() {
+        super(
+		"bf-endless", 
+		"bf-encore", 
+		"bf-endless-encore", 
+		"bf-super", 
+		"bf-invert", 
+		"bf-fatal", 
+		"bf-fatal-small",
+		"bfpickel",
+		"bfpickel2",
+		"bfsaturn",
+		"bf-thirdperson",
+		"bf-thirdperson-flip",
+		"sonic_exenew"); // placeholder;
+	}
+
+	function onCreate(event:ScriptEvent) {
+		super.onCreate(event);
+
+		FunkinMemory.permanentCacheTexture(Paths.image("characters/deathScreens/bfDeath"));
+		Paths.getSparrowAtlas("characters/deathScreens/bfDeath"); // preload so there isn't any lag
+
+		GameOverSubState.musicSuffix = "";
+		GameOverSubState.blueBallSuffix = "";
+	}
+}

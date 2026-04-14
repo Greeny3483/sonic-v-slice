@@ -3,6 +3,9 @@
   "name": "FINAL ESCAPE",
   "visible": false,
   "titleAsset": "storymenu/titles/round1",
+  "capsule": {
+    "name": "FINAL ACT"
+  },
   "props": [
     {
       "assetPath": "storymenu/props/menu_exe",

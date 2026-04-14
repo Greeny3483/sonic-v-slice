@@ -2,6 +2,7 @@
     "version": "1.0.0",
     "name": "Boyfriend (Fatal Error - Small)",
     "assetPath": "characters/tiny-bf",
+    "renderType": "multisparrow",
     "singTime": 4,
     "isPixel": true,
     "scale": 4,
@@ -91,6 +92,25 @@
                 -5,
                 -1
             ]
+        },
+        {
+            "name": "firstDeath",
+            "prefix": "BF dies",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "offsets": [-37, 11]
+        },
+        {
+            "name": "deathLoop",
+            "prefix": "BF Dead Loop",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "looped": true,
+            "offsets": [-37, 5]
+        },
+        {
+            "name": "deathConfirm",
+            "assetPath": "characters/deathScreens/bfDeath",
+            "prefix": "BF Dead confirm",
+            "offsets": [-37, 69]
         }
     ],
     "flipX": false

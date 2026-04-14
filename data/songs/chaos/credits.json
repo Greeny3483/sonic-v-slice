@@ -1,0 +1,32 @@
+{
+  "sections": [
+    {
+      "title": "CODE",
+      "names": ["Greeny3483", "(org.) Avery", "(org.) Nebula", "(org.) Crybit"]
+    },
+    {
+      "title": "ARTWORK",
+      "names": ["RightBurstUltra", "Zekuta", "Comgaming_Nz"]
+    },
+    {
+      "title": "MUSIC",
+      "names": ["Jacaris"]
+    },
+    {
+      "title": "CHARTING",
+      "names": ["Wilde"]
+    }
+  ],
+  "options": {
+    "startStep": 1,
+    "exitTimer": 5,
+    "tweenSpeed": 0.8,
+    "alpha": 0.8,
+    "color": "0xFF808080",
+    "textColor": "0xFFFFFFFF",
+    "font": "sonic-1-hud-font.ttf",
+    "titleSize": 50,
+    "sectionSize": 35,
+    "nameSize": 25
+  }
+}

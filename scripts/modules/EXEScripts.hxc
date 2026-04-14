@@ -9,9 +9,10 @@ import funkin.play.PlayState;
 import funkin.FunkinMemory;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
-import funkin.graphics.video.FunkinVideoSprite;
 import funkin.modding.module.Module;
-import funkin.modding.module.ModuleHandler;
+import funkin.util.ReflectUtil;
+
+import EXEHud;
 
 class EXEScripts extends Module {
     // This module handles scripted events for various songs (ex, jumpscares)
@@ -21,129 +22,105 @@ class EXEScripts extends Module {
     }
 
     public static var daSTAT:FlxSprite = null;
-    public static var isDaSTATCreated:Bool = false;
     public static var topBorder:FlxSprite = null;
-	public static var bottomBorder:FlxSprite = null;
-    public static var isBordersCreated:Bool = false;
+    public static var bottomBorder:FlxSprite = null;
     public static var blackBG:FlxSprite = null;
-    public static var isBlackBGCreated:Bool = false;
-    public static var doCinematics:Bool = false;
-    public static var doJumpscares:Bool = false;
+    public static var screenGlitch:FunkinSprite = null;
+    public static var redVignette:FlxSprite = null;
+    public static var sonicJumpAnim:FunkinSprite = null;
+
+    public static var sonicJump:FunkinSprite = null;
+    public static var tailsJump:FunkinSprite = null;
+    public static var knucklesJump:FunkinSprite = null;
+    public static var eggmanJump:FunkinSprite = null;
+    public static var shadow:FunkinSprite = null;
+
+    public static var areStrumlinesMoved:Bool = false;
+    public static var lastStrumlineOffset:Float = 0;
+
+    static function getCamera(camera:String) {
+        return switch (camera) {
+            case "camGame": PlayState.instance.camGame;
+            case "camHUD": PlayState.instance.camHUD;
+            case "camCutscene": PlayState.instance.camCutscene;
+            default: PlayState.instance.camHUD;
+        };
+    }
 
     public static function resetVariables():Void {
         daSTAT = null;
-        isDaSTATCreated = false;
         topBorder = null;
         bottomBorder = null;
-        isBordersCreated = false;
         blackBG = null;
-        isBlackBGCreated = false;
         screenGlitch = null;
-        isScreenGlitchCreated = false;
+        redVignette = null;
+        sonicJumpAnim = null;
         sonicJump = null;
         tailsJump = null;
         knucklesJump = null;
         eggmanJump = null;
-        redVignette = null;
-        isRedVignetteCreated = false;
-        sonicJumpAnim = null;
+        shadow = null;
+        areStrumlinesMoved = false;
+        lastStrumlineOffset = 0;
     }
 
     override function onSongLoaded(event):Void {
         super.onSongLoaded(event);
         resetVariables();
 
-        FunkinMemory.cacheTexture(Paths.image("events/jumpscares/sonicJUMPSCARE")); // sonicJumpAnim
+        var images:Array<String> = [
+            "events/jumpscares/sonicJUMPSCARE", "events/jumpscares/Sonic", "events/jumpscares/Tails",
+            "events/jumpscares/Knuckles", "events/jumpscares/Eggman", "events/jumpscares/SHADOWTHEFUCKINGHEDGEHOG",
+            "events/daSTAT", "events/RedVG", "events/P3_Stat"
+        ];
+        for (img in images) FunkinMemory.cacheTexture(Paths.image(img));
+
+        var sounds:Array<String> = [
+            "TailsScreamLOL", "KnucklesScreamLOL", "EggmanScreamLOL", "datOneSound",
+            "jumpscare", "sppok", "vboom", "staticBUZZ"
+        ];
+        for (snd in sounds) FunkinMemory.cacheSound(Paths.sound(snd, "shared"));
+
         Paths.getSparrowAtlas("events/jumpscares/sonicJUMPSCARE");
-
-        FunkinMemory.cacheTexture(Paths.image("events/jumpscares/Sonic")); // sonicJump
-        FunkinMemory.cacheTexture(Paths.image("events/jumpscares/Tails")); // tailsJump
-        FunkinMemory.cacheTexture(Paths.image("events/jumpscares/Knuckles")); // knucklesJump
-        FunkinMemory.cacheTexture(Paths.image("events/jumpscares/Eggman")); // eggmanJump
-        FunkinMemory.cacheTexture(Paths.image("events/jumpscares/SHADOWTHEFUCKINGHEDGEHOG"));
-        FunkinMemory.cacheTexture(Paths.image("events/daSTAT")); // daSTAT
-        FunkinMemory.cacheTexture(Paths.image("events/RedVG")); // redVignette
-        FunkinMemory.cacheTexture(Paths.image("events/P3_Stat")); // screenGlitch
-
-        FunkinMemory.cacheSound(Paths.sound("TailsScreamLOL", "shared"));
-		FunkinMemory.cacheSound(Paths.sound("KnucklesScreamLOL", "shared"));
-		FunkinMemory.cacheSound(Paths.sound("EggmanScreamLOL", "shared"));
-        FunkinMemory.cacheSound(Paths.sound("datOneSound", "shared"));
-        FunkinMemory.cacheSound(Paths.sound("jumpscare", "shared"));
-        FunkinMemory.cacheSound(Paths.sound("sppok", "shared"));
-        FunkinMemory.cacheSound(Paths.sound("vboom", "shared"));
     }
 
-    public static function triggerStatic(?camera:String = "camHUD", ?alpha:Float = 0.3, ?useRandomAlpha:Bool = true):Void {
-        var doScreenStatic = Save.instance.modOptions["doScreenStatic"];
-        if (!doScreenStatic) return;
+    static function prepareStatic(camera:String, alpha:Float, useRandomAlpha:Bool, looped:Bool):Void {
+        if (!Save.instance.modOptions["doScreenStatic"]) return;
 
-        if (!isDaSTATCreated) {
-            daSTAT = new FlxSprite(100, 0);
+        if (daSTAT == null) {
+            daSTAT = new FlxSprite();
             daSTAT.frames = Paths.getSparrowAtlas("events/daSTAT");
-            daSTAT.animation.addByPrefix('static', 'staticFLASH', 30, false);
-            daSTAT.scale.set(FlxG.onMobile ? 6.15 : 5, FlxG.onMobile ? 5.1 : 5);
-            switch (camera) {
-                case "camGame":
-                    daSTAT.cameras = [PlayState.instance.camGame];
-                case "camHUD":
-                    daSTAT.cameras = [PlayState.instance.camHUD];
-                case "camCutscene":
-                    daSTAT.cameras = [PlayState.instance.camCutscene];
-                default:
-                    daSTAT.cameras = [PlayState.instance.camHUD];
-            }
+            daSTAT.animation.addByPrefix('static', 'staticFLASH', 30, looped);
+            daSTAT.setGraphicSize(FlxG.width, FlxG.height);
+            daSTAT.updateHitbox();
+            daSTAT.screenCenter();
+            daSTAT.cameras = [getCamera(camera)];
             daSTAT.zIndex = 5000;
             daSTAT.alpha = useRandomAlpha ? FlxG.random.float(0.1, 0.5) : alpha;
             daSTAT.visible = false;
             PlayState.instance.add(daSTAT);
-            isDaSTATCreated = true;
+        } else {
+            daSTAT.animation.getByName('static').looped = looped;
         }
 
         if (daSTAT != null) {
             daSTAT.visible = true;
             daSTAT.animation.play('static');
-            daSTAT.animation.finishCallback = function(name:String) {
+        }
+    }
+
+    public static function triggerStatic(?camera:String = "camHUD", ?alpha:Float = 0.3, ?useRandomAlpha:Bool = true):Void {
+        prepareStatic(camera, alpha, useRandomAlpha, false);
+        if (daSTAT != null) {
+            daSTAT.animation.finishCallback = function(_) {
                 if (daSTAT != null) daSTAT.visible = false;
-            }
+            };
         }
         FunkinSound.playOnce(Paths.sound("staticBUZZ"), 0.6);
     }
 
     public static function triggerStaticLoop(?camera:String = "camHUD", ?alpha:Float = 0.3, ?useRandomAlpha:Bool = true):Void {
-        var doScreenStatic = Save.instance.modOptions["doScreenStatic"];
-        if (!doScreenStatic) return;
-
-        if (!isDaSTATCreated) {
-            daSTAT = new FlxSprite(100, 0);
-            daSTAT.frames = Paths.getSparrowAtlas("events/daSTAT");
-            // loop the animation indefinitely
-            daSTAT.animation.addByPrefix('static', 'staticFLASH', 30, true);
-            daSTAT.scale.set(FlxG.onMobile ? 6.15 : 5, FlxG.onMobile ? 5.1 : 5);
-            switch (camera) {
-                case "camGame":
-                    daSTAT.cameras = [PlayState.instance.camGame];
-                case "camHUD":
-                    daSTAT.cameras = [PlayState.instance.camHUD];
-                case "camCutscene":
-                    daSTAT.cameras = [PlayState.instance.camCutscene];
-                default:
-                    daSTAT.cameras = [PlayState.instance.camHUD];
-            }
-            daSTAT.zIndex = 5000;
-            daSTAT.alpha = useRandomAlpha ? FlxG.random.float(0.1, 0.5) : alpha;
-            daSTAT.visible = false;
-            PlayState.instance.add(daSTAT);
-            isDaSTATCreated = true;
-        } else {
-            daSTAT.animation.getByName('static').looped = true;
-        }
-
-        if (daSTAT != null) {
-            daSTAT.visible = true;
-            daSTAT.animation.play('static');
-        }
-
+        prepareStatic(camera, alpha, useRandomAlpha, true);
         var buzz = FunkinSound.playOnce(Paths.sound("staticBUZZ"), 0.6);
         if (buzz != null) buzz.looped = true;
     }
@@ -155,23 +132,19 @@ class EXEScripts extends Module {
         }
     }
 
-    public static var screenGlitch:FunkinSprite = null;
-    public static var isScreenGlitchCreated:Bool = false;
-
     public static function triggerGlitchTransition():Void {
-        if (!isScreenGlitchCreated) {
+        if (screenGlitch == null) {
             screenGlitch = FunkinSprite.create(-600, -200);
             screenGlitch.frames = Paths.getSparrowAtlas('events/P3_Stat');
             screenGlitch.scrollFactor.set(1, 1);
             screenGlitch.scale.set(5.5, 5.5);
-            screenGlitch.animation.addByPrefix('busk', 'Phase3Static instance 1', 34, false); // org. framerate is 36 // 24 (base game)
+            screenGlitch.animation.addByPrefix('busk', 'Phase3Static instance 1', 34, false);
             screenGlitch.zIndex = 20;
-		    screenGlitch.visible = false;
-		    screenGlitch.animation.finishCallback = function() {
+            screenGlitch.visible = false;
+            screenGlitch.animation.finishCallback = function() {
                 if (screenGlitch != null) screenGlitch.visible = false;
             };
-		    PlayState.instance.add(screenGlitch);
-            isScreenGlitchCreated = true;
+            PlayState.instance.add(screenGlitch);
         }
         if (screenGlitch != null) {
             screenGlitch.visible = true;
@@ -179,164 +152,283 @@ class EXEScripts extends Module {
         }
     }
 
-    public static function triggerCinematics():Void {
-        doCinematics = Save.instance.modOptions["doCinematics"];
-        if (!doCinematics) return;
+    static function setupSprite(sprite:FunkinSprite, zIndex:Int):Void {
+        sprite.screenCenter();
+        sprite.cameras = [PlayState.instance.camCutscene];
+        sprite.zIndex = zIndex;
+        PlayState.instance.add(sprite);
+    }
 
-        if (!isBordersCreated) {
-            topBorder = new FlxSprite(0, -50).makeGraphic(FlxG.width, 50, 0xFF000000);
-            topBorder.cameras = [PlayState.instance.camCutscene];
-            topBorder.scale.set(5, 5);
-            topBorder.alpha = 0;
-            PlayState.instance.add(topBorder);
+    static function tweenHUD(alpha:Float, duration:Float):Void {
+        var elements = [
+            PlayState.instance.healthBar, PlayState.instance.healthBarBG,
+            PlayState.instance.iconP1, PlayState.instance.iconP2,
+            PlayState.instance.scoreText, EXEHud.sonicMissesSprite,
+            EXEHud.sonicTimeSprite, EXEHud.sonicScoreSprite,
+            EXEHud.sonicColonSprite, EXEHud.sonicHealthSprite
+        ];
+        for (e in elements) if (e != null) FlxTween.tween(e, {alpha: alpha}, duration);
 
-            bottomBorder = new FlxSprite(0, FlxG.height - 0).makeGraphic(FlxG.width, 50, 0xFF000000);
-            bottomBorder.cameras = [PlayState.instance.camCutscene];
-            bottomBorder.scale.set(5, 5);
-            bottomBorder.alpha = 0;
-            PlayState.instance.add(bottomBorder);
-            isBordersCreated = true;
-        }
-
-        if (topBorder != null && bottomBorder != null) {
-            FlxTween.tween(topBorder, {alpha: 1}, 1);
-            FlxTween.tween(bottomBorder, {alpha: 1}, 1);
-            PlayState.instance.camHUD.alpha = 0;
+        var groupElements = [
+            EXEHud.missesNumbers, EXEHud.timeNumbers,
+            EXEHud.scoreNumbers, EXEHud.healthNumbers
+        ];
+        for (group in groupElements) {
+            if (group != null) for (num in group) if (num != null) FlxTween.tween(num, {alpha: alpha}, duration);
         }
     }
 
-    public static function disableCinematics():Void {
-        doCinematics = Save.instance.modOptions["doCinematics"];
-        if (!doCinematics) return;
+    public static function triggerCinematics(?size:Float = 100, ?duration:Float = 1, ?tweenType:String = "fade", ?hideHUD:Bool = true, ?keepStrumlines:Bool = true):Void {
+        if (!Save.instance.modOptions["doCinematics"]) return;
 
-        if (isBordersCreated && topBorder != null && bottomBorder != null) {
-            FlxTween.tween(topBorder, {alpha: 0}, 1);
-            FlxTween.tween(bottomBorder, {alpha: 0}, 1);
-            PlayState.instance.camHUD.alpha = 1;
+        if (topBorder == null) {
+            topBorder = createBorder(0, 0, size);
+            bottomBorder = createBorder(0, FlxG.height - size, size);
+        } else {
+            topBorder.makeGraphic(FlxG.width, Std.int(size), 0xFF000000);
+            bottomBorder.makeGraphic(FlxG.width, Std.int(size), 0xFF000000);
+            topBorder.alpha = bottomBorder.alpha = 0;
+        }
+
+        switch (tweenType) {
+            case "fade":
+                topBorder.y = 0;
+                bottomBorder.y = FlxG.height - size;
+                FlxTween.tween(topBorder, {alpha: 1}, duration);
+                FlxTween.tween(bottomBorder, {alpha: 1}, duration);
+            case "slide":
+                topBorder.alpha = bottomBorder.alpha = 1;
+                topBorder.y = -size;
+                bottomBorder.y = FlxG.height;
+                FlxTween.tween(topBorder, {y: 0}, duration, {ease: FlxEase.quadOut});
+                FlxTween.tween(bottomBorder, {y: FlxG.height - size}, duration, {ease: FlxEase.quadOut});
+            case "instant":
+                topBorder.alpha = bottomBorder.alpha = 1;
+                topBorder.y = 0;
+                bottomBorder.y = FlxG.height - size;
+        }
+        
+        if (hideHUD) {
+            if (PlayState.instance.camHUD != null) {
+                if (tweenType == "instant") PlayState.instance.camHUD.alpha = 0;
+                else FlxTween.tween(PlayState.instance.camHUD, {alpha: 0}, duration);
+            }
+            if (areStrumlinesMoved) {
+                moveStrumlines(-lastStrumlineOffset, duration, tweenType);
+                areStrumlinesMoved = false;
+                lastStrumlineOffset = 0;
+            }
+        } else {
+            if (tweenType == "instant") {
+                // Instantly update elements handled by tweenHUD
+                var elements = [
+                    PlayState.instance.healthBar, PlayState.instance.healthBarBG,
+                    PlayState.instance.iconP1, PlayState.instance.iconP2,
+                    PlayState.instance.scoreText, EXEHud.sonicMissesSprite,
+                    EXEHud.sonicTimeSprite, EXEHud.sonicScoreSprite,
+                    EXEHud.sonicColonSprite, EXEHud.sonicHealthSprite
+                ];
+                for (e in elements) if (e != null) e.alpha = 0;
+
+                var groupElements = [
+                    EXEHud.missesNumbers, EXEHud.timeNumbers,
+                    EXEHud.scoreNumbers, EXEHud.healthNumbers
+                ];
+                for (group in groupElements) {
+                    if (group != null) for (num in group) if (num != null) num.alpha = 0;
+                }
+            } else {
+                tweenHUD(0, duration);
+            }
+
+            if (!FlxG.onMobile && keepStrumlines) {
+                var offset:Float = (Preferences.downscroll ? -1 : 1) * (size - 30);
+                if (areStrumlinesMoved) {
+                    moveStrumlines(offset - lastStrumlineOffset, duration, tweenType);
+                } else {
+                    moveStrumlines(offset, duration, tweenType);
+                    areStrumlinesMoved = true;
+                }
+                lastStrumlineOffset = offset;
+            } else if (areStrumlinesMoved) {
+                moveStrumlines(-lastStrumlineOffset, duration, tweenType);
+                areStrumlinesMoved = false;
+                lastStrumlineOffset = 0;
+            }
         }
     }
 
-    public static var sonicJumpAnim:FunkinSprite;
+    static function moveStrumlines(offset:Float, duration:Float, tweenType:String):Void {
+        if (tweenType == "instant") {
+            PlayState.instance.playerStrumline.y += offset;
+            PlayState.instance.opponentStrumline.y += offset;
+        } else {
+            FlxTween.tween(PlayState.instance.playerStrumline, {y: PlayState.instance.playerStrumline.y + offset}, duration, {ease: FlxEase.quadOut});
+            FlxTween.tween(PlayState.instance.opponentStrumline, {y: PlayState.instance.opponentStrumline.y + offset}, duration, {ease: FlxEase.quadOut});
+        }
+    }
+
+    static function createBorder(x:Float, y:Float, size:Float):FlxSprite {
+        var border = new FlxSprite(x, y).makeGraphic(FlxG.width, Std.int(size), 0xFF000000);
+        border.cameras = [PlayState.instance.camCutscene];
+        border.alpha = 0;
+        PlayState.instance.add(border);
+        return border;
+    }
+
+    public static function disableCinematics(?duration:Float = 1, ?tweenType:String = "fade"):Void {
+        if (!Save.instance.modOptions["doCinematics"] || topBorder == null) return;
+
+        var size:Float = topBorder.height;
+        switch (tweenType) {
+            case "fade":
+                FlxTween.tween(topBorder, {alpha: 0}, duration);
+                FlxTween.tween(bottomBorder, {alpha: 0}, duration);
+            case "slide":
+                FlxTween.tween(topBorder, {y: -size}, duration, {ease: FlxEase.quadIn, onComplete: function(_) { topBorder.alpha = 0; }});
+                FlxTween.tween(bottomBorder, {y: FlxG.height}, duration, {ease: FlxEase.quadIn, onComplete: function(_) { bottomBorder.alpha = 0; }});
+            case "instant":
+                topBorder.alpha = bottomBorder.alpha = 0;
+        }
+        
+        if (PlayState.instance.camHUD != null) {
+            if (tweenType == "instant") PlayState.instance.camHUD.alpha = 1;
+            else FlxTween.tween(PlayState.instance.camHUD, {alpha: 1}, duration);
+        }
+
+        if (tweenType == "instant") {
+            var elements = [
+                PlayState.instance.healthBar, PlayState.instance.healthBarBG,
+                PlayState.instance.iconP1, PlayState.instance.iconP2,
+                PlayState.instance.scoreText, EXEHud.sonicMissesSprite,
+                EXEHud.sonicTimeSprite, EXEHud.sonicScoreSprite,
+                EXEHud.sonicColonSprite, EXEHud.sonicHealthSprite
+            ];
+            for (e in elements) if (e != null) e.alpha = 1;
+
+            var groupElements = [
+                EXEHud.missesNumbers, EXEHud.timeNumbers,
+                EXEHud.scoreNumbers, EXEHud.healthNumbers
+            ];
+            for (group in groupElements) {
+                if (group != null) for (num in group) if (num != null) num.alpha = 1;
+            }
+        } else {
+            tweenHUD(1, duration);
+        }
+
+        if (areStrumlinesMoved && !FlxG.onMobile) {
+            if (tweenType == "instant") {
+                PlayState.instance.playerStrumline.y -= lastStrumlineOffset;
+                PlayState.instance.opponentStrumline.y -= lastStrumlineOffset;
+            } else {
+                FlxTween.tween(PlayState.instance.playerStrumline, {y: PlayState.instance.playerStrumline.y - lastStrumlineOffset}, duration, {ease: FlxEase.quadIn});
+                FlxTween.tween(PlayState.instance.opponentStrumline, {y: PlayState.instance.opponentStrumline.y - lastStrumlineOffset}, duration, {ease: FlxEase.quadIn});
+            }
+            areStrumlinesMoved = false;
+            lastStrumlineOffset = 0;
+        }
+    }
 
     public static function triggerAnimatedJumpscare():Void {
-        doJumpscares = Save.instance.modOptions["doJumpscares"];
-        if (!doJumpscares) return;
+        if (!Save.instance.modOptions["doJumpscares"]) return;
 
-        sonicJumpAnim = FunkinSprite.createSparrow(0, 0, "events/jumpscares/sonicJUMPSCARE");
-        sonicJumpAnim.setPosition(FlxG.onMobile ? 200 : 150, 115);
-        sonicJumpAnim.animation.addByPrefix('spook', 'sonicSPOOK', 24, false); // org. framerate is 36 // 24 (base game)
+        if (sonicJumpAnim == null) {
+            sonicJumpAnim = FunkinSprite.createSparrow(150, 115, "events/jumpscares/sonicJUMPSCARE");
+            sonicJumpAnim.animation.addByPrefix('spook', 'sonicSPOOK', 24, false);
+            sonicJumpAnim.cameras = [PlayState.instance.camCutscene];
+            sonicJumpAnim.animation.finishCallback = function() {
+                if (sonicJumpAnim != null) sonicJumpAnim.visible = false;
+            };
+            PlayState.instance.add(sonicJumpAnim);
+        }
+
+        sonicJumpAnim.visible = true;
+        //sonicJumpAnim.screenCenter();
         sonicJumpAnim.animation.play('spook');
-		sonicJumpAnim.cameras = [PlayState.instance.camCutscene];
-		sonicJumpAnim.animation.finishCallback = function() {
-            if (sonicJumpAnim != null) sonicJumpAnim.visible = false;
-        };
-		PlayState.instance.add(sonicJumpAnim);
 
-		FunkinSound.playOnce(Paths.sound("datOneSound"), 1);
+        FunkinSound.playOnce(Paths.sound("datOneSound"), 1);
         var jumpSound = FunkinSound.playOnce(Paths.sound("jumpscare"), 0.7);
-        FlxTween.tween(jumpSound, {volume: 0}, 2.3);
+        if (jumpSound != null) FlxTween.tween(jumpSound, {volume: 0}, 2.3);
     }
 
-    public static var sonicJump:FunkinSprite = null;
-    public static var tailsJump:FunkinSprite = null;
-	public static var knucklesJump:FunkinSprite = null;
-	public static var eggmanJump:FunkinSprite = null;
-    public static var shadow:FunkinSprite = null;
-
     public static function triggerJumpscare(type:String):Void {
-        doJumpscares = Save.instance.modOptions["doJumpscares"];
-        if (!doJumpscares) return;
+        if (!Save.instance.modOptions["doJumpscares"]) return;
 
         if (blackBG == null) {
-            blackBG = new FlxSprite(0, 0);
-            blackBG.makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+            blackBG = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
             blackBG.scrollFactor.set();
             blackBG.cameras = [PlayState.instance.camCutscene];
             blackBG.zIndex = 5000;
-            PlayState.instance.add(blackBG);
             blackBG.alpha = 0;
+            PlayState.instance.add(blackBG);
         }
 
-        switch (type) {
-            case "sonic":
-                if (sonicJump == null) { // prevent from being created multiple times
-                    sonicJump = FunkinSprite.create(FlxG.onMobile ? 200 : 0, 0, "events/jumpscares/Sonic");
-                    sonicJump.cameras = [PlayState.instance.camCutscene];
-                    sonicJump.zIndex = 5001;
-                    sonicJump.visible = false;
-                    PlayState.instance.add(sonicJump);
-                }
+        if (type == "sonic") {
+            if (sonicJump == null) {
+                sonicJump = FunkinSprite.create(0, 0, "events/jumpscares/Sonic");
+                setupSprite(sonicJump, 5001);
+                sonicJump.visible = false;
+            }
+            sonicJump.visible = true;
+            blackBG.alpha = 1;
+            new FlxTimer().start(0.3, function(timer:FlxTimer) {
+                if (sonicJump != null) sonicJump.visible = false;
+                if (blackBG != null) blackBG.alpha = 0;
+            });
+            FunkinSound.playOnce(Paths.sound("sppok"), 1);
+            return;
+        }
 
-                sonicJump.visible = true;
-                blackBG.alpha = 1;
-                new FlxTimer().start(0.3, function(timer:FlxTimer) {
-				    if (sonicJump != null) sonicJump.visible = false;
-                    if (blackBG != null) blackBG.alpha = 0;
-			    });
-			    FunkinSound.playOnce(Paths.sound("sppok"), 1);
-                return;
+        var sprite:FunkinSprite = null;
+        var sound:String = "";
+        var soundVol:Float = 0.4;
+        var bgAlphaDuration:Float = 1.5;
+
+        switch (type) {
             case "tails":
                 if (tailsJump == null) {
-                    tailsJump = FunkinSprite.create(FlxG.onMobile ? 200 : 0, 0, 'events/jumpscares/Tails');
-                    tailsJump.cameras = [PlayState.instance.camCutscene];
-                    tailsJump.zIndex = 5001;
+                    tailsJump = FunkinSprite.create(0, 0, 'events/jumpscares/Tails');
+                    setupSprite(tailsJump, 5001);
                     tailsJump.alpha = 0;
-                    PlayState.instance.add(tailsJump);
                 }
-
-                tailsJump.alpha = 1;
-				FlxTween.tween(tailsJump, { alpha: 0 }, 1.5);
-				var tailsScream = FunkinSound.playOnce(Paths.sound("TailsScreamLOL"), 0.4);
-				FlxTween.tween(tailsScream, {volume: 0}, 1.5);
-                blackBG.alpha = 1;
-		        FlxTween.tween(blackBG, { alpha: 0 }, 1.5);
-                return;
+                sprite = tailsJump;
+                sound = "TailsScreamLOL";
             case "knuckles":
                 if (knucklesJump == null) {
-                    knucklesJump = FunkinSprite.create(FlxG.onMobile ? 200 : 0, 0, 'events/jumpscares/Knuckles');
-                    knucklesJump.cameras = [PlayState.instance.camCutscene];
-                    knucklesJump.zIndex = 5001;
+                    knucklesJump = FunkinSprite.create(0, 0, 'events/jumpscares/Knuckles');
+                    setupSprite(knucklesJump, 5001);
                     knucklesJump.alpha = 0;
-                    PlayState.instance.add(knucklesJump);
                 }
-
-                knucklesJump.alpha = 1;
-				FlxTween.tween(knucklesJump, { alpha: 0 }, 1.5);
-				var knucklesScream = FunkinSound.playOnce(Paths.sound("KnucklesScreamLOL"), 0.4);
-				FlxTween.tween(knucklesScream, {volume: 0}, 1.5);
-                blackBG.alpha = 1;
-		        FlxTween.tween(blackBG, { alpha: 0 }, 1.5);
-                return;
+                sprite = knucklesJump;
+                sound = "KnucklesScreamLOL";
             case "eggman":
                 if (eggmanJump == null) {
-                    eggmanJump = FunkinSprite.create(FlxG.onMobile ? 200 : 0, 0, 'events/jumpscares/Eggman');
-                    eggmanJump.cameras = [PlayState.instance.camCutscene];
-                    eggmanJump.zIndex = 5001;
+                    eggmanJump = FunkinSprite.create(0, 0, 'events/jumpscares/Eggman');
+                    setupSprite(eggmanJump, 5001);
                     eggmanJump.alpha = 0;
-                    PlayState.instance.add(eggmanJump);
                 }
-
-                eggmanJump.alpha = 1;
-                FlxTween.tween(eggmanJump, { alpha: 0 }, 1.5);
-                var eggmanScream = FunkinSound.playOnce(Paths.sound("EggmanScreamLOL"), 0.4);
-                FlxTween.tween(eggmanScream, {volume: 0}, 1.5);
-                blackBG.alpha = 1;
-		        FlxTween.tween(blackBG, { alpha: 0 }, 1.5);
-                return;
+                sprite = eggmanJump;
+                sound = "EggmanScreamLOL";
             case "shadow":
-                if (shadow == null) { // prevent from being created multiple times
-                    shadow = FunkinSprite.create(FlxG.onMobile ? 200 : 0, 0, "events/jumpscares/SHADOWTHEFUCKINGHEDGEHOG");
-                    shadow.cameras = [PlayState.instance.camCutscene];
-                    shadow.zIndex = 5001;
+                if (shadow == null) {
+                    shadow = FunkinSprite.create(0, 0, "events/jumpscares/SHADOWTHEFUCKINGHEDGEHOG");
+                    setupSprite(shadow, 5001);
                     shadow.alpha = 0;
-                    PlayState.instance.add(shadow);
                 }
-                shadow.alpha = 1;
-                FlxTween.tween(shadow, {alpha: 0}, 1.5);
-                var vineBoom = FunkinSound.playOnce(Paths.sound("vboom"), 0.8);
-                FlxTween.tween(blackBG, { alpha: 0 }, 0.0000001);
-            default:
-                return;
+                sprite = shadow;
+                sound = "vboom";
+                soundVol = 0.8;
+                bgAlphaDuration = 0.0000001;
+        }
+
+        if (sprite != null) {
+            sprite.alpha = 1;
+            FlxTween.tween(sprite, {alpha: 0}, 1.5);
+            var snd = FunkinSound.playOnce(Paths.sound(sound), soundVol);
+            if (snd != null) FlxTween.tween(snd, {volume: 0}, 1.5);
+            blackBG.alpha = 1;
+            FlxTween.tween(blackBG, {alpha: 0}, bgAlphaDuration);
         }
     }
 

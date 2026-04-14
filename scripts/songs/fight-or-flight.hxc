@@ -1,0 +1,14 @@
+import funkin.play.song.Song;
+
+class FightOrFlightSong extends Song {
+    public function new() {
+        super("fight-or-flight");
+    }
+
+    override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        EXEStrumlines.changeStrumlineMode("middlescroll");
+    }
+}
+

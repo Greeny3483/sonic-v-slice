@@ -35,26 +35,36 @@ class ColoredHealthbar extends Module {
     static var iconColorCache:StringMap;
     static var lastDoColoredIcons:Bool = true;
     
+    var doColoredIcons:Bool = false;
+    var cachedSetting:Bool = false;
+    
     function new() {
         iconColorCache = new StringMap();
         super("ColoredHealthbar", 0);
     }
     
-    function checkSettingChange() {
-        var currentDoColoredIcons = false;
+    function checkSettingChange():Bool {
+        var currentSetting = false;
         try {
-            currentDoColoredIcons = Save.instance.modOptions["doColoredHealthBar"];
+            currentSetting = Save.instance != null ? Save.instance.modOptions["doColoredHealthBar"] : false;
         } catch (e:Dynamic) {
-            currentDoColoredIcons = false;
+            currentSetting = false;
         }
         
-        // If the setting changed from enabled to disabled, clear cache and reset colors
-        if (lastDoColoredIcons && !currentDoColoredIcons) {
-            clearCacheAndResetColors();
+        if (currentSetting != cachedSetting) {
+            cachedSetting = currentSetting;
+            doColoredIcons = currentSetting;
+            if (!doColoredIcons) {
+                clearCacheAndResetColors();
+            }
         }
         
-        lastDoColoredIcons = currentDoColoredIcons;
-        return currentDoColoredIcons;
+        lastDoColoredIcons = currentSetting;
+        return doColoredIcons;
+    }
+    
+    function safePlayState():Null<PlayState> {
+        return PlayState.instance;
     }
     
     function clearCacheAndResetColors() {
@@ -72,19 +82,19 @@ class ColoredHealthbar extends Module {
         Constants.COLOR_HEALTH_BAR_RED = defaultHBRed;
         
         // Reset healthbar colors if in play
-        if (inPlay && PlayState.instance != null && PlayState.instance.healthBar != null) {
-            PlayState.instance.healthBar.createFilledBar(defaultHBRed, defaultHBGreen);
-            PlayState.instance.healthBar.updateBar();
+        var ps = safePlayState();
+        if (inPlay && ps != null && ps.healthBar != null) {
+            ps.healthBar.createFilledBar(defaultHBRed, defaultHBGreen);
+            ps.healthBar.updateBar();
 
             // Reset healthbar background color if it exists
-            if (PlayState.instance.healthBarBG != null) {
-                PlayState.instance.healthBarBG.color = 0xFFFFFFFF; // Reset to white/default
+            if (ps.healthBarBG != null) {
+                ps.healthBarBG.color = 0xFFFFFFFF; // Reset to white/default
             }
         }
     }
     
     function getIconColor(icon:FlxSprite, ?resMult:Float = 1.0, ?dontUseCache = false) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         if (!dontUseCache && iconColorCache.get(icon.characterId) != null) {
@@ -96,11 +106,10 @@ class ColoredHealthbar extends Module {
         }
     }
 
-    function dominantColor(sprite:FlxSprite, ?resMult:Float = 1.0) {
-        doColoredIcons = checkSettingChange();
-        if (!doColoredIcons) return;
+    function dominantColor(sprite:FlxSprite, ?resMult:Float = 1.0):Int {
+        if (!doColoredIcons) return 0;
         
-        if (sprite == null || !inPlay) return;
+        if (sprite == null || !inPlay) return 0;
         
         var mult:Float = Math.min(1, (iconRes / sprite.frameWidth) * resMult);
         
@@ -147,25 +156,24 @@ class ColoredHealthbar extends Module {
     }
     
     function updateHealthBarColors(?resMult:Float = 1.0, ?forced:Bool = false) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
 
         if (!inPlay) return;
 
-        // Add null checks for PlayState.instance and icons
-        if (PlayState.instance == null || PlayState.instance.iconP1 == null || PlayState.instance.iconP2 == null) return;
+        var ps = safePlayState();
+        if (ps == null || ps.iconP1 == null || ps.iconP2 == null) return;
 
         var shouldFill = false;
 
-        if (PlayState.instance.iconP1.characterId != bfLastChar || forced) {
-            bfColor = getIconColor(PlayState.instance.iconP1, resMult, forced);
-            bfLastChar = PlayState.instance.iconP1.characterId;
+        if (ps.iconP1.characterId != bfLastChar || forced) {
+            bfColor = getIconColor(ps.iconP1, resMult, forced);
+            bfLastChar = ps.iconP1.characterId;
             shouldFill = true;
         }
 
-        if (PlayState.instance.iconP2.characterId != dadLastChar || forced) {
-            dadColor = getIconColor(PlayState.instance.iconP2, resMult, forced);
-            dadLastChar = PlayState.instance.iconP2.characterId;
+        if (ps.iconP2.characterId != dadLastChar || forced) {
+            dadColor = getIconColor(ps.iconP2, resMult, forced);
+            dadLastChar = ps.iconP2.characterId;
             shouldFill = true;
         }
 
@@ -173,7 +181,6 @@ class ColoredHealthbar extends Module {
     }
     
     function fillHealthBar() {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
 
         bfColor = (bfColor != null ? bfColor : defaultHBGreen);
@@ -182,40 +189,35 @@ class ColoredHealthbar extends Module {
         Constants.COLOR_HEALTH_BAR_GREEN = bfColor;
         Constants.COLOR_HEALTH_BAR_RED = dadColor;
 
-        if (!inPlay || PlayState.instance == null || PlayState.instance.healthBar == null) return;
+        var ps = safePlayState();
+        if (!inPlay || ps == null || ps.healthBar == null) return;
 
-        PlayState.instance.healthBar.createFilledBar(dadColor, bfColor);
-        PlayState.instance.healthBar.updateBar();
+        ps.healthBar.createFilledBar(dadColor, bfColor);
+        ps.healthBar.updateBar();
 
         // Color the healthbar background asset if EXE HUD is enabled
         colorHealthBarAsset();
     }
     
     function colorHealthBarAsset() {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
 
-        var exeHudEnabled = false;
-        try {
-            exeHudEnabled = Save.instance.modOptions["doColoredHealthBar"];
-        } catch (e:Dynamic) {
-            exeHudEnabled = false;
-        }
+        if (!inPlay) return;
 
-        if (!exeHudEnabled || !inPlay || PlayState.instance == null || PlayState.instance.healthBarBG == null) return;
+        var ps = safePlayState();
+        if (ps == null || ps.healthBarBG == null) return;
 
         // Only color the hpR-light asset, not fatalHealth
-        var currentStage = PlayState.instance.currentStage?.id ?? "";
+        var currentStage = ps.currentStage?.id ?? "";
         if (currentStage == "launchbase") return; // Don't color fatalHealth asset
 
         // Apply opponent's dominant color to the healthbar background
         if (dadColor != null) {
-            PlayState.instance.healthBarBG.color = dadColor;
+            ps.healthBarBG.color = dadColor;
         }
     }
     
     function onPlayStateEnter() {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         // Forcing this does add a tiny bit of loading time, but ensures that colors won't be wrong
@@ -223,7 +225,6 @@ class ColoredHealthbar extends Module {
     }
     
     override function onStateChangeBegin(ev:ScriptEvent) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         super.onStateChangeBegin(ev);
@@ -231,21 +232,25 @@ class ColoredHealthbar extends Module {
     }
     
     override function onStateChangeEnd(ev:ScriptEvent) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         super.onStateChangeEnd(ev);
         
         inPlay = Std.isOfType(FlxG.state, PlayState);
         
-        if (PlayState.instance != null && inPlay) {
+        var ps = safePlayState();
+        if (ps != null && inPlay) {
             onPlayStateEnter();
             return;
         }
     }
     
+    override function onUpdate(elapsed:Float) {
+        checkSettingChange();
+        super.onUpdate(elapsed);
+    }
+    
     override function onBeatHit(ev:ScriptEvent) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         updateHealthBarColors(0.25);
@@ -253,7 +258,6 @@ class ColoredHealthbar extends Module {
     }
     
     override function onSongEvent(ev:ScriptEvent) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         updateHealthBarColors(0.5);
@@ -261,7 +265,6 @@ class ColoredHealthbar extends Module {
     }
     
     override function onPause(ev:ScriptEvent) {
-        doColoredIcons = checkSettingChange();
         if (!doColoredIcons) return;
         
         super(ev);

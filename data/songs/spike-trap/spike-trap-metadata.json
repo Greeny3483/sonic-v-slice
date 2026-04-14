@@ -2,15 +2,7 @@
   "version": "2.2.4",
   "songName": "Spike Trap",
   "artist": "MiiniStar / KIRB0",
-  "looped": false,
-  "offsets": {
-    "instrumental": 0,
-    "altInstrumentals": {    },
-    "vocals": {    },
-    "altVocals": {    }
-  },
   "playData": {
-    "songVariations": [    ],
     "album": "exeOST",
     "difficulties": [
       "easy",

@@ -1,0 +1,18 @@
+{
+  "version": "2.2.2",
+  "songName": "Fatality (Pico Mix)",
+  "artist": "ZRonny",
+  "playData": {
+    "album": "exeOST",
+    "difficulties": ["easy", "normal", "hard"],
+    "characters": {"player": "bf-fatal", "opponent": "fatal-sonic", "instrumental": "pico"},
+    "stage": "launchbase",
+    "noteStyle": "fatal",
+    "ratings": {"easy": 9, "normal": 11, "hard": 13},
+    "previewStart": 0,
+    "previewEnd": 15000
+  },
+  "generatedBy": "Chart Editor Import (FNF Legacy)",
+  "timeFormat": "ms",
+  "timeChanges": [{"t": 0, "bpm": 240}]
+}
