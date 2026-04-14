@@ -324,6 +324,18 @@
                     "looped": false,
                     "flipX": false,
                     "name": "wowSonic"
+                },
+                {
+                    "offsets": [
+                        0,
+                        0
+                    ],
+                    "flipY": false,
+                    "frameRate": 24,
+                    "prefix": "Chamber Sonic Fall0025",
+                    "looped": false,
+                    "flipX": false,
+                    "name": "normal"
                 }
             ]
         }

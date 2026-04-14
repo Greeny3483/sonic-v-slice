@@ -49,14 +49,26 @@ class EmeraldChamber extends Stage
 	{
 		super.onCountdownStart(event);
 
-		getDad().x = getDad().x + 30;
-		getDad().y = 1000;
-		getDad().visible = false;
+		chamber = getNamedProp('Chamber');
+		emerald1 = getNamedProp('ChamberRainEmerald');
+		emerald2 = getNamedProp('ChamberRainEmerald2');
+		floor = getNamedProp('ChamberFloor');
 
-		if (!hasPlayedInGameCutscene && PlayState.instance.currentSong.id.toLowerCase() == "chaos") {
+		if (!hasPlayedInGameCutscene) {
+			getDad().x = getDad().x + 30;
+		    getDad().y = 1000;
+		    getDad().visible = false;
+
 			hasPlayedInGameCutscene = true;
+
 			event.cancel();
 			playCutscene();
+		} else {
+			getDad().y = -800;
+			floor.animation.play('yellow');
+			emerald1.zIndex = -4;
+			emerald2.zIndex = -3;
+			chamber.animation.play('normal'); // post cutscene state
 		}
 	}
 
@@ -119,6 +131,16 @@ class EmeraldChamber extends Stage
 		super.onSongRetry(event);
 		cleanupCutscene();
 		hasPlayedInGameCutscene = true;
+
+		chamber = getNamedProp('Chamber');
+		emerald1 = getNamedProp('ChamberRainEmerald');
+		emerald2 = getNamedProp('ChamberRainEmerald2');
+		floor = getNamedProp('ChamberFloor');
+
+		floor.animation.play('yellow');
+		emerald1.zIndex = -4;
+		emerald2.zIndex = -3;
+		chamber.animation.play('normal');
 	}
 
 	override function onDestroy(event:ScriptEvent):Void

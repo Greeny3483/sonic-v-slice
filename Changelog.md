@@ -150,7 +150,7 @@
 
   - Removed the **Luther** stage prop
 
-  - Song is in the extras variation
+  - Song moved to the **EXTRAS** category
 
 - **Too Slow *ENCORE***
   

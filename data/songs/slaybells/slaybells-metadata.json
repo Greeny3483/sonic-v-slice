@@ -6,15 +6,10 @@
 	"playData": {
 	  "album": "exeOST",
 	  "difficulties": ["extra"],
-	  "characters": {
-		"player": "sonic_exenew",
-		"girlfriend": "lord_xchristmas",
-		"opponent": "exeCHRISTMAS",
-		"instrumental": ""
-	  },
+	  "characters": {"player": "sonic_exenew", "girlfriend": "lord_xchristmas", "opponent": "exeCHRISTMAS"},
 	  "stage": "hillXMAS",
 	  "noteStyle": "exe",
-	  "ratings": {"easy": 3, "normal": 4, "hard": 5},
+	  "ratings": {"extra": 5},
 	  "previewStart": 0,
 	  "previewEnd": 15000
 	},
