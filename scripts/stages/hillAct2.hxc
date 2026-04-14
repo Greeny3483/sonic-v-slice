@@ -126,7 +126,7 @@ class HillAct2 extends Stage {
         }
         
         // ENCORE
-        if (PlayState.instance.currentVariation == "encore") {
+        if (PlayState.instance.currentVariation == "erect") {
             switch (event.step) {
                 case 80:
                     doRedVignette = true;

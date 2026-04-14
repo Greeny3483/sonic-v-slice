@@ -60,7 +60,7 @@ class EXEIntros extends Module {
             songIntroText = null;
         }
 
-        if (PlayState.instance.currentVariation == "encore") {
+        if (PlayState.instance.currentVariation == "erect") {
             if (encoreText != null) encoreText.destroy();
             encoreText = FunkinSprite.create(0, 0, "songIntros/encore");
             setupIntroSprite(encoreText);
@@ -136,7 +136,7 @@ class EXEIntros extends Module {
             tweenIntroSprite(songIntroText, {x: (FlxG.width - songIntroText.width) / 2}, true);
         }
 
-        if (encoreText != null && PlayState.instance.currentVariation == "encore") {
+        if (encoreText != null && PlayState.instance.currentVariation == "erect") {
             encoreText.y = FlxG.height;
             tweenIntroSprite(encoreText, {y: (FlxG.height - encoreText.height) / 2});
         }
@@ -178,12 +178,12 @@ class EXEIntros extends Module {
                 FlxTween.tween(songIntroCircle.scale, {x: 1, y: 1}, 0.5, {
                     ease: FlxEase.bounceOut,
                     onComplete: function(_) {
-                        FlxTween.tween(songIntroCircle, {alpha: 0}, 0.3, {
+                        FlxTween.tween(songIntroCircle, {alpha: 0}, 0.2, {
                             ease: FlxEase.quadOut,
                             startDelay: 1.5,
                             onComplete: function(_) {
                                 if (blackBackground != null) {
-                                    FlxTween.tween(blackBackground, {alpha: 0}, 0.3, {ease: FlxEase.quadOut});
+                                    FlxTween.tween(blackBackground, {alpha: 0}, 0.2, {ease: FlxEase.quadOut});
                                     PlayState.instance.startSong(); // start early
                                 }
                             }

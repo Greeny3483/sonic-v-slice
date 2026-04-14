@@ -4,9 +4,9 @@
   "artist": "MarStarBro",
   "charter": "Echolocated",
   "playData": {
-    "songVariations": ["encore"],
+    "songVariations": ["erect"],
     "difficulties": ["easy", "normal", "hard" ],
-    "characters": {"player": "bf-endless", "girlfriend": "", "opponent": "majin", "instrumental": "", "altInstrumentals": ["og", "encore"]},
+    "characters": {"player": "bf-endless", "girlfriend": "", "opponent": "majin", "instrumental": "", "altInstrumentals": ["og", "erect"]},
     "stage": "majinForest",
     "noteStyle": "exeSemi",
     "ratings": {"easy": 6, "normal": 7, "hard": 7 },

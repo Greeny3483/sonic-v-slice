@@ -73,7 +73,15 @@
 
 #### Changes/Fixes:
 
+**General**
+
 - Compatibility with version **0.8.4** of the game
+
+- Removed **ENCORE** difficulty/variation, moved songs to the **ERECT** difficulty/variation
+
+- Changed the names of all stages for consistency
+
+- Stage directory and script names are now consistent
 
 **Songs:**
 
@@ -106,7 +114,7 @@
   - Smoothed transitions between sections of gameplay
   
   - The player now uses the proper icon
-  - 
+  
 * **Cycles**
   
   - Chart more accurately follows the vocals
@@ -163,12 +171,6 @@
 - **Personnel (Serious Mix)**
   
   - Added an effect
-
-- ***ENCORE* Difficulty**
-  
-  - Songs now display special text in the song intro card
-  
-  - Added missing rank screen tag
 
 - ***EXTRA* Difficulty**
   
@@ -260,9 +262,3 @@
 - **VS SONIC.EXE** is now the only week (from this mod) in story mode
 
 - Redid all freeplay backgrounds using the [Freeplay Background Template by ElastedAlorian](https://gamebanana.com/tools/21164)
-
-**Other:**
-
-* Changed the names of all stages for consistency
-
-* Stage directory and script names are now consistent

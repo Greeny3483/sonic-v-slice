@@ -48,6 +48,55 @@ class EXEOptions extends Module
     // Bonus Content
     public var doGenesisMode:Bool = false;
 
+    private var optionForMobile:Map<String, Bool> = [
+        "doJumpscares" => true,
+        "doCameraShakes" => true,
+        "doScreenStatic" => true,
+        "doModcharts" => false,
+        "doQTES" => true,
+        "doCinematics" => false,
+        "doFatalPopups" => true,
+        "doWindowMovement" => false,
+        "doGhostTapping" => false,
+        "doSongTransitions" => true,
+        "doFreeplayCuts" => true,
+        "doCamMovement" => true,
+        "camMovementIntensity" => true,
+        "allowGore" => true,
+        "doShaders" => true,
+        "doGenesisHUD" => true,
+        "doColoredHealthBar" => true,
+        "freeplayBG" => true,
+        "doGenesisMode" => true
+    ];
+
+    private function shouldShowOption(optionName:String, isMobile:Bool):Bool
+    {
+        if (!isMobile) return true;
+        return optionForMobile.get(optionName) ?? true;
+    }
+
+    private function createCheckboxIfMobileAllowed(prefs, optionName:String, label:String, description:String, callback, defaultValue:Bool):Void
+    {
+        if (shouldShowOption(optionName, FlxG.onMobile)) {
+            prefs.createPrefItemCheckbox(label, description, callback, defaultValue);
+        }
+    }
+
+    private function createNumberIfMobileAllowed(prefs, optionName:String, label:String, description:String, callback, defaultValue, min:Int, max:Int, step:Int, decimals:Int):Void
+    {
+        if (shouldShowOption(optionName, FlxG.onMobile)) {
+            prefs.createPrefItemNumber(label, description, callback, null, defaultValue, min, max, step, decimals);
+        }
+    }
+
+    private function createEnumIfMobileAllowed(prefs, optionName:String, label:String, description:String, options, callback, defaultValue):Void
+    {
+        if (shouldShowOption(optionName, FlxG.onMobile)) {
+            prefs.createPrefItemEnum(label, description, options, callback, defaultValue);
+        }
+    }
+
 
     public function new(){
         super("EXEOptions", 1);
@@ -95,103 +144,96 @@ class EXEOptions extends Module
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: GAMEPLAY", "bold", () -> false); // Separate options from the default preferences OR modded preferences.
 			prefs.preferenceDesc.push("Gameplay options for VS Sonic.EXE");
 
-            prefs.createPrefItemCheckbox("Jumpscares", "Toggles jumpscares.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doJumpscares", "Jumpscares", "Toggles jumpscares.", function(value) {
                 Save.instance.modOptions["doJumpscares"] = value;
                 doJumpscares = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doJumpscares"]);
 
-            prefs.createPrefItemCheckbox("Camera Shake", "Toggles camera shakes.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doCameraShakes", "Camera Shake", "Toggles camera shakes.", function(value) {
                 Save.instance.modOptions["doCameraShakes"] = value;
                 doCameraShakes = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doCameraShakes"]);
 
-            prefs.createPrefItemCheckbox("Screen Static", "Toggles screen static effects.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doScreenStatic", "Screen Static", "Toggles screen static effects.", function(value) {
                 Save.instance.modOptions["doScreenStatic"] = value;
                 doScreenStatic = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doScreenStatic"]);
 
-            prefs.createPrefItemCheckbox("Modcharts", "Toggles modchart effects such as strumline wiggle.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doModcharts", "Modcharts", "Toggles modchart effects such as strumline wiggle.", function(value) {
                 Save.instance.modOptions["doModcharts"] = value;
                 doModcharts = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doModcharts"]);
 
-            prefs.createPrefItemCheckbox("QTEs", "Toggles quick time events.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doQTES", "QTEs", "Toggles quick time events.", function(value) {
                 Save.instance.modOptions["doQTES"] = value;
                 doQTES = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doQTES"]);
 
-            prefs.createPrefItemCheckbox("Cinematics", "Toggles cinematic effects.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doCinematics", "Cinematics", "Toggles cinematic effects.", function(value) {
                 Save.instance.modOptions["doCinematics"] = value;
                 doCinematics = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doCinematics"]);
 
-            prefs.createPrefItemCheckbox("Fatal Error Popups", "Toggles the 'Fatality Popups' event.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doFatalPopups", "Fatal Error Popups", "Toggles the 'Fatality Popups' event.", function(value) {
                 Save.instance.modOptions["doFatalPopups"] = value;
                 doFatalPopups = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doFatalPopups"]);
 
-            prefs.createPrefItemCheckbox("Window Movement", "Toggles window movement effects.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doWindowMovement", "Window Movement", "Toggles window movement effects.", function(value) {
                 Save.instance.modOptions["doWindowMovement"] = value;
                 doWindowMovement = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doWindowMovement"]);
 
-            prefs.createPrefItemCheckbox("Ghost Tapping", "Toggles ghost tapping.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doGhostTapping", "Ghost Tapping", "Toggles ghost tapping.", function(value) {
                 Save.instance.modOptions["doGhostTapping"] = value;
                 doGhostTapping = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doGhostTapping"]);
 
-            prefs.createPrefItemCheckbox("Song Transitions", "Toggles song transitions in freeplay.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doSongTransitions", "Song Transitions", "Toggles song transitions in freeplay.", function(value) {
                 Save.instance.modOptions["doSongTransitions"] = value;
                 doSongTransitions = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doSongTransitions"]);
 
-            prefs.createPrefItemCheckbox("Freeplay Cutscenes", "Toggles cutscenes for certain songs in freeplay.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doFreeplayCuts", "Freeplay Cutscenes", "Toggles cutscenes for certain songs in freeplay.", function(value) {
                 Save.instance.modOptions["doFreeplayCuts"] = value;
                 doSongTransitions = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doFreeplayCuts"]);
 
-            prefs.createPrefItemCheckbox("Camera Movement", "Toggles movement of the camera when hitting a note.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doCamMovement", "Camera Movement", "Toggles movement of the camera when hitting a note.", function(value) {
                 Save.instance.modOptions["doCamMovement"] = value;
                 doCamMovement = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doCamMovement"]);
 
-            prefs.createPrefItemNumber(
-                "Intensity",
-                "How far the camera moves when hitting a note.",
-                function(value:Float) {
-                    if (Save.instance.modOptions["camMovementIntensity"]) {
-                        Save.instance.modOptions["camMovementIntensity"] = Std.int(value);
-                        camMovementIntensity = Std.int(value);
-                        Save.instance.flush();
-                    }
-                },
-                null,
-                Save.instance.modOptions["camMovementIntensity"],
-                5, 100, 5, 0
-            );
+            createNumberIfMobileAllowed(prefs, "camMovementIntensity", "Intensity", "How far the camera moves when hitting a note.", function(value:Float) {
+                if (Save.instance.modOptions["camMovementIntensity"]) {
+                    Save.instance.modOptions["camMovementIntensity"] = Std.int(value);
+                    camMovementIntensity = Std.int(value);
+                    Save.instance.flush();
+                }
+            }, Save.instance.modOptions["camMovementIntensity"], 5, 100, 5, 0);
 
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: GRAPHICS", "bold", () -> false);
 			prefs.preferenceDesc.push("Graphical options for VS Sonic.EXE");
 
-            prefs.createPrefItemCheckbox("Gore", "Toggles gore assets.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "allowGore", "Gore", "Toggles gore assets.", function(value) {
                 Save.instance.modOptions["allowGore"] = value;
                 allowGore = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["allowGore"]);
 
-            prefs.createPrefItemCheckbox("Shaders", "Toggles shaders. Disabling may improve performance.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doShaders", "Shaders", "Toggles shaders. Disabling may improve performance.", function(value) {
                 Save.instance.modOptions["doShaders"] = value;
                 doShaders = value;
                 Save.instance.flush();
@@ -200,13 +242,13 @@ class EXEOptions extends Module
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: HUD", "bold", () -> false);
             prefs.preferenceDesc.push("HUD options for VS Sonic.EXE");
 
-            prefs.createPrefItemCheckbox("GENESIS HUD", "Toggles the GENESIS-styled HUD.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doGenesisHUD", "GENESIS HUD", "Toggles the GENESIS-styled HUD.", function(value) {
                 Save.instance.modOptions["doGenesisHUD"] = value;
                 doGenesisHUD = value;
                 Save.instance.flush();
             }, Save.instance.modOptions["doGenesisHUD"]);
 
-            prefs.createPrefItemCheckbox("Colored Health Bar", "Toggles icon based health bar colors.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doColoredHealthBar", "Colored Health Bar", "Toggles icon based health bar colors.", function(value) {
                 Save.instance.modOptions["doColoredHealthBar"] = value;
                 doColoredHealthBar = value;
                 Save.instance.flush();
@@ -215,7 +257,7 @@ class EXEOptions extends Module
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: MENU", "bold", () -> false);
 			prefs.preferenceDesc.push("Menu options for VS Sonic.EXE");
 
-            prefs.createPrefItemEnum("Freeplay BG", "Switch between different freeplay backgrounds.", [
+            createEnumIfMobileAllowed(prefs, "freeplayBG", "Freeplay BG", "Switch between different freeplay backgrounds.", [
                 "Default" => "Default",
                 "Too Slow" => "Too Slow",
                 "You Can't Run" => "You Can't Run",
@@ -238,7 +280,7 @@ class EXEOptions extends Module
             prefs.items.createItem(120, 120 * prefs.items.length + 30, "EXE: EXTRAS", "bold", () -> false);
             prefs.preferenceDesc.push("Bonus content options for VS Sonic.EXE");
 
-            prefs.createPrefItemCheckbox("Genesis Mode", "Toggles extra visuals not typically seen in some songs.", function(value) {
+            createCheckboxIfMobileAllowed(prefs, "doGenesisMode", "Genesis Mode", "Toggles extra visuals not typically seen in some songs.", function(value) {
                 Save.instance.modOptions["doGenesisMode"] = value;
                 doGenesisMode = value;
                 Save.instance.flush();

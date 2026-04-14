@@ -133,7 +133,7 @@ class MajinForest extends Stage
 			        });
 			}
 		}
-		if (PlayState.instance.currentVariation == "encore") {
+		if (PlayState.instance.currentVariation == "erect") {
             if (event.step >= 15 && event.step % 16 == 0) { // bpm and song time is the same on both variations
                 triggerVignette();
             }

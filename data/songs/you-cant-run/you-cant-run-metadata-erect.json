@@ -1,19 +1,19 @@
 {
   "version": "2.2.2",
-  "songName": "You Can't Run Encore",
+  "songName": "You Can't Run ENCORE",
   "artist": "MarStarBro & Saster",
   "playData": {
     "album": "exeOST",
-    "difficulties": ["encore"],
+    "difficulties": ["erect", "nightmare"],
     "characters": {
       "player": "bf-encore",
       "girlfriend": "gf-encore",
       "opponent": "sonicexep2",
-      "instrumental": "encore"
+      "instrumental": "erect"
     },
     "stage": "hillAct2",
     "noteStyle": "exe",
-    "ratings": {"encore": 11},
+    "ratings": {"erect": 11, "nightmare": 12},
     "previewStart": 0,
     "previewEnd": 15000
   },

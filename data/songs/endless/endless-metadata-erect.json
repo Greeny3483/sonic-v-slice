@@ -6,11 +6,11 @@
 		"album": "exeOST",
 		"stage": "majinForest",
 		"noteStyle": "majin",
-		"difficulties": ["encore"],
-		"characters": {"girlfriend": "", "opponent": "majin_new", "player": "bf-encore-endless", "instrumental": "encore"},
-		"ratings": {"encore": 8}
+		"difficulties": ["erect", "nightmare"],
+		"characters": {"girlfriend": "", "opponent": "majin_new", "player": "bf-encore-endless", "instrumental": "erect"},
+		"ratings": {"erect": 8, "nightmare": 9}
 	},
-	"songName": "Endless Encore",
+	"songName": "Endless ENCORE",
 	"timeChanges": [
 		{"t": 0, "bpm": 158}
 	],
