@@ -83,6 +83,8 @@
 
 - Stage directory and script names are now consistent
 
+- All songs (from this mod) now are all under the same album. Depending on the song, the 'OFFICIAL OST' text will change
+
 **Songs:**
 
 - Fixed haxe logo appearing on song start
@@ -256,8 +258,6 @@
     - **Change Aspect Ratio**
 
 - Adjusted song order in freeplay
-
-- Changed album cover for all songs
 
 - **VS SONIC.EXE** is now the only week (from this mod) in story mode
 
