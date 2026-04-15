@@ -41,6 +41,7 @@ class EXEStrumlines extends Module {
         // Resets specified strumline(s) completely
         // This SHOULD work with downscroll
         if (PlayState.instance == null) return;
+        if (FlxG.onMobile) return; // mobile has its own strumline code, so don't do anything if we're on mobile
 
         PLAYER_STRUM_X = (FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET) + (PlayState.instance.cutoutSize / 2.0);
         PLAYER_STRUM_Y = Preferences.downscroll ? FlxG.height - PlayState.instance.playerStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
@@ -58,12 +59,22 @@ class EXEStrumlines extends Module {
                 PlayState.instance.playerStrumline.visible = true;
                 PlayState.instance.playerStrumline.alpha = 1;
                 return;
+            case "playerX":
+                PlayState.instance.playerStrumline.x = PLAYER_STRUM_X;
+                PlayState.instance.playerStrumline.visible = true;
+                PlayState.instance.playerStrumline.alpha = 1;
+                return;
             case "opponent":
                 PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
                 PlayState.instance.opponentStrumline.y = OPPONENT_STRUM_Y;
                 for (note in PlayState.instance.opponentStrumline.strumlineNotes.members) {
                     if (note != null) note.y = OPPONENT_STRUM_Y;
                 }
+                PlayState.instance.opponentStrumline.visible = true;
+                PlayState.instance.opponentStrumline.alpha = 1;
+                return;
+            case "opponentX":
+                PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
                 PlayState.instance.opponentStrumline.visible = true;
                 PlayState.instance.opponentStrumline.alpha = 1;
                 return;
@@ -84,6 +95,15 @@ class EXEStrumlines extends Module {
                 PlayState.instance.opponentStrumline.visible = true;
                 PlayState.instance.opponentStrumline.alpha = 1;
                 return;
+            case "bothX":
+                PlayState.instance.playerStrumline.x = PLAYER_STRUM_X;
+                PlayState.instance.playerStrumline.visible = true;
+                PlayState.instance.playerStrumline.alpha = 1;
+
+                PlayState.instance.opponentStrumline.x = OPPONENT_STRUM_X;
+                PlayState.instance.opponentStrumline.visible = true;
+                PlayState.instance.opponentStrumline.alpha = 1;
+                return;
             default:
                 return;
         }
@@ -91,10 +111,11 @@ class EXEStrumlines extends Module {
 
     public static function changeStrumlineMode(mode:String):Void {
         if (PlayState.instance == null) return;
+        if (FlxG.onMobile) return;
 
         switch (mode) {
             case "middlescroll":
-                PlayState.instance.playerStrumline.x = FlxG.width / 1.5 - PLAYER_STRUM_X / 1.5;
+                PlayState.instance.playerStrumline.x = FlxG.width / 1.5 - PlayState.instance.playerStrumline.x / 1.5;
                 PlayState.instance.opponentStrumline.visible = false;
             default:
                 return;
@@ -103,6 +124,7 @@ class EXEStrumlines extends Module {
 
     public static function swapStrumlines(position:String):Void {
         if (PlayState.instance == null) return;
+        if (FlxG.onMobile) return;
     
         switch (position) {
             case "isDefault":
@@ -144,6 +166,7 @@ class EXEStrumlines extends Module {
         doModcharts = Save.instance.modOptions["modcharts"];
         if (!doModcharts) return;
         if (PlayState.instance == null) return;
+        if (FlxG.onMobile) return;
 
         modchartWasActive = true;
 		doStrumlineWiggle = true;
@@ -156,6 +179,7 @@ class EXEStrumlines extends Module {
         doModcharts = Save.instance.modOptions["modcharts"];
         if (!doModcharts) return;
         if (PlayState.instance == null) return;
+        if (FlxG.onMobile) return;
 
         doStrumlineWiggle = false;
         strumlinePositionSet = false;
@@ -181,6 +205,7 @@ class EXEStrumlines extends Module {
         doModcharts = Save.instance.modOptions["modcharts"];
         if (!doModcharts) return;
         if (PlayState.instance == null) return;
+        if (FlxG.onMobile) return;
 
         switch (type) {
             case "wiggle":

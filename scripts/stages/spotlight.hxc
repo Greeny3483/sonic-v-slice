@@ -38,8 +38,10 @@ class SpotlightStage extends Stage
             case 860:
                 getNamedProp('Background').alpha = 1;
                 getBoyfriend().alpha = 1;
-
-                EXEStrumlines.resetStrumlines("both");
+            
+                EXEStrumlines.resetStrumlines("playerX");
+                EXEStrumlines.resetStrumlines("opponentX");
+                PlayState.instance.playerStrumline.alpha = 1; // for mobile
         }
     }
 

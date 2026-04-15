@@ -5,8 +5,14 @@ class FightOrFlightSong extends Song {
         super("fight-or-flight");
     }
 
-    override function onCreate(event:ScriptEvent):Void {
+    /*override function onCreate(event:ScriptEvent):Void {
         super.onCreate(event);
+
+        EXEStrumlines.changeStrumlineMode("middlescroll");
+    }*/
+
+    override function onCountdownStart(event:CountdownScriptEvent):Void {
+        super.onCountdownStart(event);
 
         EXEStrumlines.changeStrumlineMode("middlescroll");
     }

@@ -5,27 +5,32 @@ import funkin.play.PlayState;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.play.notes.notekind.NoteKind;
+import funkin.FunkinMemory;
 
 class StaticNote extends NoteKind
 {
-    var staticFlash:FunkinSprite;
-
 	public function new(noteKind:String, description:String = "", ?noteStyleId:String, ?params:Array<NoteKindParam>)
 	{
 		super("staticnote", "Static Note (EXE)", "staticnote", []);
 
-        staticFlash = new FlxSprite(-100, -100);
-        staticFlash.frames = Paths.getSparrowAtlas("notekinds/staticnote/hitStatic");
-        staticFlash.animation.addByPrefix("flash", "staticANIMATION000", 30, false);
-        staticFlash.scale.set(1.25, 1.25);
-        staticFlash.updateHitbox();
-        staticFlash.zIndex = 1002;
-		staticFlash.alpha = FlxG.onMobile ? 0.55 : 1;
+		FunkinMemory.permanentCacheSound(Paths.sound("hitStatic1"));
+        FunkinMemory.permanentCacheTexture(Paths.image("notekinds/staticnote/hitStatic"));
+        Paths.getSparrowAtlas("notekinds/staticnote/hitStatic");
 	}
 
 	function onNoteIncoming(event)
 	{
 		super.onNoteIncoming(event);
+
+		staticFlash = new FlxSprite(-100, -100);
+        staticFlash.frames = Paths.getSparrowAtlas("notekinds/staticnote/hitStatic");
+        staticFlash.animation.addByPrefix("flash", "staticANIMATION000", 30, false);
+        staticFlash.scale.set(1.25, 1.25);
+        staticFlash.zIndex = 10000;
+		staticFlash.alpha = FlxG.onMobile ? 0.55 : 1;
+		staticFlash.cameras = [PlayState.instance.camHUD];
+		PlayState.instance.add(staticFlash);
+		staticFlash.alpha = 0;
 
 		event.note.lowPriority = true;
 		event.note.offset.x = 40.3;
@@ -42,16 +47,17 @@ class StaticNote extends NoteKind
 
 	function onNoteMiss(event:NoteScriptEvent)
 	{
-        event.cancelEvent();
+		event.cancelEvent();
 
-        PlayState.instance.health -= 0.3;
-		
-        staticFlash.cameras = [PlayState.instance.camHUD];
-        PlayState.instance.add(staticFlash);
-		staticFlash.animation.play("flash");
-		staticFlash.animation.finishCallback = function(name:String) {
-			PlayState.instance.remove(staticFlash);
+		PlayState.instance.health -= 0.3;
+
+		if (staticFlash != null) {
+			staticFlash.alpha = 1;
+		    staticFlash.animation.play("flash");
+		    staticFlash.animation.finishCallback = function(name:String) {
+			    staticFlash.alpha = 0;
+		    }
 		}
-        FunkinSound.playOnce(Paths.sound("hitStatic1"));
+		FunkinSound.playOnce(Paths.sound("hitStatic1"));
 	}
 }

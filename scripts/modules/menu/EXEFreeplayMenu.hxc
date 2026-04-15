@@ -39,14 +39,14 @@ class EXEFreeplayMenu extends Module
         Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("extra");
     }
 
-    override function onSongSelected(event:CapsuleScriptEvent):Void {
+    /*override function onSongSelected(event:CapsuleScriptEvent):Void {
         super.onSongSelected(event);
 
         switch (event.capsule?.freeplayData.levelId) {
             case '1round1', '2final2', '3freeplay3', '4extras4':
                 var menulaugh = FunkinSound.playOnce(Paths.sound("menulaugh"), 1);
         }
-    }
+    }*/
 
     override function onCapsuleSelected(event:CapsuleScriptEvent):Void {
         super.onCapsuleSelected(event);

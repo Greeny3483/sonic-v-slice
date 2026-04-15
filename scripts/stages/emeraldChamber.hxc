@@ -64,7 +64,7 @@ class EmeraldChamber extends Stage
 			event.cancel();
 			playCutscene();
 		} else {
-			getDad().y = -800;
+			//getDad().y = -800;
 			floor.animation.play('yellow');
 			emerald1.zIndex = -4;
 			emerald2.zIndex = -3;

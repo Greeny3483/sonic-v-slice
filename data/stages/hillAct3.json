@@ -71,24 +71,10 @@
             "name": "p3_Glitch",
             "isPixel": false,
             "startingAnimation": "batic",
-            "assetPath": "stages/hillAct3/p3_Glitch",
+            "assetPath": "stages/hillAct3/p3_glitch_noanim",
             "scroll": [
                 1,
                 1
-            ],
-            "animations": [
-                {
-                    "offsets": [
-                        0,
-                        0
-                    ],
-                    "flipY": false,
-                    "frameRate": 24,
-                    "prefix": "Glitch static",
-                    "looped": true,
-                    "flipX": false,
-                    "name": "batic"
-                }
             ]
         },
         {

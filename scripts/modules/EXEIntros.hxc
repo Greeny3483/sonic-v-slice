@@ -48,6 +48,13 @@ class EXEIntros extends Module {
         songName = PlayState.instance.currentSong.id.toLowerCase();
         FunkinMemory.permanentCacheSound(Paths.sound("flatBONK"));
 
+        if (blackBackground != null) blackBackground.destroy();
+        blackBackground = new FlxSprite(0, 0).makeGraphic(FlxG.width + 1, FlxG.height, 0xFF000000);
+        blackBackground.cameras = [PlayState.instance.camCutscene];
+        blackBackground.zIndex = -1;
+        blackBackground.visible = false;
+        PlayState.instance.add(blackBackground);
+
         if (songIntroCircle != null) songIntroCircle.destroy();
         songIntroCircle = FunkinSprite.create(0, 0, "songIntros/" + songName + "/circle");
         setupIntroSprite(songIntroCircle);
@@ -65,13 +72,6 @@ class EXEIntros extends Module {
             encoreText = FunkinSprite.create(0, 0, "songIntros/encore");
             setupIntroSprite(encoreText);
         }
-
-        if (blackBackground != null) blackBackground.destroy();
-        blackBackground = new FlxSprite(0, 0).makeGraphic(FlxG.width + 1, FlxG.height, 0xFF000000);
-        blackBackground.cameras = [PlayState.instance.camCutscene];
-        blackBackground.zIndex = 999;
-        blackBackground.visible = false;
-        PlayState.instance.add(blackBackground);
     }
 
     function setupIntroSprite(sprite:FunkinSprite):Void {

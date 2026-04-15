@@ -54,7 +54,7 @@ class LaunchBase extends Stage
 		doWindowMovement = Save.instance.modOptions["doWindowMovement"];
 
 		doGenesisMode = Save.instance.modOptions["doGenesisMode"];
-		if (doGenesisMode) ShaderHandler.initShader("vcr");
+		if (doGenesisMode) EXEShaders.initShader("vcr");
 
 		FunkinMemory.cacheTexture(Paths.image('events/fatalpopups/error_popups'));
 
@@ -70,21 +70,7 @@ class LaunchBase extends Stage
 			statix.visible = false;
 		};
 
-		if (FlxG.onMobile) {
-			leftBorder = new FlxSprite(0, 0).makeGraphic(50, FlxG.height, 0xFF000000);
-			leftBorder.scrollFactor.set(0, 0);
-			leftBorder.scale.set(5, 3);
-			leftBorder.cameras = [PlayState.instance.camHUD];
-			PlayState.instance.add(leftBorder);
-
-			rightBorder = new FlxSprite(FlxG.width - 50, 0).makeGraphic(50, FlxG.height, 0xFF000000);
-			rightBorder.scrollFactor.set(0, 0);
-			rightBorder.scale.set(5, 3);
-			rightBorder.cameras = [PlayState.instance.camHUD];
-			PlayState.instance.add(rightBorder);
-		} else {
-			EXEWindow.resizeWindow(960, 720);
-		}
+		EXEWindow.resizeWindow(960, 720);
 
 		if (doFatalPopups) {
 			FlxG.mouse.visible = true;
@@ -192,7 +178,7 @@ class LaunchBase extends Stage
 	override function onUpdate(event:ScriptEvent):Void {
 		super.onUpdate(event);
 		
-		if (doGenesisMode) ShaderHandler.updateShader("vcr");
+		if (doGenesisMode) EXEShaders.updateShader("vcr");
 	}
 
 	function onCountdownStart()
@@ -215,6 +201,8 @@ class LaunchBase extends Stage
 
 	function shakescreen()
 	{
+		doCameraShake = Save.instance.modOptions["doCameraShake"];
+		if (!doCameraShake || FlxG.onMobile) return;
 		new FlxTimer().start(0.01, function(tmr:FlxTimer)
 		{
 			Application.current.window.move(Application.current.window.x + FlxG.random.int(-10, 10), Application.current.window.y + FlxG.random.int(-8, 8));
@@ -239,10 +227,10 @@ class LaunchBase extends Stage
 
 		switch (event.step) {
 			case 257:
-				statix.visible = true;
-				statix.animation.play('static');
-
 				if (statix != null) {
+					statix.visible = true;
+					statix.animation.play('static');
+
 					var timer = new FlxTimer();
 					timer.start(0.12, function(timer:FlxTimer):Void {
 						statix.visible = false;
@@ -258,20 +246,20 @@ class LaunchBase extends Stage
 				if (doWindowMovement) windowX = Application.current.window.x;
 				if (doWindowMovement) windowY = Application.current.window.y;
 				if (doWindowMovement) IsWindowMoving = true;
-				statix.visible = true;
-				statix.animation.play('static');
-				clearPopups();
-
 				if (statix != null) {
+					statix.visible = true;
+					statix.animation.play('static');
+
 					var timer2 = new FlxTimer();
 					timer2.start(0.12, function(timer:FlxTimer):Void {
 						statix.visible = false;
 					});
 				}
+				clearPopups();
 
 				EXEStrumlines.changeStrumlineMode("middlescroll");
 			
-				phase3bg.zIndex = 20;
+				if (phase3bg != null) phase3bg.zIndex = 20;
 				PlayState.instance.currentStage.refresh(); // Apply Z-Index.
 			case 2208:
 				if (doWindowMovement) IsWindowMoving = false;

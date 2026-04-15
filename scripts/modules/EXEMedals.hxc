@@ -81,7 +81,7 @@ class EXEMedals extends Module {
 		if (PlayState.instance.currentSong.id == 'spike-trap' && Save.instance.hasBeatenSong('relax') && Save.instance.hasBeatenSong('round-a-bout') && !Save.instance.hasBeatenSong('spike-trap')) {
 			new FlxTimer().start(0.6, _ -> { // Completed Spike Trap with both Relax and Round-a-Bout beaten
 				if (event.eventCanceled) return;
-   				giveMedal(15, "Silent Night", Paths.image("medals/mouse"));
+   				giveMedal(15, "I Fixed You :)", Paths.image("medals/mouse"));
 			});
 		}
 	}

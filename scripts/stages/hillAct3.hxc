@@ -41,12 +41,12 @@ class HillAct3 extends Stage
 			case 1296: // Knuckles jumpscare + swap strumlines
 				switchStageArea('glitchBG');
 				EXEScripts.triggerJumpscare('knuckles');
-				EXEStrumlines.swapStrumlines("isDefault");
+				EXEStrumlines.swapStrumlines("isCurrent");
 			case 2320:
 				switchStageArea('xenoBG');
 			case 2824: // Eggman jumpscare + reset strumlines
 				switchStageArea('glitchBG');
-				EXEStrumlines.resetStrumlines("both");
+				EXEStrumlines.resetStrumlines("bothX");
 				EXEScripts.triggerJumpscare('eggman');
 			case 3957:
 				switchStageArea('xenoBG');
