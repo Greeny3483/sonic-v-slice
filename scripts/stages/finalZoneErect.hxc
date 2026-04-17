@@ -91,6 +91,7 @@ class FinalActErect extends Stage
 		redVignette.zIndex = 1000;
 		redVignette.scrollFactor.set(0, 0); // Make it static (doesn't scroll with the camera)
 		redVignette.setGraphicSize(FlxG.width, FlxG.height);
+		redVignette.updateHitbox();
 		redVignette.cameras = [PlayState.instance.camCutscene];
 		PlayState.instance.add(redVignette);
 		redVignette.alpha = 0;

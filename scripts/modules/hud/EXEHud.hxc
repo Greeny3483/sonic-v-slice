@@ -99,8 +99,10 @@ class EXEHud extends Module {
             ps.healthBar.x += 100;
 
             if (ps.currentStage.id == "launchbase") {
-                ps.healthBar.setPosition(310, 633);
-                ps.healthBarBG.setPosition(303, 630);
+                var healthBarY = (!(Preferences.downscroll || FlxG.onMobile)) ? 633 : 90;
+                var healthBarBGY = (!(Preferences.downscroll || FlxG.onMobile)) ? 630 : 87;
+                ps.healthBar.setPosition(310, healthBarY);
+                ps.healthBarBG.setPosition(303, healthBarBGY);
                 ps.healthBarBG.scale.set(1.3, 1.3);
                 ps.healthBar.scale.set(0.865, 1.1);
             } else {

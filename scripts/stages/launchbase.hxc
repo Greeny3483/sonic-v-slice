@@ -40,7 +40,6 @@ class LaunchBase extends Stage
 	
 	var errorRandom:FlxRandom = new FlxRandom(666); // so that every time you play the song, the error popups are in the same place
 
-
 	public function new()
 	{
 		super("launchbase");
@@ -83,7 +82,7 @@ class LaunchBase extends Stage
 
 	function clearPopups():Void
 	{
-		if (FlxG.keys.justPressed.F6 || doFatalPopups) {
+		if (FlxG.keys.justPressed.F7 || doFatalPopups) {
 			while(FatalPopup.popups.length>0)
 				FatalPopup.popups[0].close();
 		}
@@ -97,9 +96,17 @@ class LaunchBase extends Stage
 				var popup = FatalPopup.popups[realIdx];
 				var hitShit:Bool=false;
 				for(camera in popup.cameras){
-					@:privateAccess
-					var hitOK = popup.clickDetector.overlapsPoint(FlxG.mouse.getWorldPosition(camera, popup.clickDetector._point), true, camera);
-					if (FlxG.onMobile) hitOK = TouchUtil.overlapsComplex(popup, camera);
+					var hitOK:Bool = false;
+					
+					if (FlxG.mouse.justPressed) {
+						@:privateAccess
+						hitOK = popup.clickDetector.overlapsPoint(FlxG.mouse.getWorldPosition(camera, popup.clickDetector._point), true, camera);
+					}
+					
+					if (!hitOK && TouchUtil.justPressed) {
+						hitOK = TouchUtil.overlapsComplex(popup, camera);
+					}
+					
 					if (hitOK){
 						popup.close();
 						hitShit=true;

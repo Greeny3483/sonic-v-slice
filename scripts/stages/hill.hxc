@@ -18,10 +18,10 @@ class Hill extends Stage {
         EXEOverlays.createOverlay(0, "camCutscene", 5000, 0, 10, 000000, 0.0001);
 
         if (FlxG.onMobile) {
-            getNamedProp('TooSlowBG').scale.set(1.5, 1.305);
-		    getNamedProp('TooSlowGround').scale.set(1.6, 1.405);
-		    getNamedProp('TooSlowTopOverlay').scale.set(1.6, 1.405);
-		    getNamedProp('TooSlowTrees').scale.set(1.5, 1.35);
+            getNamedProp('TooSlowBG').scale.set(1.55, 1.305);
+		    getNamedProp('TooSlowGround').scale.set(1.65, 1.405);
+		    getNamedProp('TooSlowTopOverlay').scale.set(1.65, 1.405);
+		    getNamedProp('TooSlowTrees').scale.set(1.55, 1.35);
         }
 
         if (!allowGore) {

@@ -59,10 +59,10 @@ class DanceFloor extends Stage
 		sunkage.cameras = [PlayState.instance.camHUD];
 		PlayState.instance.add(sunkage);
 
-		//if (FlxG.onMobile) {
-		getNamedProp("sunkyGround").scale.set(1.6, 1.3);
-		getNamedProp("sunkyGround").x = getNamedProp("sunkyGround").x - 100;
-		//}
+		if (FlxG.onMobile) {
+		    getNamedProp("sunkyGround").scale.set(1.6, 1.3);
+		    getNamedProp("sunkyGround").x = getNamedProp("sunkyGround").x - 100;
+		}
 	}
 
 	override function onCountdownStart(event:CountdownScriptEvent):Void {

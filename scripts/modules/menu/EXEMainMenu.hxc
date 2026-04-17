@@ -1,11 +1,10 @@
 import flixel.FlxG;
 import funkin.ui.mainmenu.MainMenuState;
 import funkin.modding.module.Module;
-import funkin.ui.ScriptedMusicBeatState;
 
 class EXEMainMenu extends Module
 {
-    public var vnum:String = '0.3.1';
+    public var vnum:String = "0.3.2";
 
     public function new()
     {

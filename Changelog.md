@@ -1,3 +1,15 @@
+## [0.3.2] - 2026-04-17
+
+#### Changes:
+
+- **Milk**'s stage ground expansion no longer applies to PC
+
+- The size of the red vignette in **You Can't Run** and **You Can't Run ENCORE** is now dynamic
+
+- 'Fatal Error' popups can now be pressed **[MOBILE]**
+
+- The healthbar in **Fatality** now is in the proper position when on downscroll or mobile
+
 ## [0.3.1] - 2026-04-15
 
 #### Changes:

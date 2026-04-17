@@ -9,6 +9,7 @@ import funkin.graphics.FunkinSprite;
 import funkin.graphics.video.FunkinVideoSprite;
 import funkin.play.character.CharacterDataParser;
 import funkin.save.Save;
+import funkin.ui.FullScreenScaleMode;
 
 import EXEScripts;
 
@@ -33,7 +34,8 @@ class HillAct2 extends Stage {
 
 		redVignette = FunkinSprite.create(0, 0, 'RedVG');
 		redVignette.zIndex = 1000;
-        redVignette.setGraphicSize(FlxG.width, FlxG.height);
+		redVignette.setGraphicSize(FlxG.width, FlxG.height);
+		redVignette.updateHitbox();
 		redVignette.cameras = [PlayState.instance.camCutscene];
         redVignette.alpha = 0;
 		PlayState.instance.add(redVignette);
