@@ -1,0 +1,102 @@
+import flixel.FlxG;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
+import funkin.play.PlayState;
+import funkin.play.stage.Stage;
+import funkin.Conductor;
+
+import EXEShaders;
+
+class SpotlightXStage extends Stage
+{
+    public var opponentFloatOffset:Float = 0;
+    public var playerFloatOffset:Float = 0;
+
+    public var shouldFloat:Bool = false;
+
+    public function new()
+    {
+        super('spotlightX');
+    }
+
+    override function onCreate(event:ScriptEvent):Void {
+        super.onCreate(event);
+
+        EXEShaders.initShader("vcr");
+        getNamedProp("sky").alpha = 0;
+    }
+
+    override function onStepHit(event:SongTimeScriptEvent):Void {
+        super.onStepHit(event);
+
+        var dad = getDad();
+        var bf = getBoyfriend();
+
+        switch (event.step) {
+            case 144:
+                FlxG.camera.flash(FlxColor.WHITE);
+                getNamedProp("sky").alpha = 1;
+            case 1072:
+                FlxG.camera.flash(FlxColor.WHITE);
+                EXEStrumlines.startWiggleModchart();
+            case 1840:
+                EXEStrumlines.stopWiggleModchart();
+            case 1968:
+                FlxG.camera.flash(FlxColor.WHITE);
+                getNamedProp("floor").alpha = 0;
+                shouldFloat = true;
+                EXEStrumlines.startWiggleModchart();
+
+                dad.y = dad.y - 150;
+                bf.y = bf.y - 150;
+        }
+    }
+
+    override function update(elapsed:Float):Void {
+        super.update(elapsed);
+
+        var dad = getDad();
+        var bf = getBoyfriend();
+
+        if (!shouldFloat) return;
+
+        opponentFloatOffset += elapsed * 1.5;
+        var floatValDad:Float = Math.sin(opponentFloatOffset) * 0.5;
+        dad.y += floatValDad;
+        dad.cameraFocusPoint.y += floatValDad;
+
+        playerFloatOffset += elapsed * 1.5;
+        var floatValBF:Float = Math.sin(playerFloatOffset) * 0.5;
+        bf.y += floatValBF;
+        bf.cameraFocusPoint.y += floatValBF;
+    }
+
+    override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+
+        EXEShaders.updateShader("vcr");
+        EXEStrumlines.updateModchart("wiggle");
+    }
+
+    override function onSongRetry(event) {
+        EXEStrumlines.stopWiggleModchart();
+        getNamedProp("floor").alpha = 1;
+        getNamedProp("sky").alpha = 0;
+        shouldFloat = false;
+    }
+
+    override function onSongEnd(event) {
+        super.onSongEnd(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        shouldFloat = false;
+    }
+
+    override function onDestroy(event) {
+        super.onDestroy(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        shouldFloat = false;
+    }
+}

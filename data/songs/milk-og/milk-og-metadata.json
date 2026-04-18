@@ -1,0 +1,18 @@
+{
+	"timeFormat": "ms",
+	"artist": "Uptaunt",
+	"playData": {
+		"stage": "dancefloorOG",
+		"noteStyle": "milk",
+		"difficulties": ["extra"],
+		"album": "exeOST",
+		"characters": {"opponent": "sunky-og", "player": "bf"},
+        "ratings": {"extra": 7},
+        "previewStart": 0,
+        "previewEnd": 15000
+	},
+	"songName": "Milk (OG)",
+	"timeChanges": [{"t": 0, "bpm": 186}],
+	"generatedBy": "Psych Engine v1.0.4 - Chart Editor V-Slice Exporter",
+	"version": "2.2.4"
+}

@@ -89,6 +89,13 @@ class Hill extends Stage {
         EXEStrumlines.updateModchart("wiggle");
     }
 
+    override function onSongRetry(event) {
+        super.onSongRetry(event);
+
+        EXEStrumlines.stopWiggleModchart();
+        EXEStrumlines.resetStrumlines("both");
+    }
+
     override function onSongEnd(event) {
         super.onSongEnd(event);
 

@@ -1,0 +1,45 @@
+import flixel.FlxG;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
+import funkin.graphics.FunkinSprite;
+import funkin.play.PlayState;
+import funkin.save.Save;
+import funkin.play.stage.Stage;
+
+class DanceFloorOG extends Stage
+{
+    public var sbob:FunkinSprite;
+
+	public function new() {
+		super('dancefloorOG');
+	}
+
+	override function onCreate(event:ScriptEvent):Void {
+		super.onCreate();
+
+        sbob = FunkinSprite.create(475, -310, "events/sunky/SpingeBinge");
+		sbob.zIndex = 201;
+		sbob.alpha = 0;
+		PlayState.instance.add(sbob);
+	}
+
+	function spongebob(dur:Float):Void {
+		var dad = getDad();
+		dad.alpha = 0;
+		sbob.alpha = 1;
+
+		new FlxTimer().start(dur, function(_) {
+			dad.alpha = 1;
+			sbob.alpha = 0;
+		});
+	}
+
+	override function onStepHit(event:SongTimeScriptEvent):Void {
+		super.onStepHit(event);
+
+		switch (event.step) {
+			case 537, 2273:
+				spongebob(0.5); // spongebob
+		}
+	}
+}

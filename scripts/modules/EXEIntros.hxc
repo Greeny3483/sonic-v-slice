@@ -20,6 +20,7 @@ class EXEIntros extends Module {
     public var encoreText:FunkinSprite;
     public var blackBackground:FlxSprite;
     public var skipNextIntro:Bool = false;
+    public var songName:String;
 
     // These are the songs that will have a custom intro card
     // If listed here, the script will look for the assets in 'songIntros/songname/'
@@ -30,14 +31,16 @@ class EXEIntros extends Module {
         'endless',
         'endless-og',
         'cycles', 
-        'execution', 'faker', 
+        'execution', 
+        'faker', 
         'black-sun', 
         'relax', 
         'round-a-bout', 
         'spike-trap', 
         'prey', 
         'fight-or-flight', 
-        'slaybells'
+        'slaybells',
+        'substantial'
     ];
 
     public function new() {
@@ -60,7 +63,7 @@ class EXEIntros extends Module {
         setupIntroSprite(songIntroCircle);
 
         if (songIntroText != null) songIntroText.destroy();
-        if (songName != "milk") { // save memory
+        if (songName != "milk" && songName != "milk-og") { // save memory
             songIntroText = FunkinSprite.create(0, 0, "songIntros/" + songName + "/text");
             setupIntroSprite(songIntroText);
         } else {
@@ -101,6 +104,9 @@ class EXEIntros extends Module {
             case "chaos":
                 Constants.COUNTDOWN_VOLUME = 0;
             case "milk":
+                Constants.COUNTDOWN_VOLUME = 0;
+                startMilkIntro();
+            case "milk-og":
                 Constants.COUNTDOWN_VOLUME = 0;
                 startMilkIntro();
             default:
@@ -178,13 +184,11 @@ class EXEIntros extends Module {
                 FlxTween.tween(songIntroCircle.scale, {x: 1, y: 1}, 0.5, {
                     ease: FlxEase.bounceOut,
                     onComplete: function(_) {
-                        FlxTween.tween(songIntroCircle, {alpha: 0}, 0.2, {
-                            ease: FlxEase.quadOut,
-                            startDelay: 1.5,
+                        FlxTween.tween(songIntroCircle, {alpha: 0}, 0.2, {ease: FlxEase.quadOut, startDelay: 1.5,
                             onComplete: function(_) {
                                 if (blackBackground != null) {
-                                    FlxTween.tween(blackBackground, {alpha: 0}, 0.2, {ease: FlxEase.quadOut});
-                                    PlayState.instance.startSong(); // start early
+                                    FlxTween.tween(blackBackground, {alpha: 0}, 0.3, {ease: FlxEase.quadOut});
+                                    if (PlayState.instance.currentSong.id.toLowerCase() == "milk") PlayState.instance.startSong();
                                 }
                             }
                         });

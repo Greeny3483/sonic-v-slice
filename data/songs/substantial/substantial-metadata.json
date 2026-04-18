@@ -1,0 +1,28 @@
+{
+	"timeFormat": "ms",
+	"artist": "churgney gurgney",
+	"playData": {
+		"album": "exeOST",
+		"stage": "spotlightX",
+		"noteStyle": "exe",
+        "difficulties": [
+            "easy",
+            "normal",
+            "hard"
+        ],
+		"characters": {"opponent": "xterion", "player": "bfsaturn"},
+        "ratings": {
+            "easy": 4,
+            "normal": 5,
+            "hard": 6
+        },
+        "previewStart": 0,
+        "previewEnd": 15000
+	},
+	"songName": "Substantial",
+	"timeChanges": [
+		{"t": 0, "bpm": 175}
+	],
+	"generatedBy": "Psych Engine v1.0.4 - Chart Editor V-Slice Exporter",
+	"version": "2.2.3"
+}

@@ -1,3 +1,23 @@
+## [0.4.0] - 2026-04-18
+
+#### Added:
+
+- **Songs:**
+  
+  - **Substantial**
+  
+  - **Milk (OG)**
+
+#### Changes:
+
+- **Furnace** is no longer visible during **Prey**'s starting cutscene **[MOBILE]**
+
+- **Sonic.EXE (GENESIS - ENCORE)** now always is in the proper position in **You Can't Run *ENCORE*** **[MOBILE]**
+
+- The video in **You Can't Run *ENCORE*** now pauses when the game is paused
+
+- The position of the video in **You Can't Run *ENCORE*** now dynamically matches the screen width
+
 ## [0.3.2] - 2026-04-17
 
 #### Changes:

@@ -1,0 +1,79 @@
+{
+    "assetPath": "characters/sunky-old",
+    "name": "Sunky.MPEG (OG)",
+    "singTime": 5,
+    "version": "1.0.0",
+    "scale": 1,
+    "flipX": false,
+    "isPixel": false,
+    "offsets": [
+        -300,
+        100
+    ],
+    "cameraOffsets": [
+        90,
+        80
+    ],
+    "healthIcon": {
+        "id": "sunky",
+        "offsets": [
+            0,
+            0
+        ],
+        "flipX": false,
+        "isPixel": false,
+        "scale": 1
+    },
+    "animations": [
+        {
+            "name": "idle",
+            "prefix": "idle",
+            "looped": true,
+            "offsets": [
+                0,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singLEFT",
+            "prefix": "singLEFT",
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singDOWN",
+            "prefix": "singDOWN",
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singUP",
+            "prefix": "singUP",
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ],
+            "frameRate": 24
+        },
+        {
+            "name": "singRIGHT",
+            "prefix": "singRIGHT",
+            "looped": false,
+            "offsets": [
+                0,
+                0
+            ],
+            "frameRate": 24
+        }
+    ]
+}
