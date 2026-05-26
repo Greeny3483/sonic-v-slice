@@ -35,8 +35,8 @@ class EXEFreeplayMenu extends Module
     {
         super.onCreate(event);
 
-        Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("encore");
-        Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("extra");
+        //Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("encore");
+        //Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("extra");
     }
 
     /*override function onSongSelected(event:CapsuleScriptEvent):Void {
@@ -44,6 +44,12 @@ class EXEFreeplayMenu extends Module
 
         switch (event.capsule?.freeplayData.levelId) {
             case '1round1', '2final2', '3freeplay3', '4extras4':
+                FlxG.camera.flash(0xFFFF0000);
+                for (sound in FlxG.sound.list.members) {
+                    if (sound != null && sound.playing && sound != FlxG.sound.music) {
+                        sound.stop(); // Cancel default confirm sound
+                    }
+                }
                 var menulaugh = FunkinSound.playOnce(Paths.sound("menulaugh"), 1);
         }
     }*/
@@ -56,7 +62,7 @@ class EXEFreeplayMenu extends Module
 
         if (songID == "soulless") {
             FlxG.state.subState.updateOSTName(true); // Play switch animation
-            FlxG.state.subState.ostName.text = "SOULLESS DX OST";
+            FlxG.state.subState.ostName.text = "SOULLES DX OST";
         } else if (songID == "relax" || songID == "spike-trap" || songID == "personnel-serious") {
             FlxG.state.subState.updateOSTName(true);
             FlxG.state.subState.ostName.text = "VS.EXE UST"; // songs not made by the actual team

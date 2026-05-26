@@ -10,222 +10,248 @@
    "t": 0,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 1371.42857142857,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 1371.42857142857,
    "e": "SetCameraBop",
    "v": {
-	"rate": 2,
-	"intensity": 1.315,
-	"offset": 0
-}
+    "intensity": 1.315,
+    "offset": 0,
+    "rate": 2
+   }
   },
   {
    "t": 6857.14285714286,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 12342.8571428571,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 12342.8571428571,
    "e": "SetCameraBop",
    "v": {
-	"rate": 1,
-	"intensity": 1.315,
-	"offset": 0
-}
+    "intensity": 1.315,
+    "offset": 0,
+    "rate": 1
+   }
   },
   {
    "t": 17828.5714285714,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 23314.2857142857,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
+  },
+  {
+   "t": 26057.1428571429,
+   "e": "ZoomCamera",
+   "v": {
+    "duration": 0.8,
+    "ease": "linear",
+    "easeDir": "In",
+    "mode": "direct",
+    "widescreenScaleX": 0,
+    "widescreenScaleY": 0,
+    "zoom": 1.2
+   }
+  },
+  {
+   "t": 26314.2857142857,
+   "e": "ZoomCamera",
+   "v": {
+    "duration": 3,
+    "ease": "linear",
+    "easeDir": "In",
+    "mode": "stage",
+    "widescreenScaleX": 0,
+    "widescreenScaleY": 0,
+    "zoom": 1
+   }
   },
   {
    "t": 28800,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 34285.7142857143,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 42514.2857142857,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 45257.1428571429,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 50742.8571428572,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 56228.5714285714,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 61714.2857142857,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 78171.4285714285,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 89142.8571428571,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 102857.142857143,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 124800,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 157714.285714286,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 163200,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 168685.714285714,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 179657.142857143,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 190628.571428572,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 196114.285714286,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 201600,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 207085.714285714,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 212571.428571429,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 223542.857142857,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   },
   {
    "t": 231771.428571429,
    "e": "FocusCamera",
    "v": {
-	"char": 1
-}
+    "char": 1
+   }
   },
   {
    "t": 234514.285714286,
    "e": "FocusCamera",
    "v": {
-	"char": 0
-}
+    "char": 0
+   }
   }
  ],
  "notes": {
@@ -21539,5 +21565,5 @@
    }
   ]
  },
- "generatedBy": "Friday Night Funkin' - v0.8.4"
+ "generatedBy": "Friday Night Funkin' - v0.8.5"
 }

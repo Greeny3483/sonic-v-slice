@@ -1,0 +1,75 @@
+
+import flixel.FlxG;
+import funkin.save.Save;
+import funkin.ui.title.TitleState;
+import funkin.ui.MusicBeatState;
+import funkin.graphics.video.FunkinVideoSprite;
+import funkin.modding.base.ScriptedMusicBeatState;
+import funkin.modding.module.Module;
+import funkin.util.TouchUtil;
+
+class EXEIntroSetup extends Module {
+
+	public var hasPlayedVideo = false;
+
+	public function new() {
+		super('EXEIntroSetup');
+	}
+
+	function onStateChangeEnd(event:StateChangeScriptEvent) {
+		super.onStateChangeBegin(event);
+
+        doEXETitleIntro = Save.instance.modOptions["doEXETitleIntro"];
+        if (!doEXETitleIntro) return;
+
+		var state1 = event.targetState;
+
+		if (!hasPlayedVideo) {
+            hasPlayedVideo = true;
+
+			var state1 = ScriptedMusicBeatState.init('EXETitleIntro');
+			FlxG.switchState(state1);
+		}
+	}
+}
+
+class EXETitleIntro extends MusicBeatState {
+
+    public function new() {
+        super('EXETitleIntro');
+    }
+
+    function create() {
+        super.create();
+
+        playIntro();
+    }
+
+    function playIntro():Void {
+        doEXETitleIntro = Save.instance.modOptions["doEXETitleIntro"];
+        if (!doEXETitleIntro) return;
+
+        introVideo = new FunkinVideoSprite(0, 0);
+        introVideo.load('videos/videos/HaxeFlixelIntro.mp4');
+        introVideo.x = (FlxG.width - 1280) / 2;
+        introVideo.y = (FlxG.height - 720) / 2;
+        FlxG.state.add(introVideo);
+        introVideo.play();
+
+        introVideo.bitmap.onEndReached.add(function() {
+            introVideo.destroy(); // Unload
+            FlxG.switchState(() -> new TitleState());
+        });
+    }
+
+    function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+        // would controls.ACCEPT work too?
+        if (introVideo != null && FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ESCAPE || FlxG.keys.justPressed.BACKSPACE || FlxG.mouse.justPressed || TouchUtil.justPressed) // skip intro
+        {
+            introVideo.stop();
+            introVideo.destroy();
+            FlxG.switchState(() -> new TitleState());
+        }
+    }
+}

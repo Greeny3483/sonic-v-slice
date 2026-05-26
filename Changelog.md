@@ -1,3 +1,115 @@
+## [0.5.0] - 2026-05-26
+
+#### Added:
+
+- **CUSTOM UI** for the **TITLE**, and **MAIN** menus
+  
+  - Includes a custom startup intro
+  
+  - Turn them on in the settings!
+
+- **Ring Mechanic**
+  
+  - **[NEW STRUM]** Press the space key *[PC]* or tap *[MOBILE]* to hit **Ring Notes** on the newly added strumline member.
+  
+  - **[RING NOTES]** **Ring Notes** do not penalize the player if they're missed, though hitting them is still beneficial.
+    If you have a ring, your next miss will not count.
+  
+  - **[RING COUNTER]** The **Ring Counter** display will keep track of the rings in-hand. The more rings you have, the more
+    likely it is you'll get a perfect score.
+  
+  - **"Ring Mechanic"** option
+    
+    - When disabled, **Ring Notes** will still spawn on the strumline, but there is no extra strumline member. 
+      They can appear on any of the four lanes.
+    
+    - Hitting **Ring Notes** with the mechanic turned off will not benefit the player in any way. The **Ring Counter**
+      display will also not be visible.
+
+- **General**
+  
+  - Added the **"Timer Mode"** option
+    
+    - Switches the **GENESIS HUD** timer between counting up (default) or down
+
+#### Changes / Fixes
+
+- **General**
+  
+  - Adjusted transparency of hold note covers
+  
+  - In-game credits listing no longer show when in charting mode
+  
+  - Modded shaders are now disabled on mobile by default (can still be turned on)
+  
+  - The Botplay bot no longer hits **Phantom Notes**
+  
+  - **Milk Splashes** are now preloaded and no longer cause lag
+
+- **Options**
+  
+  - EXE Options have been moved to their own category in the options menu
+  
+  - Removed the **'EXTRAS'** category and replaced it with **'MISC'**
+  
+  - The following options have been moved to the **'MISC'** category:
+    
+    - **Song Transitions**
+    
+    - **Freeplay Cutscenes**
+
+- **Songs**
+  
+  - Replaced **2.5/3.0** Song Charts with the **UPDATE 2** versions for the following songs:
+    
+    - **Too Slow**
+    
+    - **You Can't Run**
+    
+    - **Endless**
+    
+    - **Chaos**
+  
+  - **Triple Trouble**
+    
+    - Added ring mechanic
+    
+    - Strumline swap now uses the exact positions
+  
+  - **Substantial**
+    
+    - Expanded the stage background **[MOBILE]**
+    
+    - Added camera events
+    
+    - Adjusted character brightness
+
+## [0.4.2] - 2026-04-21
+
+#### Changes
+
+- **X-Terion**'s icon set is now visible **[MOBILE]**
+
+- Intro graphics for **Substantial** and **Milk (OG)** are now visible **[MOBILE]**
+
+## [0.4.1] - 2026-04-19
+
+#### Changes:
+
+- **Triple Trouble**
+  
+  - Adjusted the timing of Tails' jumpscare, added a screen shake effect
+  
+  - Soul jumpscare audios now last longer
+  
+  - The duration of the soul jumpscares has been decreased (1.5s -> 1s)
+  
+  - The transition to Eggman's section no longer causes a game crash
+
+- **Faker + Black Sun**
+  
+  - Opponent sprites **SHOULD** appear now
+
 ## [0.4.0] - 2026-04-18
 
 #### Added:
@@ -10,13 +122,17 @@
 
 #### Changes:
 
-- **Furnace** is no longer visible during **Prey**'s starting cutscene **[MOBILE]**
+- **Prey**
+  
+  - Furnace is no longer visible during the starting cutscene **[MOBILE]**
 
-- **Sonic.EXE (GENESIS - ENCORE)** now always is in the proper position in **You Can't Run *ENCORE*** **[MOBILE]**
-
-- The video in **You Can't Run *ENCORE*** now pauses when the game is paused
-
-- The position of the video in **You Can't Run *ENCORE*** now dynamically matches the screen width
+- **You Can't Run *ENCORE***
+  
+  - **Sonic.EXE (GENESIS - ENCORE)** now always is in the proper position
+  
+  - The (Gaze of a God) animation now pauses when the game is paused
+  
+  - The position of the (Gaze of a God) animation now dynamically matches the screen width
 
 ## [0.3.2] - 2026-04-17
 
@@ -33,8 +149,6 @@
 ## [0.3.1] - 2026-04-15
 
 #### Changes:
-
-- The size of the red vignette in **You Can't Run** and **You Can't Run ENCORE** is now dynamic
 
 - **Static Notes** no longer cause an error
 

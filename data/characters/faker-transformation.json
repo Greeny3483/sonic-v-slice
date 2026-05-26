@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "name": "Faker (Transformation)",
-    "assetPath": "characters/Faker_Transformation",
+    "assetPath": "characters/fakertransform",
     "singTime": 4,
     "isPixel": false,
     "scale": null,

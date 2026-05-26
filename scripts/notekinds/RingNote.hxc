@@ -5,33 +5,36 @@ import funkin.play.PlayState;
 import funkin.audio.FunkinSound;
 import funkin.graphics.FunkinSprite;
 import funkin.play.notes.notekind.NoteKind;
+import funkin.FunkinMemory;
+
+import EXERingMechanic;
 
 class RingNote extends NoteKind
 {
-	public function new(noteKind:String, description:String = "", ?noteStyleId:String, ?params:Array<NoteKindParam>)
-	{
-		super("ringnote", "Ring Note (EXE)", "ringnote", []);
-	}
+    static final DISABLE_ANIMATIONS:Bool = true;
 
-	function onNoteIncoming(event)
-	{
-		super.onNoteIncoming(event);
+    public function new(noteKind:String, description:String = "", ?noteStyleId:String, ?params:Array<NoteKindParam>)
+    {
+        super("ringnote", "Ring Note (EXE)", "ringnote", [], DISABLE_ANIMATIONS);
+        
+        this.scoreable = false; 
+    }
 
-		event.note.lowPriority = true;
-		//event.note.offset.x = 40.3;
-	}
+    function onNoteIncoming(event:Dynamic)
+    {
+        super.onNoteIncoming(event);
+        event.note.lowPriority = true;
+        FunkinMemory.permanentCacheSound(Paths.sound("Ring"));
+    }
 
-	function onNoteHit(event:HitNoteScriptEvent)
-	{
-		if (event.judgement == "perfect" || event.judgement == "good")
-		{
-			FunkinSound.playOnce(Paths.sound("Ring"), 1);
-		}
-	}
+    function onNoteHit(event:Dynamic)
+    {
+        super.onNoteHit(event);
+        FunkinSound.playOnce(Paths.sound("Ring"), 1);
+    }
 
-	function onNoteMiss(event:NoteScriptEvent)
-	{
-        Highscore.tallies.totalNotes--;
-		event.cancelEvent();
-	}
+    function onNoteMiss(event:Dynamic)
+    {
+        event.cancelEvent();
+    }
 }

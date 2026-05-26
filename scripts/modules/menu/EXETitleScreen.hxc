@@ -1,0 +1,118 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
+import funkin.save.Save;
+import funkin.ui.title.TitleState;
+import funkin.audio.FunkinSound;
+import funkin.modding.module.Module;
+
+class EXETitleScreen extends Module {
+
+    public var state1;
+    public var titleBG:FlxSprite;
+    public var pressEnter:FlxSprite;
+    public var modLogo:FlxSprite;
+
+    public var onTitle:Bool = false;
+
+    public function new() {
+        super('EXETitleScreen');
+    }
+
+    function startMusic() {
+        FunkinSound.playMusic('freakyMenu-EXET', //CL
+        {
+            startingVolume: 0.0,
+            overrideExisting: true,
+            restartTrack: false,
+            persist: true
+        });
+        FlxG.sound.music.fadeIn(4.0, 0.0, 1.0);
+    }
+
+    function onStateChangeEnd(event:StateChangeScriptEvent):Void {
+        super.onStateChangeEnd(event);
+
+        doEXETitleScreen = Save.instance.modOptions["doEXETitleScreen"];
+        if (!doEXETitleScreen) return;
+
+        state1 = event.targetState;
+        if (FlxG.state is TitleState) {
+
+            if (!FlxG.state.initialized) new FlxTimer().start(1, function() {
+                startMusic();
+            });
+            else
+                startMusic();
+
+            // Weird how the same sprite is used for the menu and Triple Trouble
+			titleBG = new FlxSprite(0, 0);
+			titleBG.frames = Paths.getSparrowAtlas('sonicUI/NewTitleMenuBG');
+            titleBG.setGraphicSize(FlxG.width, FlxG.height);
+			titleBG.animation.addByPrefix('idle', "TitleMenuSSBG instance 100", 24, true);
+            titleBG.animation.play('idle');
+			titleBG.antialiasing = true;
+			titleBG.alpha = 1;
+			titleBG.updateHitbox();
+
+		    modLogo = new FlxSprite().loadGraphic(Paths.image('sonicUI/logo'));
+            modLogo.setGraphicSize(modLogo.width / 2, modLogo.height / 2);
+            modLogo.screenCenter();
+            modLogo.y -= 25;
+		    modLogo.antialiasing = true;
+		    modLogo.alpha = 1;
+
+			pressEnter = new FlxSprite(0, 0);
+			pressEnter.frames = Paths.getSparrowAtlas('sonicUI/titleEnterEXE');
+			pressEnter.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+			pressEnter.animation.addByPrefix('press', "ENTER PRESSED", 24, false);
+            pressEnter.screenCenter();
+			pressEnter.animation.play('idle');
+            pressEnter.y += 25;
+			pressEnter.updateHitbox();	
+        }
+    }
+
+    override function onUpdate(event) {
+        super.onUpdate(event);
+
+        doEXETitleScreen = Save.instance.modOptions["doEXETitleScreen"];
+        if (!doEXETitleScreen) return;
+
+		if (FlxG.state is TitleState)
+		{
+            if (!FlxG.state.initialized) new FlxTimer().start(1, function() {
+                FlxG.state.skipIntro();
+            });
+			if (FlxG.state.skippedIntro && !onTitle) {
+                onTitle = true;
+                FunkinSound.playOnce(Paths.sound('showMoment'));
+                FlxG.camera.flash(0xFFFF0000, 2);
+                FlxG.state.add(titleBG);
+                FlxG.state.add(modLogo);
+                FlxG.state.add(pressEnter);
+                if (FlxG.state.logoBl != null) FlxG.state.logoBl.alpha = 0;
+                if (FlxG.state.gfDance != null) FlxG.state.gfDance.alpha = 0;
+                if (FlxG.state.titleText != null) FlxG.state.titleText.alpha = 0;
+			}
+            if (state1 != null && state1.transitioning && pressEnter.animation.name != 'press') {
+                for (sound in FlxG.sound.list.members) {
+                    if (sound != null && sound.playing && sound != FlxG.sound.music) {
+                        sound.stop(); // Cancel default confirm sound
+                    }
+                }
+                FlxG.camera.flash(0xFF000000);
+		        FlxG.sound.play(Paths.sound('menumomentclick'));
+		        FlxG.sound.play(Paths.sound('menulaugh'));
+                pressEnter.animation.play('press', false);
+                pressEnter.animation.finishCallback = function() {
+                    pressEnter.alpha = 0;
+                };
+
+                FlxTween.tween(modLogo, {alpha: 0}, 0.4);
+                FlxTween.tween(titleBG, {alpha: 0}, 0.4);
+            }
+        }
+    }
+}

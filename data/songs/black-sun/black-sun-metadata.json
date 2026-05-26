@@ -11,7 +11,7 @@
 		"ratings": {"easy": 4, "normal": 5, "hard": 7},
 		"previewStart": 0,
 		"previewEnd": 15000,
-		"characters": {"girlfriend": "faker-gf", "opponent": "FakerExe", "player": "bf"}
+		"characters": {"girlfriend": "faker-gf", "opponent": "exefaker", "player": "bf"}
 	},
 	"timeChanges": [
 		{"t": 0, "bpm": 150}

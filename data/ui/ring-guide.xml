@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dialog width="1000" height="600" title="Ring Mechanic" closable="false">
+    <tabview width="100%" height="100%">
+        <box width="100%" text="Terms">
+            <vbox width="100%" padding="20">
+                <section-header text="RING MECHANIC (1 OF 2)" />
+                <hbox width="100%" horizontalAlign="center" padding="20">
+                    <vbox paddingRight="50">
+                        <image resource="images/guides/triple-trouble/ring.png" width="128" height="128" />
+                        <label text="Ring Note" />
+                    </vbox>
+                    <vbox>
+                        <image resource="images/guides/triple-trouble/ringstrum.png" width="128" height="128" />
+                        <label text="Ring Strumline" />
+                    </vbox>
+                </hbox>
+                <label width="100%" text="Extra Note Lane: Ring notes will appear in an additional lane in between the down and up arrows. Ring Notes are the only notes that will appear on this lane. On PC, press the SPACE key to hit them. On mobile, simply tap the ring." />
+                <label width="100%" text="Miss Penalty: If you miss a standard note while holding at least one ring, you will lose a ring instead of taking health damage." />
+            </vbox>
+        </box>
+
+        <box width="100%" text="Tips">
+            <vbox width="100%" padding="20">
+                <section-header text="Survival Tips (2 OF 2)" />
+                <label width="100%" text="Conservation: Save your rings for difficult sections! Having a stockpile of rings acts as a shield during intense charting patterns." />
+                <label width="100%" text="Phantom Notes: Phantom notes will NOT take away your rings if you miss them. Do not waste your rings trying to avoid phantom notes." />
+                <label width="100%" text="Press SPACE, ENTER, or click 'Start Song' to begin." color="0xFFAA00" />
+            </vbox>
+        </box>
+    </tabview>
+</dialog>

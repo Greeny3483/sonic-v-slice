@@ -19,32 +19,33 @@ class PhantomNote extends NoteKind
 	function onNoteIncoming(event)
 	{
 		super.onNoteIncoming(event);
-
 		event.note.lowPriority = true;
 	}
 
 	function onNoteHit(event:HitNoteScriptEvent)
 	{
+        if ((PlayState.instance != null && PlayState.instance.isBotPlayMode) || !event.note.noteData.getMustHitNote()) {
+            event.cancel();
+            return;
+        }
+
     	if (event.judgement == "perfect" || event.judgement == "good") {
     		super.onNoteHit(event);
 			return;
 		}
 
-        // For bad, shit, or miss judgments, cancel the hit to prevent any effects
         event.cancel();
-
-        rate += 0.06;
-
+		rate += 0.06;
+		
         if (!draining)
         {
             draining = true;
-
             tick = new FlxTimer().start(0.05, function(t:FlxTimer)
             {
                 if (PlayState.instance == null || PlayState.instance.isGamePaused) return;
                 PlayState.instance.health -= rate * 0.05;
             }, 0);
-
+            
             stop = new FlxTimer().start(7, function(_)
             {
                 if (tick != null) { tick.cancel(); tick = null; }

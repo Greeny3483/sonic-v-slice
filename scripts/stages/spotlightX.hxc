@@ -5,6 +5,9 @@ import flixel.util.FlxTimer;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
 import funkin.Conductor;
+import funkin.graphics.shaders.AdjustColorShader;
+import funkin.graphics.shaders.DropShadowShader;
+import funkin.play.character.CharacterType;
 
 import EXEShaders;
 
@@ -15,6 +18,8 @@ class SpotlightXStage extends Stage
 
     public var shouldFloat:Bool = false;
 
+    public var characterShader:AdjustColorShader;
+
     public function new()
     {
         super('spotlightX');
@@ -23,8 +28,26 @@ class SpotlightXStage extends Stage
     override function onCreate(event:ScriptEvent):Void {
         super.onCreate(event);
 
+        characterShader = new AdjustColorShader();
+
+        characterShader.brightness = -40;
+        characterShader.hue = 0;
+        characterShader.contrast = 0;
+        characterShader.saturation = 0;
+
         EXEShaders.initShader("vcr");
         getNamedProp("sky").alpha = 0;
+        
+        if (FlxG.onMobile) getNamedProp("sky").scale.x += 0.3;
+    }
+
+    override function addCharacter(character:BaseCharacter, charType:CharacterType):Void {
+        super.addCharacter(character, charType);
+
+        switch (charType) {
+            case CharacterType.BF, CharacterType.DAD:
+                character.shader = characterShader;
+        }
     }
 
     override function onStepHit(event:SongTimeScriptEvent):Void {
@@ -84,6 +107,12 @@ class SpotlightXStage extends Stage
         getNamedProp("floor").alpha = 1;
         getNamedProp("sky").alpha = 0;
         shouldFloat = false;
+        applyShader = false;
+
+        var bf = getBoyfriend();
+        var dad = getDad();
+        if (bf != null) bf.shader = bfPreRim;
+        if (dad != null) dad.shader = dadPreRim;
     }
 
     override function onSongEnd(event) {

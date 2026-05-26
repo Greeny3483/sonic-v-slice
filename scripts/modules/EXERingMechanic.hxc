@@ -1,0 +1,513 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import Math;
+import funkin.Paths;
+import funkin.Conductor;
+import funkin.graphics.FunkinSprite;
+import funkin.modding.module.Module;
+import funkin.modding.module.ModuleHandler;
+import funkin.play.PlayState;
+import funkin.play.notes.Strumline;
+import funkin.util.Constants;
+import funkin.util.TouchUtil;
+
+class EXERingMechanic extends Module 
+{
+    public static var playerHasRings:Bool = false; // tracks whether the player has rings or not, put in any script
+    
+    var isMechanicActive:Bool = false;
+    var wasMobileTouching:Bool = false;
+
+    var noteShiftAmount:Float = 54; // the space in between the up and down notes to make room for the ring note (higher = more space)
+    var ringXOffset:Float = -3;
+    var ringYOffset:Float = 24;
+    var confirmXOffset:Float = -15; // hit note animation offsets for the ring
+    var confirmYOffset:Float = -20;
+    
+    var ringSizeMobile:Float = 1.0; // increase the scale of the ring on mobile to make it easier to hit
+    var ringXOffsetMobile:Float = -47.5;
+    var ringYOffsetMobile:Float = -22;
+    
+    var ringDisplay:FlxSprite = null; 
+    var ringCount:FlxText = null;
+    var rings:Int = 0;
+    var ringStrum:FlxSprite;
+    
+    var trackedSplashes = [];
+    var trackedCovers = [];
+
+    public function new() 
+    {
+        super("EXERingMechanic");
+    }
+
+    // Add to a script to activate the ring mechanic
+    // If a song doesnt have this function on, but still has ring notes in it, the ring notes wont do anything
+    public static function useRingMechanic()
+    {
+        var mod = ModuleHandler.getModule("EXERingMechanic");
+        if (mod != null) 
+        {
+            mod.initializeRing();
+        }
+    }
+
+    public function initializeRing() 
+    {
+        if (isMechanicActive || PlayState.instance == null) return;
+        
+        isMechanicActive = true;
+        rings = 0;
+        playerHasRings = false;
+        wasMobileTouching = false;
+        
+        ringDisplay = null;
+        ringCount = null;
+        ringStrum = null;
+        trackedSplashes = [];
+        trackedCovers = [];
+        
+        setupRingStrum();
+        createRingDisplay();
+        updateRingDisplay();
+    }
+
+    override function onStateChangeBegin(event) 
+    {
+        super.onStateChangeBegin(event);
+        
+        isMechanicActive = false;
+        wasMobileTouching = false;
+        
+        ringDisplay = null;
+        ringCount = null;
+        ringStrum = null;
+        trackedSplashes = [];
+        trackedCovers = [];
+    }
+
+    override function onUpdate(event) 
+    {
+        super.onUpdate(event);
+        
+        if (isMechanicActive) 
+        {
+            playerHasRings = (rings > 0);
+
+            if (PlayState.instance != null && ringStrum != null) 
+            {
+                updateRingPosition();
+                handleInput();
+                alignIncomingNotes();
+            }
+        }
+    }
+
+    override function onSongRetry(event) 
+    {
+        super.onSongRetry(event);
+        if (isMechanicActive) 
+        {
+            rings = 0;
+            playerHasRings = false;
+            wasMobileTouching = false;
+            trackedSplashes = [];
+            trackedCovers = [];
+            updateRingDisplay();
+        }
+    }
+
+    function setupRingStrum() 
+    {
+        for (i in 0...PlayState.instance.playerStrumline.strumlineNotes.members.length) 
+        {
+            var strum = PlayState.instance.playerStrumline.strumlineNotes.members[i];
+            if (i < 2) strum.x -= noteShiftAmount;
+            else strum.x += noteShiftAmount;
+        }
+
+        ringStrum = createRingSprite();
+        updateRingPosition();
+        ringStrum.cameras = PlayState.instance.playerStrumline.cameras;
+        
+        var strumIndex = PlayState.instance.members.indexOf(PlayState.instance.playerStrumline);
+        if (strumIndex != -1) 
+        {
+            PlayState.instance.insert(strumIndex, ringStrum);
+        } 
+        else 
+        {
+            PlayState.instance.add(ringStrum);
+        }
+    }
+
+    function createRingSprite():FlxSprite 
+    {
+        var strum = new FlxSprite();
+        strum.frames = Paths.getSparrowAtlas("notekinds/ringnote/ring");
+        strum.animation.addByPrefix("static", "arrowSPACE0000", 24, true); 
+        strum.animation.addByPrefix("pressed", "space press000", 24, false);
+        strum.animation.addByPrefix("confirm", "space confirm000", 24, false);
+        
+        strum.animation.play("static");
+        
+        if (FlxG.onMobile) 
+        {
+            strum.scale.set(ringSizeMobile, ringSizeMobile);
+        } 
+        else 
+        {
+            strum.scale.set(0.7, 0.7);
+        }
+        
+        strum.updateHitbox();
+        
+        return strum;
+    }
+
+    function updateRingPosition() 
+    {
+        var extraX = FlxG.onMobile ? ringXOffsetMobile : 0;
+        var extraY = FlxG.onMobile ? ringYOffsetMobile : 0;
+        
+        ringStrum.x = PlayState.instance.playerStrumline.x + (PlayState.instance.playerStrumline.width / 2) - (ringStrum.width / 2) + ringXOffset + extraX;
+        ringStrum.y = PlayState.instance.playerStrumline.y + ringYOffset + extraY;
+    }
+
+    function updateRingOffsets() 
+    {
+        ringStrum.centerOffsets();
+        if (ringStrum.animation.name == "confirm") 
+        {
+            ringStrum.offset.x += confirmXOffset;
+            ringStrum.offset.y += confirmYOffset;
+        }
+    }
+
+    function createRingDisplay() 
+    {
+        if (ringDisplay != null) return;
+        ringDisplay = new FlxSprite(FlxG.width - 180, FlxG.height - 120);
+        ringDisplay.loadGraphic(Paths.image("notekinds/ringnote/Counter"));
+        ringDisplay.cameras = [PlayState.instance.camHUD];
+        PlayState.instance.add(ringDisplay);
+        
+        ringCount = new FlxText(ringDisplay.x + 74, ringDisplay.y - 6); 
+        ringCount.text = rings + "";
+        ringCount.cameras = [PlayState.instance.camHUD];
+        ringCount.setFormat(Paths.font("EurostileTBla.ttf"), 60, 0xFFFFCC33, "left", FlxTextBorderStyle.OUTLINE, 0xFFCC6600);
+        ringCount.borderSize = 3;
+        PlayState.instance.add(ringCount);
+    }
+
+    function updateRingDisplay() 
+    {
+        if (ringCount != null) {
+            ringCount.text = rings + "";
+        }
+    }
+
+    function alignIncomingNotes()
+    {
+        for (note in PlayState.instance.playerStrumline.notes.members) 
+        {
+            if (note != null && note.alive && note.noteData != null) 
+            {
+                if (note.noteData.kind == "ringnote") 
+                {
+                    if (Math.abs(note.scale.x - ringStrum.scale.x) > 0.01) 
+                    {
+                        note.scale.set(ringStrum.scale.x, ringStrum.scale.y);
+                        note.updateHitbox();
+                    }
+                    note.x = ringStrum.x + (ringStrum.width / 2) - (note.width / 2);
+                }
+                else
+                {
+                    var dir = note.noteData.data % 4;
+                    var targetStrum = PlayState.instance.playerStrumline.strumlineNotes.members[dir];
+                    if (targetStrum != null)
+                    {
+                        note.x = targetStrum.x + (targetStrum.width / 2) - (note.width / 2);
+                    }
+                }
+            }
+        }
+
+        for (hold in PlayState.instance.playerStrumline.holdNotes.members) 
+        {
+            if (hold != null && hold.alive && hold.noteData != null) 
+            {
+                if (hold.noteData.kind == "ringnote") 
+                {
+                    if (Math.abs(hold.scale.x - ringStrum.scale.x) > 0.01) 
+                    {
+                        hold.scale.x = ringStrum.scale.x;
+                        hold.updateHitbox();
+                    }
+                    hold.x = ringStrum.x + (ringStrum.width / 2) - (hold.width / 2);
+                }
+                else
+                {
+                    var dir = hold.noteData.data % 4;
+                    var targetStrum = PlayState.instance.playerStrumline.strumlineNotes.members[dir];
+                    if (targetStrum != null)
+                    {
+                        hold.x = targetStrum.x + (targetStrum.width / 2) - (hold.width / 2);
+                    }
+                }
+            }
+        }
+
+        var sIndex = trackedSplashes.length;
+        while(sIndex-- > 0) {
+            var t = trackedSplashes[sIndex];
+            if (t == null || t.sprite == null || !t.sprite.alive || !t.sprite.exists || !t.sprite.visible) {
+                trackedSplashes.splice(sIndex, 1);
+            }
+        }
+
+        for (splash in PlayState.instance.playerStrumline.noteSplashes.members) 
+        {
+            if (splash != null && splash.alive && splash.visible) 
+            {
+                var splashData = null;
+                var isTracked = false;
+                
+                for (t in trackedSplashes) {
+                    if (t.sprite == splash) {
+                        isTracked = true;
+                        splashData = t;
+                        break;
+                    }
+                }
+                
+                if (!isTracked) 
+                {
+                    var bestLane:Int = 0;
+                    var minDistance:Float = 999999;
+                    var closestUnshiftedX:Float = 0;
+                    
+                    for (i in 0...4) 
+                    {
+                        var strum = PlayState.instance.playerStrumline.strumlineNotes.members[i];
+                        if (strum != null) 
+                        {
+                            var unshiftedX = strum.x + (i < 2 ? noteShiftAmount : -noteShiftAmount);
+                            var dist = Math.abs(splash.x - unshiftedX);
+                            
+                            if (dist < minDistance) 
+                            {
+                                minDistance = dist;
+                                bestLane = i;
+                                closestUnshiftedX = unshiftedX;
+                            }
+                        }
+                    }
+                    
+                    splashData = {sprite: splash, lane: bestLane, offset: splash.x - closestUnshiftedX};
+                    trackedSplashes.push(splashData);
+                }
+                
+                var targetStrum = PlayState.instance.playerStrumline.strumlineNotes.members[splashData.lane];
+                if (targetStrum != null) 
+                {
+                    splash.x = targetStrum.x + splashData.offset;
+                }
+            }
+        }
+
+        var cIndex = trackedCovers.length;
+        while(cIndex-- > 0) {
+            var t = trackedCovers[cIndex];
+            if (t == null || t.sprite == null || !t.sprite.alive || !t.sprite.exists || !t.sprite.visible) {
+                trackedCovers.splice(cIndex, 1);
+            }
+        }
+
+        for (cover in PlayState.instance.playerStrumline.noteHoldCovers.members) 
+        {
+            if (cover != null && cover.alive && cover.visible) 
+            {
+                var coverData = null;
+                var isTracked = false;
+                
+                for (t in trackedCovers) {
+                    if (t.sprite == cover) {
+                        isTracked = true;
+                        coverData = t;
+                        break;
+                    }
+                }
+                
+                if (!isTracked) 
+                {
+                    var bestLane:Int = 0;
+                    var minDistance:Float = 999999;
+                    var closestUnshiftedX:Float = 0;
+                    
+                    for (i in 0...4) 
+                    {
+                        var strum = PlayState.instance.playerStrumline.strumlineNotes.members[i];
+                        if (strum != null) 
+                        {
+                            var unshiftedX = strum.x + (i < 2 ? noteShiftAmount : -noteShiftAmount);
+                            var dist = Math.abs(cover.x - unshiftedX);
+                            
+                            if (dist < minDistance) 
+                            {
+                                minDistance = dist;
+                                bestLane = i;
+                                closestUnshiftedX = unshiftedX;
+                            }
+                        }
+                    }
+                    
+                    coverData = {sprite: cover, lane: bestLane, offset: cover.x - closestUnshiftedX};
+                    trackedCovers.push(coverData);
+                }
+                
+                var targetStrum = PlayState.instance.playerStrumline.strumlineNotes.members[coverData.lane];
+                if (targetStrum != null) 
+                {
+                    cover.x = targetStrum.x + coverData.offset;
+                }
+            }
+        }
+    }
+
+    function handleInput() 
+    {
+        var ringJustPressed = FlxG.keys.justPressed.SPACE;
+        var ringJustReleased = FlxG.keys.justReleased.SPACE;
+        var ringPressed = FlxG.keys.pressed.SPACE;
+
+        if (FlxG.onMobile && ringStrum != null) 
+        {
+            var isTouching = TouchUtil.overlaps(ringStrum);
+            
+            if (isTouching) 
+            {
+                ringPressed = true;
+                if (!wasMobileTouching) ringJustPressed = true;
+            }
+            else if (wasMobileTouching)
+            {
+                ringJustReleased = true;
+            }
+
+            wasMobileTouching = isTouching;
+        }
+
+        if (ringJustPressed) 
+        {
+            ringStrum.animation.play("pressed", true);
+            updateRingOffsets();
+
+            for (note in PlayState.instance.playerStrumline.notes.members) 
+            {
+                if (note != null && note.alive && note.noteData != null && note.noteData.kind == "ringnote") 
+                {
+                    if (Math.abs(note.strumTime - Conductor.instance.songPosition) <= 160) 
+                    {
+                        var fakeInput = {
+                            noteDirection: note.noteData.data % 4,
+                            timestamp: Math.floor(Conductor.instance.songPosition * Constants.NS_PER_MS)
+                        };
+                        PlayState.instance.goodNoteHit(note, fakeInput); 
+                        PlayState.instance.playerStrumline.playStatic(note.noteData.data % 4);
+                        
+                        ringStrum.animation.play("confirm", true);
+                        updateRingOffsets();
+                        break; 
+                    }
+                }
+            }
+        }
+        
+        if (ringJustReleased) 
+        {
+            ringStrum.animation.play("static", true);
+            updateRingOffsets();
+        }
+
+        if (!ringPressed && ringStrum.animation.name == "confirm" && ringStrum.animation.finished)
+        {
+            ringStrum.animation.play("static", true);
+            updateRingOffsets();
+        }
+    }
+
+    override function onNoteHit(event) 
+    {
+        if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "ringnote") 
+        {
+            var ringPressed = FlxG.keys.pressed.SPACE;
+            
+            if (FlxG.onMobile && ringStrum != null && TouchUtil.overlaps(ringStrum)) 
+            {
+                ringPressed = true;
+            }
+
+            if (!ringPressed && !PlayState.instance.isBotPlayMode)
+            {
+                event.cancelEvent();
+            }
+            else 
+            {
+                rings++;
+                updateRingDisplay();
+            }
+        }
+        else if (rings > 0 && event.note != null && event.note.noteData != null && event.note.noteData.getMustHitNote() && (event.judgement == "bad" || event.judgement == "shit"))
+        {
+            event.judgement = "good";
+            rings--;
+            updateRingDisplay();
+        }
+    }
+    
+    override function onNoteMiss(event) 
+    {
+        if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "ringnote") 
+        {
+            event.cancelEvent();
+        }
+        else if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "phantomnote") // we can leave static notes alone since they still need to be hit
+        {
+        }
+        else if (rings > 0) 
+        {
+            event.cancelEvent();
+            rings--;
+            updateRingDisplay();
+        }
+    }
+
+    override function onNoteGhostMiss(event) 
+    {
+        if (rings > 0) 
+        {
+            event.cancelEvent();
+            rings--;
+            updateRingDisplay();
+        }
+    }
+
+    override function onNoteHoldDrop(event) 
+    {
+        if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "phantomnote") 
+        {
+            return;
+        }
+
+        if (rings > 0) 
+        {
+            event.cancelEvent();
+            rings--;
+            updateRingDisplay();
+        }
+    }
+}

@@ -1,23 +1,349 @@
 import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxTimer;
+import flixel.addons.display.FlxBackdrop;
+import flixel.addons.transition.FlxTransitionableState;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.util.FlxTimer;
+import flixel.effects.FlxFlicker;
+import funkin.FunkinMemory;
 import funkin.ui.mainmenu.MainMenuState;
+import funkin.audio.FunkinSound;
 import funkin.modding.module.Module;
+import funkin.ui.story.StoryMenuState;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.ui.credits.CreditsState;
+import funkin.ui.options.OptionsState;
+import funkin.ui.FullScreenScaleMode;
+import funkin.ui.title.TitleState;
+import funkin.save.Save;
 
 class EXEMainMenu extends Module
 {
-    public var vnum:String = "0.4.0";
+    public var vnum:String = "0.5.0";
+
+    public var options:Array<String> = ['story_mode', 'freeplay', 'credits', 'options'];
+    public var optionButton:Array<FlxSprite> = [];
+
+    public var menuBG:FlxSprite;
+    public var spikeUp:FlxBackdrop;
+    public var spikeDown:FlxBackdrop;
+    public var arrows:FlxSprite;
+
+    public var renders:Array<FlxSprite>;
+
+    public var selectedIndex:Int = 0;
+    public var busy:Bool = false;
+    public var wasSubStateOpen:Bool = false;
 
     public function new()
     {
         super('EXEMainMenu');
     }
-  
+
+    function startMusic() {
+        FunkinSound.playMusic('freakyMenu-EXE', //CL
+        {
+            startingVolume: 0.0,
+            overrideExisting: true,
+            restartTrack: false,
+            persist: true
+        });
+        FlxG.sound.music.fadeIn(4.0, 0.0, 1.0);
+    }
+
+    override function onStateChangeEnd(event:StateChangeScriptEvent)
+    {
+        super.onStateChangeEnd(event);
+
+        doEXEMenuScreen = Save.instance.modOptions["doEXEMenuScreen"];
+        if (!doEXEMenuScreen) return;
+
+        if (FlxG.state is MainMenuState)
+        {
+
+            //EXEWindow.resizeWindow(1520, 720);
+            // reset
+            busy = false;
+            wasSubStateOpen = false;
+            selectedIndex = 0;
+
+            // Clean up old sprites
+            var state = FlxG.state;
+            if (menuBG != null) { state.remove(menuBG); menuBG.destroy(); menuBG = null; }
+            if (arrows != null) { state.remove(arrows); arrows.destroy(); arrows = null; }
+            if (spikeUp != null) { state.remove(spikeUp); spikeUp.destroy(); spikeUp = null; }
+            if (spikeDown != null) { state.remove(spikeDown); spikeDown.destroy(); spikeDown = null; }
+            if (optionButton != null)
+            {
+                for (button in optionButton)
+                {
+                    if (button != null) { state.remove(button); button.destroy(); }
+                }
+                optionButton = null;
+            }
+
+            if (!FlxG.state.initialized) new FlxTimer().start(0.0000000000000001, function() {
+                startMusic();
+            });
+            else
+                startMusic();
+
+		    menuBG = new FlxSprite(-100).loadGraphic(Paths.image("sonicUI/mainMenu/backgroundlool"));
+            menuBG.scrollFactor.x = 0;
+            menuBG.scrollFactor.y = 0;
+            menuBG.setGraphicSize(Std.int(menuBG.width * .5));
+            menuBG.updateHitbox();
+            menuBG.screenCenter();
+		    menuBG.antialiasing = true;
+		    menuBG.alpha = 1;
+
+		    arrows = new FlxSprite(92, 182).loadGraphic(Paths.image('sonicUI/mainMenu/funniArrows'));
+		    arrows.scrollFactor.set();
+		    arrows.antialiasing = true;
+		    arrows.updateHitbox();
+		    FlxTween.tween(arrows.offset, {y: 15}, 0.6, {ease: FlxEase.quadInOut, type: FlxTween.PINGPONG});
+
+		    spikeUp = new FlxBackdrop(Paths.image('sonicUI/mainMenu/spikeUp'), 0x01);
+            spikeUp.y = -65;
+		    spikeUp.scrollFactor.set();
+		    spikeUp.antialiasing = true;
+            spikeUp.velocity.x = -30;
+		
+		    spikeDown = new FlxBackdrop(Paths.image('sonicUI/mainMenu/spikeDown'), 0x01);
+            spikeDown.y = 630;
+		    spikeDown.scrollFactor.set();
+		    spikeDown.antialiasing = true;
+            spikeDown.velocity.x = 30;
+
+            optionButton = [];
+            for (i in 0...options.length)
+            {
+                var option = options[i];
+                var button = new FlxSprite();
+                button.frames = Paths.getSparrowAtlas('sonicUI/mainMenu/buttons/' + option);
+                button.animation.addByPrefix('idle', option + "idle", 24, true);
+                button.animation.addByPrefix('hover', option + "hover", 24, true);
+                button.animation.play('idle');
+                button.antialiasing = true;
+                button.alpha = 1;
+                button.x = 100 + (i * 200); // spacing between the buttons on the x axis
+                button.y = 100 + (i * 120); // spacing between the buttons on the y axis
+                button.ID = i;
+                optionButton.push(button);
+            }
+
+            state.remove(state.bg);
+            state.add(menuBG);
+            state.add(arrows);
+            state.add(spikeUp);
+            state.add(spikeDown);
+            for (button in optionButton)
+                state.add(button);
+
+            if (state.menuItems != null)
+            {
+                state.menuItems.enabled = false;
+                state.menuItems.visible = false;
+            }
+
+            updateButtonAnimations();
+        }
+    }
+
     override function onUpdate(event:UpdateScriptEvent)
     {
 	    super.onUpdate(event);
 
+        doEXEMenuScreen = Save.instance.modOptions["doEXEMenuScreen"];
+        if (!doEXEMenuScreen) return;
+
         if (FlxG.state is MainMenuState)
         {
-            FlxG.state.rightWatermarkText.text = "EXE V-SLICE " + vnum;
+            var state = FlxG.state;
+
+            if (doEXEMenuScreen) {
+                state.rightWatermarkText.alpha = 0;
+                state.leftWatermarkText.alpha = 0;
+            } else {
+                state.rightWatermarkText.text = "EXE V-SLICE " + vnum;
+            }
+            
+            if (state.menuItems != null)
+                state.menuItems.visible = false;
+
+            FlxG.camera.target = null;
+            FlxG.camera.scroll.set(0, 0);
+
+            if (busy || state.subState != null)
+            {
+                wasSubStateOpen = state.subState != null;
+                return;
+            }
+
+            if (wasSubStateOpen && state.subState == null)
+            {
+                wasSubStateOpen = false;
+                startMusic();
+                return;
+            }
+
+            handleInput();
         }
+    }
+
+    function handleInput():Void
+    {
+        if (optionButton == null || optionButton.length == 0) return;
+
+        var controls = FlxG.state.controls;
+        var mouseOverlapping:Int = -1;
+
+        for (i in 0...optionButton.length)
+        {
+            var button = optionButton[i];
+            if (FlxG.mouse.overlaps(button))
+            {
+                mouseOverlapping = i;
+                if (FlxG.mouse.justPressed)
+                {
+                    selectItem(i);
+                    return;
+                }
+            }
+        }
+
+        if (mouseOverlapping != -1 && mouseOverlapping != selectedIndex)
+        {
+            FunkinSound.playOnce(Paths.sound('scrollMenuEXE'));
+            selectedIndex = mouseOverlapping;
+            updateButtonAnimations();
+        }
+
+        if (controls.UI_UP_P)
+        {
+            FunkinSound.playOnce(Paths.sound('scrollMenuEXE'));
+            selectedIndex--;
+            if (selectedIndex < 0)
+                selectedIndex = optionButton.length - 1;
+            updateButtonAnimations();
+        }
+        else if (controls.UI_DOWN_P)
+        {
+            FunkinSound.playOnce(Paths.sound('scrollMenuEXE'));
+            selectedIndex++;
+            if (selectedIndex >= optionButton.length)
+                selectedIndex = 0;
+            updateButtonAnimations();
+        }
+
+        if (controls.ACCEPT)
+        {
+            onAccept();
+        }
+
+        if (controls.BACK_P)
+        {
+            onBack();
+        }
+    }
+
+    function updateButtonAnimations():Void
+    {
+        for (i in 0...optionButton.length)
+        {
+            var button = optionButton[i];
+            if (i == selectedIndex)
+                button.animation.play('hover');
+            else
+                button.animation.play('idle');
+        }
+    }
+
+    function selectItem(index:Int):Void
+    {
+        if (busy) return;
+        selectedIndex = index;
+        updateButtonAnimations();
+        onAccept();
+    }
+
+    function onAccept():Void
+    {
+        if (busy) return;
+        busy = true;
+
+        FunkinSound.playOnce(Paths.sound('confirmMenuEXE'));
+
+        var selectedOption = options[selectedIndex];
+
+        switch (selectedOption)
+        {
+            case 'story_mode':
+                FlxFlicker.flicker(optionButton[selectedIndex], 1, 0.06, true, false, function(flick:FlxFlicker) {
+                    FlxG.signals.preStateSwitch.addOnce(() ->
+                    {
+                        FunkinMemory.clearFreeplay();
+                        FunkinMemory.purgeCache();
+                    });
+                    startExitState(() -> new StoryMenuState());
+                });
+
+            case 'freeplay':
+                FlxFlicker.flicker(optionButton[selectedIndex], 1, 0.06, true, false, function(flick:FlxFlicker) {
+                    FlxTransitionableState.skipNextTransIn = true;
+                    FlxTransitionableState.skipNextTransOut = true;
+                    FreeplayState.CUTOUT_WIDTH = FullScreenScaleMode.gameCutoutSize.x / 1.5;
+                    var targetCharacter = FreeplayState.rememberedCharacterId;
+                    FlxG.state.openSubState(new FreeplayState({
+                        character: targetCharacter
+                    }));
+                    busy = false;
+                });
+
+            case 'credits':
+                FlxFlicker.flicker(optionButton[selectedIndex], 1, 0.06, true, false, function(flick:FlxFlicker) {
+                    startExitState(() -> new CreditsState());
+                });
+            case 'options':
+                FlxFlicker.flicker(optionButton[selectedIndex], 1, 0.06, true, false, function(flick:FlxFlicker) {
+                    startExitState(() -> new OptionsState());
+                });
+        }
+    }
+
+    function onBack():Void
+    {
+        if (busy) return;
+        busy = true;
+
+        FunkinSound.playOnce(Paths.sound('cancelMenuEXE'));
+        startExitState(() -> new TitleState());
+    }
+
+    function startExitState(nextState:flixel.util.typeLimit.NextState):Void
+    {
+        var fadeOutDuration:Float = 0.4;
+
+        for (i in 0...optionButton.length)
+        {
+            var button = optionButton[i];
+            if (i != selectedIndex)
+                FlxTween.tween(button, {alpha: 0}, fadeOutDuration, {ease: FlxEase.quadOut});
+            else
+                button.visible = false;
+        }
+
+        // Fade out bg elements too
+        if (menuBG != null) FlxTween.tween(menuBG, {alpha: 0}, fadeOutDuration, {ease: FlxEase.quadOut});
+        if (arrows != null) FlxTween.tween(arrows, {alpha: 0}, fadeOutDuration, {ease: FlxEase.quadOut});
+        if (spikeUp != null) FlxTween.tween(spikeUp, {alpha: 0}, fadeOutDuration, {ease: FlxEase.quadOut});
+        if (spikeDown != null) FlxTween.tween(spikeDown, {alpha: 0}, fadeOutDuration, {ease: FlxEase.quadOut});
+
+        FlxTimer.wait(fadeOutDuration, () ->
+        {
+            FlxG.switchState(nextState);
+        });
     }
 }

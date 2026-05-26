@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="options.png">
+	<!-- Created with Adobe Animate version 21.0.7.42652 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="optionsidle" x="4" y="4" width="434" height="163" frameX="0" frameY="0" frameWidth="434" frameHeight="165"/>
+	<SubTexture name="optionshover" x="442" y="4" width="434" height="163" frameX="0" frameY="-2" frameWidth="434" frameHeight="165"/>
+</TextureAtlas>

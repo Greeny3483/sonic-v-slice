@@ -71,7 +71,7 @@ class EXEScripts extends Module {
         var images:Array<String> = [
             "events/jumpscares/sonicJUMPSCARE", "events/jumpscares/Sonic", "events/jumpscares/Tails",
             "events/jumpscares/Knuckles", "events/jumpscares/Eggman", "events/jumpscares/SHADOWTHEFUCKINGHEDGEHOG",
-            "events/daSTAT", "events/RedVG", "events/P3_Stat"
+            "events/daSTAT", "events/RedVG", "events/P3_Stat", "noteskins/milk/milkSplashes"
         ];
         for (img in images) FunkinMemory.cacheTexture(Paths.image(img));
 
@@ -82,6 +82,7 @@ class EXEScripts extends Module {
         for (snd in sounds) FunkinMemory.cacheSound(Paths.sound(snd, "shared"));
 
         Paths.getSparrowAtlas("events/jumpscares/sonicJUMPSCARE");
+        Paths.getSparrowAtlas("noteskins/milk/milkSplashes");
     }
 
     static function prepareStatic(camera:String, alpha:Float, useRandomAlpha:Bool, looped:Bool):Void {
@@ -393,6 +394,7 @@ class EXEScripts extends Module {
                     tailsJump.alpha = 0;
                 }
                 sprite = tailsJump;
+                soundVol = 0.5;
                 sound = "TailsScreamLOL";
             case "knuckles":
                 if (knucklesJump == null) {
@@ -401,6 +403,7 @@ class EXEScripts extends Module {
                     knucklesJump.alpha = 0;
                 }
                 sprite = knucklesJump;
+                soundVol = 0.5;
                 sound = "KnucklesScreamLOL";
             case "eggman":
                 if (eggmanJump == null) {
@@ -409,6 +412,7 @@ class EXEScripts extends Module {
                     eggmanJump.alpha = 0;
                 }
                 sprite = eggmanJump;
+                soundVol = 0.5;
                 sound = "EggmanScreamLOL";
             case "shadow":
                 if (shadow == null) {
@@ -424,9 +428,9 @@ class EXEScripts extends Module {
 
         if (sprite != null) {
             sprite.alpha = 1;
-            FlxTween.tween(sprite, {alpha: 0}, 1.5);
+            FlxTween.tween(sprite, {alpha: 0}, 0.7);
             var snd = FunkinSound.playOnce(Paths.sound(sound), soundVol);
-            if (snd != null) FlxTween.tween(snd, {volume: 0}, 1.5);
+            if (snd != null) FlxTween.tween(snd, {volume: 0}, 2);
             blackBG.alpha = 1;
             FlxTween.tween(blackBG, {alpha: 0}, bgAlphaDuration);
         }

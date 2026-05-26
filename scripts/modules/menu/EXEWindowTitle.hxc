@@ -1,0 +1,22 @@
+/*import funkin.data.story.level.LevelRegistry;
+import funkin.util.WindowUtil;
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+
+class EXEWindowTitle extends Module {
+    public function new() {
+        super('EXEWindowTitle');
+    }
+
+    override function onSongStart(event:ScriptEvent) {
+        super.onSongStart(event);
+
+        if (PlayState.instance.currentSong.id == 'final-escape') {
+            WindowUtil.setWindowTitle('Run');
+        } else if (PlayState.instance.currentSong.id == 'fatality') {
+            WindowUtil.setWindowTitle('Fatal Error');
+        } else if (LevelRegistry.isCurrentLevel('1round1') || LevelRegistry.isCurrentLevel('3freeplay3') || LevelRegistry.isCurrentLevel('4extras4')) {
+            WindowUtil.setWindowTitle('Friday Night Funkin\': VS Sonic.EXE - ' + PlayState.instance.currentSong.id);
+        }
+    }
+}*/

@@ -12,8 +12,6 @@ import funkin.graphics.FunkinSprite;
 
 class EmeraldChamber extends Stage 
 {
-    // do not overcomplicated your scripts guys
-
 	var hasPlayedInGameCutscene:Bool = false;
 	var cutsceneTimer:FlxTimer;
 	var quickTime:FunkinSprite;
@@ -26,13 +24,13 @@ class EmeraldChamber extends Stage
 	override function onCreate(event:ScriptEvent):Void {
 		super.onCreate(event);
 
-
         // (might) prevent lag?
-		FunkinMemory.permanentCacheTexture("characters/Super_BoyFriend_Assets", "shared");
+		FunkinMemory.permanentCacheTexture("characters/Super_BoyFriend_Assets");
+		Paths.getSparrowAtlas('characters/Super_BoyFriend_Assets');
 
-		FunkinMemory.permanentCacheSound(Paths.sound("robot", "shared"));
-		FunkinMemory.permanentCacheSound(Paths.sound("sonic", "shared"));
-		FunkinMemory.permanentCacheSound(Paths.sound("PowerUp", "shared"));
+		FunkinMemory.permanentCacheSound(Paths.sound("robot"));
+		FunkinMemory.permanentCacheSound(Paths.sound("sonic"));
+		FunkinMemory.permanentCacheSound(Paths.sound("PowerUp"));
 
 		quickTime = FunkinSprite.create(500, 80);
         quickTime.frames = Paths.getSparrowAtlas('events/spacebar_icon');

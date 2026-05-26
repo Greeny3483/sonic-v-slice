@@ -1,0 +1,14 @@
+import funkin.play.song.Song;
+import funkin.FunkinMemory;
+
+class Milk extends Song {
+    public function new() {
+        super("milk", "milk-og");
+    }
+
+    override function onCreate(event:ScriptEvent) {
+        super.onCreate(event);
+
+        FunkinMemory.permanentCacheTexture(Paths.image("noteskins/milk/milkSplashes"));
+    }
+}

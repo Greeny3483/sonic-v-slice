@@ -6,11 +6,27 @@ import funkin.play.PlayState;
 import funkin.Preferences;
 import funkin.save.Save;
 import funkin.modding.module.Module;
-import funkin.modding.module.ModuleHandler;
 import funkin.modding.events.ScriptEvent;
-import haxe.ds.StringMap;
+import funkin.Highscore;
 
 class EXEHud extends Module {
+    public static inline var HEALTH_BAR_Y_NORMAL:Float = 0.88;
+    public static inline var HEALTH_BAR_Y_MOBILE:Float = 0.12;
+    public static inline var HEALTH_BAR_X_OFFSET:Float = 100;
+    public static inline var HEALTH_BAR_X_LAUNCHBASE:Float = 310;
+    public static inline var HEALTH_BAR_Y_LAUNCHBASE:Float = 633;
+    public static inline var HEALTH_BARBG_X_LAUNCHBASE:Float = 303;
+    public static inline var HEALTH_BARBG_Y_LAUNCHBASE:Float = 630;
+    public static inline var HEALTH_BAR_SCALE_LAUNCHBASE_X:Float = 0.865;
+    public static inline var HEALTH_BAR_SCALE_LAUNCHBASE_Y:Float = 1.1;
+    public static inline var HEALTH_BARBG_SCALE_LAUNCHBASE:Float = 1.3;
+    public static inline var HEALTH_BARBG_OFFSET_X:Float = 28;
+    public static inline var HEALTH_BARBG_OFFSET_Y:Float = 7;
+    public static inline var HEALTH_BAR_SCALE_DEFAULT_X:Float = 1.010;
+    public static inline var HEALTH_BAR_SCALE_DEFAULT_Y:Float = 1.2;
+
+    public static inline var HUD_START_X_LAUNCHBASE_MOBILE:Float = 160;
+
     public static var sonicMissesSprite:FlxSprite = null;
     public static var sonicTimeSprite:FlxSprite = null;
     public static var sonicScoreSprite:FlxSprite = null;
@@ -21,22 +37,17 @@ class EXEHud extends Module {
     public static var missesNumbers:Array<FlxSprite> = null;
     public static var timeNumbers:Array<FlxSprite> = null;
     public static var healthNumbers:Array<FlxSprite> = null;
-
     public static var currentMisses:Int = 0;
-
     public static var hudStartX:Float = 20;
     public static var hudStartY:Float = 0;
     public static var verticalSpacing:Float = 50;
     public static var fontStyle:String = "sonic1";
     public static var digitSize:Array<Int> = [7, 11];
     public static var isModuleActive:Bool = false;
-
     public static var isHudEnabled:Bool = false;
-    public static var isWideScreenEnabled:Bool = false;
     public static var isGhostTappingEnabled:Bool = false;
-
     var cachedHudEnabled:Bool = false;
-    
+
     public function new() {
         super('EXEHud');
     }
@@ -44,7 +55,8 @@ class EXEHud extends Module {
     function updateHudSetting():Bool {
         var current = false;
         try {
-            current = Save.instance != null ? Save.instance.modOptions["doGenesisHUD"] : false;
+            current = Save.instance != null ?
+            Save.instance.modOptions["doGenesisHUD"] : false;
         } catch (e:Dynamic) {
             current = false;
         }
@@ -55,64 +67,54 @@ class EXEHud extends Module {
         return EXEHud.isHudEnabled;
     }
 
-    function safePlayState():Null<PlayState> {
-        return PlayState.instance;
-    }
-
-    override function onCountdownStart(event:ScriptEvent) {
-        super.onCountdownStart(event);
-    }
-
     function onPlayStateEnter() {
-        var ps = safePlayState();
-        if (ps == null) return;
+        if (PlayState.instance == null) return;
 
         updateHudSetting();
-
         cleanup();
 
         EXEHud.isModuleActive = EXEHud.isHudEnabled;
 
         if (!EXEHud.isHudEnabled) {
-            if (ps.scoreText != null) ps.scoreText.visible = true;
+            if (PlayState.instance.scoreText != null) PlayState.instance.scoreText.visible = true;
             return;
         }
 
         EXEHud.fontStyle = getFontStyle();
         setupPositioning();
 
-        if (ps.scoreText != null) ps.scoreText.visible = false;
+        if (PlayState.instance.scoreText != null) PlayState.instance.scoreText.visible = false;
+        if (FlxG.onMobile && PlayState.instance.opponentStrumline != null) PlayState.instance.opponentStrumline.visible = false;
 
-        if (FlxG.onMobile && ps.opponentStrumline != null) ps.opponentStrumline.visible = false;
-
-        var healthBarAsset = (ps.currentStage.id == "launchbase") ? 'sonicUI/sonic3/healthbar' : 'sonicUI/healthbar-light';
-
-        if (ps.healthBarBG != null) {
-            ps.healthBarBG.loadGraphic(Paths.image(healthBarAsset));
-            ps.healthBarBG.cameras = [ps.camHUD];
+        var healthBarAsset = (PlayState.instance.currentStage.id == "launchbase") ? 'sonicHUD/sonic3/healthbar' : 'sonicHUD/healthbar-light';
+        if (PlayState.instance.healthBarBG != null) {
+            PlayState.instance.healthBarBG.loadGraphic(Paths.image(healthBarAsset));
+            PlayState.instance.healthBarBG.cameras = [PlayState.instance.camHUD];
         }
 
-        if (ps.healthBar != null) {
-            ps.healthBar.y = FlxG.height * (!(Preferences.downscroll || FlxG.onMobile) ? 0.88 : 0.12);
-            ps.healthBar.screenCenter(0x01);
-            ps.healthBar.cameras = [ps.camHUD];
-            ps.healthBar.x += 100;
-
-            if (ps.currentStage.id == "launchbase") {
-                var healthBarY = (!(Preferences.downscroll || FlxG.onMobile)) ? 633 : 90;
-                var healthBarBGY = (!(Preferences.downscroll || FlxG.onMobile)) ? 630 : 87;
-                ps.healthBar.setPosition(310, healthBarY);
-                ps.healthBarBG.setPosition(303, healthBarBGY);
-                ps.healthBarBG.scale.set(1.3, 1.3);
-                ps.healthBar.scale.set(0.865, 1.1);
+        if (PlayState.instance.healthBar != null) {
+            var isDownscroll:Bool = Preferences.downscroll ||
+            FlxG.onMobile;
+            PlayState.instance.healthBar.y = FlxG.height * (isDownscroll ? HEALTH_BAR_Y_MOBILE : HEALTH_BAR_Y_NORMAL);
+            PlayState.instance.healthBar.screenCenter(0x01);
+            PlayState.instance.healthBar.cameras = [PlayState.instance.camHUD];
+            PlayState.instance.healthBar.x += HEALTH_BAR_X_OFFSET;
+            if (PlayState.instance.currentStage.id == "launchbase") {
+                var healthBarY:Float = isDownscroll ?
+                90 : HEALTH_BAR_Y_LAUNCHBASE;
+                var healthBarBGY:Float = isDownscroll ? 87 : HEALTH_BARBG_Y_LAUNCHBASE;
+                PlayState.instance.healthBar.setPosition(HEALTH_BAR_X_LAUNCHBASE, healthBarY);
+                PlayState.instance.healthBarBG.setPosition(HEALTH_BARBG_X_LAUNCHBASE, healthBarBGY);
+                PlayState.instance.healthBarBG.scale.set(HEALTH_BARBG_SCALE_LAUNCHBASE, HEALTH_BARBG_SCALE_LAUNCHBASE);
+                PlayState.instance.healthBar.scale.set(HEALTH_BAR_SCALE_LAUNCHBASE_X, HEALTH_BAR_SCALE_LAUNCHBASE_Y);
             } else {
-                ps.healthBarBG.setPosition(ps.healthBar.x - 28, ps.healthBar.y - 7);
-                ps.healthBar.scale.set(1.010, 1.2);
+                PlayState.instance.healthBarBG.setPosition(PlayState.instance.healthBar.x - HEALTH_BARBG_OFFSET_X, PlayState.instance.healthBar.y - HEALTH_BARBG_OFFSET_Y);
+                PlayState.instance.healthBar.scale.set(HEALTH_BAR_SCALE_DEFAULT_X, HEALTH_BAR_SCALE_DEFAULT_Y);
             }
         }
 
         createPixelHUD();
-        ps.refresh();
+        PlayState.instance.refresh();
     }
 
     function getFontStyle():String {
@@ -126,24 +128,21 @@ class EXEHud extends Module {
     }
 
     function setupPositioning() {
-        EXEHud.isWideScreenEnabled = Save.instance.modOptions["screenratio"];
-
-        EXEHud.hudStartY = !(Preferences.downscroll || FlxG.onMobile) ? FlxG.height - 160 : EXEHud.verticalSpacing;
-        EXEHud.hudStartX = (PlayState.instance.currentStage.id == "launchbase" && EXEHud.isWideScreenEnabled && FlxG.onMobile) ? 160 : 20;
+        var isDownscroll:Bool = Preferences.downscroll || FlxG.onMobile;
+        EXEHud.hudStartY = isDownscroll ? EXEHud.verticalSpacing : FlxG.height - 160;
+        EXEHud.hudStartX = (PlayState.instance.currentStage.id == "launchbase" && FlxG.onMobile) ? HUD_START_X_LAUNCHBASE_MOBILE : 20;
     }
 
     function createPixelHUD() {
-        var uiPath = 'sonicUI/' + EXEHud.fontStyle;
-
+        var uiPath = 'sonicHUD/' + EXEHud.fontStyle;
         if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless') {
-            EXEHud.sonicHealthSprite = createSprite('sonicUI/sonic1/health', EXEHud.hudStartX, EXEHud.hudStartY - EXEHud.verticalSpacing, 3.5);
+            EXEHud.sonicHealthSprite = createSprite('sonicHUD/sonic1/health', EXEHud.hudStartX, EXEHud.hudStartY - EXEHud.verticalSpacing, 3.5);
         }
 
         EXEHud.sonicMissesSprite = createSprite(uiPath + '/misses', EXEHud.hudStartX, EXEHud.hudStartY, 3.5);
         EXEHud.sonicTimeSprite = createSprite(uiPath + '/time', EXEHud.hudStartX, EXEHud.hudStartY + EXEHud.verticalSpacing, 3.5);
         EXEHud.sonicScoreSprite = createSprite(uiPath + '/score', EXEHud.hudStartX, EXEHud.hudStartY + (EXEHud.verticalSpacing * 2), 3.5);
         EXEHud.sonicColonSprite = createSprite(uiPath + '/colon', 0, 0, 3);
-
         if (EXEHud.timeNumbers == null) EXEHud.timeNumbers = [];
         for (index in 0...4) {
             EXEHud.timeNumbers.push(createNumberSprite(uiPath + '/numbers'));
@@ -199,14 +198,11 @@ class EXEHud extends Module {
 
     function updatePixelNumbers() {
         if (EXEHud.sonicMissesSprite == null || EXEHud.sonicScoreSprite == null || EXEHud.sonicTimeSprite == null) return;
+        if (PlayState.instance == null) return;
 
-        var uiPath = 'sonicUI/' + EXEHud.fontStyle;
-
-        var ps = safePlayState();
-        if (ps == null) return;
-
-        if (ps.currentSong.id.toLowerCase() == 'fight-or-flight' || ps.currentSong.id.toLowerCase() == 'soulless' && EXEHud.sonicHealthSprite != null) {
-            var healthPercent = Math.round((ps.health / 2) * 100);
+        var uiPath = 'sonicHUD/' + EXEHud.fontStyle;
+        if (PlayState.instance.currentSong.id.toLowerCase() == 'fight-or-flight' || PlayState.instance.currentSong.id.toLowerCase() == 'soulless' && EXEHud.sonicHealthSprite != null) {
+            var healthPercent = Math.round((PlayState.instance.health / 2) * 100);
             if (healthPercent < 0) healthPercent = 0;
             if (healthPercent > 100) healthPercent = 100;
             var healthString = Std.string(healthPercent);
@@ -242,7 +238,7 @@ class EXEHud extends Module {
             }
         }
 
-        var formattedScore:String = FlxStringUtil.formatMoney(ps.songScore, false, true);
+        var formattedScore:String = FlxStringUtil.formatMoney(PlayState.instance.songScore, false, true);
         var digitString:String = '';
         for (i in 0...formattedScore.length) {
             var char:String = formattedScore.charAt(i);
@@ -267,7 +263,20 @@ class EXEHud extends Module {
 
         updatePixelHUDPositions();
 
-        var songPosition = Math.max(0, ps.conductorInUse.songPosition);
+        var songPosition = Math.max(0, PlayState.instance.conductorInUse.songPosition);
+        var timeToDisplay = songPosition;
+        
+        var isCountDown = false;
+        try {
+            if (Save.instance != null && Save.instance.modOptions != null) {
+                isCountDown = Save.instance.modOptions["timerMode"] == "Count Down";
+            }
+        } catch (e:Dynamic) {}
+
+        if (isCountDown && FlxG.sound.music != null) {
+            timeToDisplay = Math.max(0, FlxG.sound.music.length - songPosition);
+        }
+
         if (EXEHud.timeNumbers != null && EXEHud.timeNumbers.length >= 4) {
             for (index in 0...4) {
                 var digitSprite = EXEHud.timeNumbers[index];
@@ -275,10 +284,10 @@ class EXEHud extends Module {
                     digitSprite.animation.play('numbers');
                     if (digitSprite.animation.curAnim != null) {
                         switch (index) {
-                            case 0: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 600000) % 10);
-                            case 1: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 60000) % 10);
-                            case 2: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 10000) % 6);
-                            case 3: digitSprite.animation.curAnim.curFrame = Math.floor((songPosition / 1000) % 10);
+                            case 0: digitSprite.animation.curAnim.curFrame = Math.floor((timeToDisplay / 600000) % 10);
+                            case 1: digitSprite.animation.curAnim.curFrame = Math.floor((timeToDisplay / 60000) % 10);
+                            case 2: digitSprite.animation.curAnim.curFrame = Math.floor((timeToDisplay / 10000) % 6);
+                            case 3: digitSprite.animation.curAnim.curFrame = Math.floor((timeToDisplay / 1000) % 10);
                         }
                     }
                 }
@@ -332,25 +341,11 @@ class EXEHud extends Module {
     override function onUpdate(event:ScriptEvent) {
         updateHudSetting();
         if (!EXEHud.isHudEnabled || !EXEHud.isModuleActive) return;
+        
+        EXEHud.currentMisses = Highscore.tallies.missed; // get misses from the real thign now
+        
         super.onUpdate(event);
-
         updatePixelNumbers();
-    }
-
-    override function onNoteMiss(event:ScriptEvent) {
-        if (!updateHudSetting()) return;
-        if (!EXEHud.isModuleActive || event.healthChange == 0 || event.note.noteData.kind == "phantomnote" || event.note.noteData.kind == "ringnote") return;
-        super.onNoteMiss(event);
-        EXEHud.currentMisses++;
-    }
-
-    override function onNoteGhostMiss(event:ScriptEvent) {
-        if (!updateHudSetting()) return;
-        super.onNoteGhostMiss(event);
-
-        EXEHud.isGhostTappingEnabled = Save.instance.modOptions["ghosttap"];
-        if (!EXEHud.isModuleActive || event.healthChange == 0 || EXEHud.isGhostTappingEnabled) return;
-        EXEHud.currentMisses++;
     }
 
     override function onSongRetry(event:ScriptEvent) {

@@ -1,13 +1,22 @@
+import funkin.graphics.FunkinSprite;
 import funkin.play.PlayState;
 import funkin.play.stage.Stage;
+import funkin.save.Save;
 import EXEScripts;
 import EXEStrumlines;
+import funkin.FunkinMemory;
 
 class HillAct3 extends Stage
 {
 	public function new()
 	{
 		super('hillAct3');
+	}
+
+	override function onCreate(event:ScriptEvent):Void {
+		super.onCreate();
+
+		FunkinMemory.permanentCacheTexture(Paths.image("characters/Beast")); // he's a big guy
 	}
 
 	function switchStageArea(area:String):Void {
@@ -30,23 +39,27 @@ class HillAct3 extends Stage
 		super.onStepHit(event);
 
 		if (!PlayState.instance.currentSong.id.toLowerCase() == "triple-trouble") return;
+		doCameraShakes = Save.instance.modOptions["doCameraShakes"];
+		doRingMechanic = Save.instance.modOptions["doRingMechanic"];
 
 		switch (event.step) {
 			case 4, 1029, 1094, 1221, 1285, 2308, 2820, 3160, 3384, 3947:
 				EXEScripts.triggerGlitchTransition();
-			case 151: // Tails jumpscare
+			case 145: // Tails jumpscare
 				EXEScripts.triggerJumpscare('tails');
+				if (doCameraShakes) PlayState.instance.camCutscene.shake(0.013, 0.35);
 			case 1038:
 				switchStageArea('xenoBG');
 			case 1296: // Knuckles jumpscare + swap strumlines
 				switchStageArea('glitchBG');
 				EXEScripts.triggerJumpscare('knuckles');
-				EXEStrumlines.swapStrumlines("isCurrent");
+				EXEStrumlines.swapStrumlines("isDefault");
+				if (doRingMechanic && !FlxG.onMobile) PlayState.instance.playerStrumline.x += 50; // adjust for the ring
 			case 2320:
 				switchStageArea('xenoBG');
 			case 2824: // Eggman jumpscare + reset strumlines
 				switchStageArea('glitchBG');
-				EXEStrumlines.resetStrumlines("bothX");
+				EXEStrumlines.resetStrumlines("both");
 				EXEScripts.triggerJumpscare('eggman');
 			case 3957:
 				switchStageArea('xenoBG');

@@ -1,0 +1,15 @@
+/*import funkin.modding.module.Module;
+
+class EXEControls extends Module
+{
+    public function new()
+    {
+        super("EXEControls");
+    }
+
+    override public function onCreate(event:ScriptEvent) {
+        if (ModuleHandler)
+
+        ControlsAPI.instance.registerKeybind("Ring", [32, 0], "NOTES", ["justPressed", "justReleased"], 4, "notes_ring");
+    }
+}*/

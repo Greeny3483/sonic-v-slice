@@ -5,24 +5,48 @@ import funkin.play.song.Song;
 import funkin.play.PlayStatePlaylist;
 import funkin.play.cutscene.VideoCutscene;
 import funkin.modding.module.ModuleHandler;
+import funkin.play.PlayState;
+/*import haxe.ui.containers.windows.Window;
+import haxe.ui.containers.VBox;
+import haxe.ui.containers.HBox;
+import haxe.ui.containers.Box;
+import haxe.ui.components.Label;
+import haxe.ui.components.Button;
+import haxe.ui.components.Image;
+import haxe.ui.core.Component;*/
 
 class TripleTroubleSong extends Song {
     var hasPlayedCutscene:Bool;
+    //var hasShownGuide:Bool;
     var doFreeplayCuts:Bool;
+    //var guideUI:Component;
+    //var isShowingGuide:Bool = false;
+
+    /*var pages:Array<VBox> = [];
+    var currentPageIndex:Int = 0;
+    var prevBtn:Button;
+    var nextBtn:Button;
+    var startBtn:Button;*/
 
     public function new() {
         super("triple-trouble");
 
         hasPlayedCutscene = false;
+        hasShownGuide = false;
     }
 
     override function onCreate(event:ScriptEvent):Void {
-
         super.onCreate(event);
 
+        doRingMechanic = Save.instance.modOptions["doRingMechanic"];
         doFreeplayCuts = Save.instance.modOptions["doFreeplayCuts"];
 
+        if (doRingMechanic) {
+            EXERingMechanic.useRingMechanic();
+        }
+
         hasPlayedCutscene = false;
+        //hasShownGuide = false;
 
         if ((PlayStatePlaylist.isStoryMode || doFreeplayCuts) && !hasPlayedCutscene) {
             var intro = ModuleHandler.getModule('EXEIntros');
@@ -30,14 +54,15 @@ class TripleTroubleSong extends Song {
         }
     }
 
-    // Reset the script state on game over
     function onGameOver():Void {
         super.onGameOver();
     }
+    
     function onSongRetry():Void {
         super.onSongRetry();
 
         hasPlayedCutscene = true;
+        //hasShownGuide = false; 
     }
 
     public override function onCountdownStart(event:CountdownScriptEvent):Void {
@@ -46,18 +71,272 @@ class TripleTroubleSong extends Song {
         if (!PlayStatePlaylist.isStoryMode && !doFreeplayCuts) hasPlayedCutscene = true;
 
         if (!hasPlayedCutscene) {
-           trace('Pausing countdown to play a video cutscene (`triple trouble`)');
-
-           hasPlayedCutscene = true;
-
-           event.cancel(); // CANCEL THE COUNTDOWN!
-
-           startVideo();
+            trace('Pausing countdown to play a video cutscene (`triple trouble`)');
+            hasPlayedCutscene = true;
+            event.cancel();
+            startVideo();
+            return;
         }
+
+        /*if (doRingMechanic && !hasShownGuide) {
+            hasShownGuide = true;
+            event.cancel(); 
+            showRingGuide();
+            return;
+        }*/
     }
+
+    /*override function onUpdate(event:UpdateScriptEvent):Void {
+        super.onUpdate(event);
+        
+        if (isShowingGuide) {
+            if (FlxG.keys.justPressed.SPACE || FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.ESCAPE) {
+                closeRingGuide();
+            }
+        }
+    }*/
 
     function startVideo() {
         VideoCutscene.play(Paths.videos('youcantruncutscene2'));
     }
-}
 
+    // W.I.P feature, shows a guide for the ring mechanic
+
+    /*function createSectionHeader(titleText:String):VBox {
+        var box = new VBox();
+        box.percentWidth = 100;
+        
+        var title = new Label();
+        title.text = titleText;
+        title.fontSize = 22;
+        title.color = 0xFFFFFF;
+        box.addComponent(title);
+        
+        var line = new Box();
+        line.percentWidth = 100;
+        line.height = 2;
+        line.backgroundColor = 0x555555;
+        line.marginTop = 5;
+        line.marginBottom = 15;
+        box.addComponent(line);
+        
+        return box;
+    }
+
+    function createTerm(titleText:String, descText:String):VBox {
+        var box = new VBox();
+        box.percentWidth = 100;
+        box.marginBottom = 15;
+
+        box.addComponent(createSectionHeader(titleText));
+
+        var desc = new Label();
+        desc.text = descText;
+        desc.percentWidth = 100;
+        desc.fontSize = 15;
+        desc.color = 0xCCCCCC; 
+        box.addComponent(desc);
+
+        return box;
+    }
+
+    function showRingGuide() {
+        isShowingGuide = true;
+        currentPageIndex = 0;
+        pages = []; 
+
+        var helpWindow = new Window();
+        helpWindow.title = "Help Guide";
+        helpWindow.width = 1000;
+        helpWindow.height = 600;
+        helpWindow.x = (FlxG.width - 1000) / 2;
+        helpWindow.y = (FlxG.height - 600) / 2;
+        helpWindow.closable = false; 
+
+        var mainLayout = new VBox();
+        mainLayout.percentWidth = 100;
+        mainLayout.percentHeight = 100;
+        mainLayout.padding = 20;
+
+        // Page 1
+        var page1 = new VBox();
+        page1.percentWidth = 100;
+        page1.percentHeight = 100; 
+
+        page1.addComponent(createSectionHeader("RING MECHANIC (1 / 3)"));
+
+        var imageRow1 = new HBox();
+        imageRow1.percentWidth = 100;
+        imageRow1.padding = 5;
+        imageRow1.marginLeft = 200;
+        imageRow1.marginBottom = 20;
+
+        var ringContainer = new VBox();
+        ringContainer.customStyle = { paddingRight: 50 };
+        
+        var ringImg = new Image();
+        ringImg.resource = "ring.png"; 
+        
+        var ringLabel = new Label();
+        ringLabel.text = "Ring Note";
+        ringLabel.percentWidth = 100;
+        
+        ringContainer.addComponent(ringImg);
+        ringContainer.addComponent(ringLabel);
+        imageRow1.addComponent(ringContainer);
+
+        page1.addComponent(imageRow1);
+
+        page1.addComponent(createTerm("Ring Notes", "Ring Notes are special notes that do not penalize the player when missed. \nBut they also do not add to your score or combo."));
+        page1.addComponent(createTerm("\nMechanics", "Though Ring Notes do not contribute to your score, they can be used to protect it. \nWhen a ring is in hand, your next miss or bad combo rating will not count. \nThis also protects the player against custom notetypes, like Phantom Notes."));
+        
+        pages.push(page1);
+        mainLayout.addComponent(page1);
+
+        // Page 2
+        var page2 = new VBox();
+        page2.percentWidth = 100;
+        page2.percentHeight = 100;
+        page2.hidden = true; 
+
+        page2.addComponent(createSectionHeader("RING MECHANIC (2 / 3)"));
+
+        var imageRow2 = new HBox();
+        imageRow2.percentWidth = 100;
+        imageRow2.padding = 5;
+        imageRow2.marginLeft = 200;
+        imageRow2.marginBottom = 20;
+
+        var strumContainer = new VBox();
+        strumContainer.customStyle = { paddingRight: 50 };
+        
+        var strumImg = new Image();
+        strumImg.resource = "ringstrum.png"; 
+        
+        var strumLabel = new Label();
+        strumLabel.text = "Strumline";
+        strumLabel.percentWidth = 100;
+
+        strumContainer.addComponent(strumImg);
+        strumContainer.addComponent(strumLabel);
+        imageRow2.addComponent(strumContainer);
+
+        page2.addComponent(imageRow2);
+        page2.addComponent(createTerm("5th Strumline Member", "When the ring mechanic is active, a 5th strumline member will be added in a lane located in-between the UP and DOWN arrows. This lane is reserved for Ring Notes. \n\nIf the 'Ring Mechanic' option is disabled, Ring Notes will still spawn on the strumline, but there will be no extra strumline member. They will appear on any of the 4 lanes. \n\nHitting a Ring Note will the option turned off will not benefit the player in any way."));
+
+        pages.push(page2);
+        mainLayout.addComponent(page2);
+
+        // Page 3
+        var page3 = new VBox();
+        page3.percentWidth = 100;
+        page3.percentHeight = 100;
+        page3.hidden = true;
+
+        var imageRow3 = new HBox();
+        imageRow3.percentWidth = 100;
+        imageRow3.padding = 5;
+        imageRow3.marginLeft = 200;
+        imageRow3.marginBottom = 20;
+
+        var displayContainer = new VBox();
+        displayContainer.customStyle = { paddingRight: 50 };
+        
+        var displayImg = new Image();
+        displayImg.resource = "ringdisplay.png"; 
+        
+        var displayLabel = new Label();
+        displayLabel.text = "Ring Display";
+        displayLabel.percentWidth = 100;
+
+        displayContainer.addComponent(displayImg);
+        displayContainer.addComponent(displayLabel);
+        imageRow3.addComponent(displayContainer);
+
+        page3.addComponent(createSectionHeader("RING MECHANIC (3 / 3)"));
+        page3.addComponent(imageRow3);
+        page3.addComponent(createTerm("Ring Display", "The Ring Display will show the amount of rings currently in hand. When a ring is obtained, a sound effect will be played. \nRing Notes can be stacked, the more rings you have, the more likely it is you'll get a perfect score."));
+        pages.push(page3);
+        mainLayout.addComponent(page3);
+
+        var readyText = new Label();
+        readyText.text = "\nPress the 'Start Song' button to begin";
+        readyText.percentWidth = 100;
+        readyText.fontSize = 18;
+        readyText.color = 0xFFAA00; 
+        page3.addComponent(readyText);
+
+        // navigation 
+        var navBar = new HBox();
+        navBar.percentWidth = 100;
+        navBar.paddingTop = 15;
+        navBar.horizontalAlign = "center";
+
+        prevBtn = new Button();
+        prevBtn.text = "Previous";
+        prevBtn.width = 150;
+        prevBtn.hidden = true; 
+        prevBtn.onClick = function(e) {
+            changePage(-1);
+        };
+        navBar.addComponent(prevBtn);
+
+        nextBtn = new Button();
+        nextBtn.text = "Next";
+        nextBtn.width = 150;
+        nextBtn.onClick = function(e) {
+            changePage(1);
+        };
+        navBar.addComponent(nextBtn);
+
+        startBtn = new Button();
+        startBtn.text = "Start Song";
+        startBtn.width = 150;
+        startBtn.hidden = true; 
+        startBtn.onClick = function(e) {
+            closeRingGuide();
+        };
+        navBar.addComponent(startBtn);
+
+        mainLayout.addComponent(navBar);
+        helpWindow.addComponent(mainLayout);
+
+        guideUI = helpWindow;
+        guideUI.cameras = [PlayState.instance.camCutscene]; 
+        PlayState.instance.add(guideUI);
+    }
+
+    function changePage(direction:Int) {
+        currentPageIndex += direction;
+
+        for (i in 0...pages.length) {
+            if (i == currentPageIndex) {
+                pages[i].hidden = false;
+            } else {
+                pages[i].hidden = true;
+            }
+        }
+
+        prevBtn.hidden = (currentPageIndex == 0);
+
+        if (currentPageIndex == pages.length - 1) {
+            nextBtn.hidden = true;
+            startBtn.hidden = false;
+        } else {
+            nextBtn.hidden = false;
+            startBtn.hidden = true;
+        }
+    }
+
+    function closeRingGuide() {
+        if (!isShowingGuide) return; 
+        isShowingGuide = false;
+
+        if (guideUI != null) {
+            PlayState.instance.remove(guideUI);
+            guideUI = null;
+        }
+        
+        PlayState.instance.startCountdown();
+    }*/
+}

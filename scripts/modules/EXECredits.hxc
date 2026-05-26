@@ -19,7 +19,7 @@ class EXECredits extends Module {
 	// Script by Greeny3483
 
 	// Adds the credits from v2.5 of the mod
-	// unused in most songs though
+	// unused in a lot of songs though
 
 	public var creditsBG:FlxSprite;
 	public var borderLeft:FlxSprite;
@@ -151,7 +151,7 @@ class EXECredits extends Module {
 	}
 
 	function activateCredits() {
-		if (creditsActivated) return;
+		if (creditsActivated || PlayState.instance.isChartingMode) return;
 		creditsActivated = true;
 
 		var options = creditsData.options;

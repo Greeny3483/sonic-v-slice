@@ -21,7 +21,7 @@ class EXEShaders extends Module {
 
     public static function initShader(shaderType:String):Void {
         doShaders = Save.instance.modOptions["doShaders"];
-        if (!doShaders) return;
+        if (!doShaders || PlayState.instance == null) return;
 
         wereShadersActive = true;
 
@@ -33,9 +33,9 @@ class EXEShaders extends Module {
                 vcrShader.setFloat("iTime", 0.0);
                 vcrShader.setFloatArray("iResolution", [FlxG.width, FlxG.height, 1.0]);
 
-                PlayState.instance.camGame.filters = [new ShaderFilter(vcrShader)];
-                PlayState.instance.camHUD.filters = [new ShaderFilter(vcrShader)];
-		        PlayState.instance.camCutscene.filters = [new ShaderFilter(vcrShader)];
+                if (PlayState.instance.camGame != null) PlayState.instance.camGame.filters = [new ShaderFilter(vcrShader)];
+                if (PlayState.instance.camHUD != null) PlayState.instance.camHUD.filters = [new ShaderFilter(vcrShader)];
+		        if (PlayState.instance.camCutscene != null) PlayState.instance.camCutscene.filters = [new ShaderFilter(vcrShader)];
 
                 setVCRShader = true;
             case "distortion":
@@ -45,9 +45,9 @@ class EXEShaders extends Module {
                 distortionShader.setFloat("iTime", 0.0);
                 distortionShader.setFloatArray("iResolution", [FlxG.width, FlxG.height, 1.0]);
 
-                PlayState.instance.camGame.filters = [new ShaderFilter(distortionShader)];
-                PlayState.instance.camHUD.filters = [new ShaderFilter(distortionShader)];
-		        PlayState.instance.camCutscene.filters = [new ShaderFilter(distortionShader)];
+                if (PlayState.instance.camGame != null) PlayState.instance.camGame.filters = [new ShaderFilter(distortionShader)];
+                if (PlayState.instance.camHUD != null) PlayState.instance.camHUD.filters = [new ShaderFilter(distortionShader)];
+		        if (PlayState.instance.camCutscene != null) PlayState.instance.camCutscene.filters = [new ShaderFilter(distortionShader)];
             default: // if no shader is specified, dont do anything
                 return;
         }
