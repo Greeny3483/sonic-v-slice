@@ -14,7 +14,7 @@
 	  },
 	  "stage": "emeraldChamber",
 	  "noteStyle": "exe",
-	  "ratings": {"easy": 8, "normal": 11, "hard": 13},
+	  "ratings": {"easy": 7, "normal": 8, "hard": 9},
 	  "previewStart": 0,
 	  "previewEnd": 15000
 	},

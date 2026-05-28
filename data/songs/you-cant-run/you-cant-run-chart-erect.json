@@ -1,8 +1,8 @@
 {
  "version": "2.0.0",
  "scrollSpeed": {
-  "erect": 3.5,
-  "nightmare": 3.7
+  "erect": 4,
+  "nightmare": 4.1
  },
  "events": [
   {

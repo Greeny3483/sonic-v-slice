@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "SOULLESS DX OST",
+  "artists": [""],
+  "albumArtAsset": "freeplay/albumRoll/dxOST",
+  "albumTitleAsset": "freeplay/albumRoll/exeOST-text",
+  "albumOSTName": "DX OST",
+  "albumTitleOffsets": [-22, -3]
+}

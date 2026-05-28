@@ -1,12 +1,12 @@
 {
     "version": "2.2.2",
-    "songName": "Final Escape (KIRB0 Mix)",
-    "artist": "MiiniStar/KIRB0 + MarStarBro & Saster",
+    "songName": "Final Escape (MiiniStar Mix)",
+    "artist": "MiiniStar, MarStarBro, Saster",
     "looped": false,
     "offsets": {},
     "playData": {
         "songVariations": [],
-        "album": "exeOST",
+        "album": "finalOST",
         "difficulties": [
             "easy",
             "normal",
@@ -21,9 +21,9 @@
         "stage": "finalZoneErect",
         "noteStyle": "exe",
         "ratings": {
-            "easy": 9,
-            "normal": 10,
-            "hard": 12
+            "easy": 12,
+            "normal": 13,
+            "hard": 14
         },
         "previewStart": 0,
         "previewEnd": 15000

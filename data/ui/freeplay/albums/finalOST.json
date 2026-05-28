@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "FINAL ESCAPE (KIRB0 / MIINISTAR MIX) OST",
+  "artists": ["MiiniStar, MarStarBro, Saster"],
+  "albumArtAsset": "freeplay/albumRoll/finalOST",
+  "albumTitleAsset": "freeplay/albumRoll/exeOST-text",
+  "albumOSTName": "VS.EXE UST",
+  "albumTitleOffsets": [-22, -3]
+}

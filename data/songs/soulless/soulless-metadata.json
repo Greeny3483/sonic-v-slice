@@ -4,7 +4,7 @@
     "artist": "Unknown",
     "charter": "",
     "playData": {
-        "album": "exeOST",
+        "album": "dxOST",
         "songVariations": [],
         "difficulties": [
             "easy",
@@ -18,7 +18,7 @@
         "stage": "darkness",
         "noteStyle": "exe",
         "ratings": {
-            "easy": 6,
+            "easy": 5,
             "normal": 6,
             "hard": 7
         },

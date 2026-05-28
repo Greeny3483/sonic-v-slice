@@ -19,6 +19,7 @@ class EXEFreeplayMenu extends Module
         "Cycles" => "freeplayBG-cycles",
         "Faker" => "freeplayBG-faker",
         "Relax" => "freeplayBG-relax",
+    
         "Prey" => "freeplayBG-prey",
         "Fatality" => "freeplayBG-fatality",
         "Personnel" => "freeplayBG-personnel",
@@ -34,20 +35,19 @@ class EXEFreeplayMenu extends Module
     override function onCreate(event:SubStateScriptEvent)
     {
         super.onCreate(event);
-
         //Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("encore");
         //Constants.DEFAULT_DIFFICULTY_LIST_FULL.push("extra");
     }
 
     /*override function onSongSelected(event:CapsuleScriptEvent):Void {
         super.onSongSelected(event);
-
         switch (event.capsule?.freeplayData.levelId) {
             case '1round1', '2final2', '3freeplay3', '4extras4':
                 FlxG.camera.flash(0xFFFF0000);
                 for (sound in FlxG.sound.list.members) {
                     if (sound != null && sound.playing && sound != FlxG.sound.music) {
-                        sound.stop(); // Cancel default confirm sound
+                        sound.stop();
+                        // Cancel default confirm sound
                     }
                 }
                 var menulaugh = FunkinSound.playOnce(Paths.sound("menulaugh"), 1);
@@ -56,19 +56,29 @@ class EXEFreeplayMenu extends Module
 
     override function onCapsuleSelected(event:CapsuleScriptEvent):Void {
         super.onCapsuleSelected(event);
-
+        
         var songID = if(event.capsule?.freeplayData != null) event.capsule?.freeplayData.songId;
         if (event.capsule?.freeplayData == null || FlxG.state.subState == null || FlxG.state.subState.ostName == null) return;
+        
+        var customCapsuleTitle:String = null;
 
-        if (songID == "soulless") {
-            FlxG.state.subState.updateOSTName(true); // Play switch animation
-            FlxG.state.subState.ostName.text = "SOULLES DX OST";
-        } else if (songID == "relax" || songID == "spike-trap" || songID == "personnel-serious") {
+            
+        if (songID == "relax" || songID == "spike-trap" || songID == "personnel-serious") {
             FlxG.state.subState.updateOSTName(true);
             FlxG.state.subState.ostName.text = "VS.EXE UST"; // songs not made by the actual team
+            
+            //customCapsuleTitle = "NEEDLEM0USE";
+            
         } else {
             return;
         }
+
+        /*if (customCapsuleTitle != null && event.capsule.weekText != null) {
+            event.capsule.weekText.visible = true;
+            
+            @:privateAccess event.capsule.createWeekTextGraphic(customCapsuleTitle);
+            event.capsule.weekText.loadGraphic(FlxG.bitmap.get(customCapsuleTitle));
+        }*/
     }
 
     function getSelectedCharacter():String {
@@ -98,12 +108,11 @@ class EXEFreeplayMenu extends Module
     function replaceBackingImage(freeplayState:FreeplayState) {
         if (freeplayState?.backingImage != null) {
             var selectedCharacter = getSelectedCharacter();
-            
             var backgroundName = characterBackgrounds.get(selectedCharacter);
-            if (backgroundName == null) backgroundName = "freeplayBGweek1-bf"; // fallback here
+            if (backgroundName == null) backgroundName = "freeplayBGweek1-bf";
+            // fallback here
             
             var customPath = Paths.image('freeplay/' + backgroundName);
-            
             if (Assets.exists(customPath)) {
                 freeplayState.backingImage.loadTextureAsync(customPath);
             } else {

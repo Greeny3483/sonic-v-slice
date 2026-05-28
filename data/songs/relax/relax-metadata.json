@@ -24,9 +24,9 @@
     "stage": "marbleZone",
     "noteStyle": "exe",
     "ratings": {
-      "easy": 4,
-      "normal": 4,
-      "hard": 5
+      "easy": 5,
+      "normal": 6,
+      "hard": 7
     },
     "previewStart": 0,
     "previewEnd": 15000

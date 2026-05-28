@@ -15,7 +15,7 @@
     "songVariations": ["erect"],
     "stage": "hillAct2",
     "noteStyle": "exe",
-    "ratings": {"easy": 6, "normal": 8, "hard": 10},
+    "ratings": {"easy": 9, "normal": 10, "hard": 12},
     "previewStart": 0,
     "previewEnd": 15000
   },

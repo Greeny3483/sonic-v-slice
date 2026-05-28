@@ -8,7 +8,7 @@
 		"stage": "zoneAct2",
 		"noteStyle": "exe",
 		"difficulties": ["easy", "normal", "hard"],
-		"ratings": {"easy": 4, "normal": 5, "hard": 7},
+		"ratings": {"easy": 6, "normal": 7, "hard": 8},
 		"previewStart": 0,
 		"previewEnd": 15000,
 		"characters": {"girlfriend": "faker-gf", "opponent": "exefaker", "player": "bf"}

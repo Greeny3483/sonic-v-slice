@@ -12,9 +12,9 @@
         ],
 		"characters": {"opponent": "xterion", "player": "bfsaturn"},
         "ratings": {
-            "easy": 4,
-            "normal": 5,
-            "hard": 6
+            "easy": 6,
+            "normal": 7,
+            "hard": 8
         },
         "previewStart": 0,
         "previewEnd": 15000

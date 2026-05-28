@@ -2,15 +2,7 @@
   "version": "2.2.4",
   "songName": "Fight or Flight",
   "artist": "Strum",
-  "looped": false,
-  "offsets": {
-    "instrumental": 0,
-    "altInstrumentals": {    },
-    "vocals": {    },
-    "altVocals": {    }
-  },
   "playData": {
-    "songVariations": [    ],
     "album": "exeOST",
     "difficulties": [
       "easy",
@@ -31,7 +23,7 @@
     },
     "stage": "eggLab",
     "noteStyle": "exe",
-    "ratings": {"easy": 4, "normal": 5, "hard": 7},
+    "ratings": {"easy": 5, "normal": 6, "hard": 7},
     "previewStart": 0,
     "previewEnd": 15000
   },

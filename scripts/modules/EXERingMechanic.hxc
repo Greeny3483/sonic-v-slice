@@ -12,6 +12,7 @@ import funkin.play.PlayState;
 import funkin.play.notes.Strumline;
 import funkin.util.Constants;
 import funkin.util.TouchUtil;
+import funkin.save.Save;
 
 class EXERingMechanic extends Module 
 {
@@ -25,7 +26,6 @@ class EXERingMechanic extends Module
     var ringYOffset:Float = 24;
     var confirmXOffset:Float = -15; // hit note animation offsets for the ring
     var confirmYOffset:Float = -20;
-    
     var ringSizeMobile:Float = 1.0; // increase the scale of the ring on mobile to make it easier to hit
     var ringXOffsetMobile:Float = -47.5;
     var ringYOffsetMobile:Float = -22;
@@ -34,7 +34,6 @@ class EXERingMechanic extends Module
     var ringCount:FlxText = null;
     var rings:Int = 0;
     var ringStrum:FlxSprite;
-    
     var trackedSplashes = [];
     var trackedCovers = [];
 
@@ -57,7 +56,6 @@ class EXERingMechanic extends Module
     public function initializeRing() 
     {
         if (isMechanicActive || PlayState.instance == null) return;
-        
         isMechanicActive = true;
         rings = 0;
         playerHasRings = false;
@@ -77,7 +75,6 @@ class EXERingMechanic extends Module
     override function onStateChangeBegin(event) 
     {
         super.onStateChangeBegin(event);
-        
         isMechanicActive = false;
         wasMobileTouching = false;
         
@@ -91,11 +88,9 @@ class EXERingMechanic extends Module
     override function onUpdate(event) 
     {
         super.onUpdate(event);
-        
         if (isMechanicActive) 
         {
             playerHasRings = (rings > 0);
-
             if (PlayState.instance != null && ringStrum != null) 
             {
                 updateRingPosition();
@@ -152,7 +147,6 @@ class EXERingMechanic extends Module
         strum.animation.addByPrefix("confirm", "space confirm000", 24, false);
         
         strum.animation.play("static");
-        
         if (FlxG.onMobile) 
         {
             strum.scale.set(ringSizeMobile, ringSizeMobile);
@@ -171,7 +165,6 @@ class EXERingMechanic extends Module
     {
         var extraX = FlxG.onMobile ? ringXOffsetMobile : 0;
         var extraY = FlxG.onMobile ? ringYOffsetMobile : 0;
-        
         ringStrum.x = PlayState.instance.playerStrumline.x + (PlayState.instance.playerStrumline.width / 2) - (ringStrum.width / 2) + ringXOffset + extraX;
         ringStrum.y = PlayState.instance.playerStrumline.y + ringYOffset + extraY;
     }
@@ -193,7 +186,6 @@ class EXERingMechanic extends Module
         ringDisplay.loadGraphic(Paths.image("notekinds/ringnote/Counter"));
         ringDisplay.cameras = [PlayState.instance.camHUD];
         PlayState.instance.add(ringDisplay);
-        
         ringCount = new FlxText(ringDisplay.x + 74, ringDisplay.y - 6); 
         ringCount.text = rings + "";
         ringCount.cameras = [PlayState.instance.camHUD];
@@ -378,16 +370,38 @@ class EXERingMechanic extends Module
         }
     }
 
+    function getValidKeys():Array<Int> 
+    {
+        var rawKeys:Array<Int> = Save.instance.modOptions.get("exe-ringKeybind") ?? [32, 0];
+        var validKeys = [];
+        for (k in rawKeys) 
+        {
+            if (k != 0) validKeys.push(k);
+        }
+        return validKeys;
+    }
+
     function handleInput() 
     {
-        var ringJustPressed = FlxG.keys.justPressed.SPACE;
-        var ringJustReleased = FlxG.keys.justReleased.SPACE;
-        var ringPressed = FlxG.keys.pressed.SPACE;
+        var activeKeys = getValidKeys();
+        
+        var ringJustPressed = FlxG.keys.anyJustPressed(activeKeys);
+        var ringJustReleased = FlxG.keys.anyJustReleased(activeKeys);
+        var ringPressed = FlxG.keys.anyPressed(activeKeys);
 
         if (FlxG.onMobile && ringStrum != null) 
         {
-            var isTouching = TouchUtil.overlaps(ringStrum);
+            var isTouching = false;
             
+            for (touch in FlxG.touches.list) 
+            {
+                if (touch.overlaps(ringStrum, ringStrum.cameras[0])) 
+                {
+                    isTouching = true;
+                    break;
+                }
+            }
+
             if (isTouching) 
             {
                 ringPressed = true;
@@ -444,11 +458,19 @@ class EXERingMechanic extends Module
     {
         if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "ringnote") 
         {
-            var ringPressed = FlxG.keys.pressed.SPACE;
+            var activeKeys = getValidKeys();
+            var ringPressed = FlxG.keys.anyPressed(activeKeys);
             
-            if (FlxG.onMobile && ringStrum != null && TouchUtil.overlaps(ringStrum)) 
+            if (FlxG.onMobile && ringStrum != null) 
             {
-                ringPressed = true;
+                for (touch in FlxG.touches.list) 
+                {
+                    if (touch.overlaps(ringStrum, ringStrum.cameras[0])) 
+                    {
+                        ringPressed = true;
+                        break;
+                    }
+                }
             }
 
             if (!ringPressed && !PlayState.instance.isBotPlayMode)
@@ -475,8 +497,9 @@ class EXERingMechanic extends Module
         {
             event.cancelEvent();
         }
-        else if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "phantomnote") // we can leave static notes alone since they still need to be hit
+        else if (event.note != null && event.note.noteData != null && event.note.noteData.kind == "phantomnote") 
         {
+            // Do nothing
         }
         else if (rings > 0) 
         {

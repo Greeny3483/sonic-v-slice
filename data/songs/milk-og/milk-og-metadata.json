@@ -7,7 +7,7 @@
 		"difficulties": ["extra"],
 		"album": "exeOST",
 		"characters": {"opponent": "sunky-og", "player": "bf"},
-        "ratings": {"extra": 7},
+        "ratings": {"extra": 8},
         "previewStart": 0,
         "previewEnd": 15000
 	},

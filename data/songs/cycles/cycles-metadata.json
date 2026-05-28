@@ -29,9 +29,9 @@
     "stage": "hillX",
     "noteStyle": "exe",
     "ratings": {
-      "normal": 6,
+      "normal": 7,
       "hard": 8,
-      "easy": 5
+      "easy": 6
     },
     "previewStart": 0,
     "previewEnd": 15000

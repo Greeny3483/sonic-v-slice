@@ -1,3 +1,23 @@
+## [0.5.1] - 2026-05-28
+
+#### Changes
+
+- Accurately redid all star ratings for all songs
+
+- Increased scroll speed for **Too Slow ENCORE**
+
+- Changed album cover and name for **Final Escape (MiiniStar Mix)** and **Soulless**
+
+- **Triple Trouble** now has **Ring Notes** on all difficulties
+
+- The keybind for pressing **Ring Notes** can now be changed
+
+- **Ring Notes** can now be pressed while holding another note **[MOBILE]**
+
+- **EXE Options** have been moved back to the main preferences menu
+  
+  - Fixes input issue on mobile
+
 ## [0.5.0] - 2026-05-26
 
 #### Added:

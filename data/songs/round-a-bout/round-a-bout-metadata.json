@@ -16,7 +16,7 @@
     "songVariations": [],
     "stage": "marbleZone",
     "noteStyle": "exe",
-    "ratings": {"easy": 2, "normal": 4, "hard": 5},
+    "ratings": {"easy": 5, "normal": 6, "hard": 7},
     "previewStart": 0,
     "previewEnd": 15000
   },

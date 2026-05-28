@@ -3,8 +3,16 @@ import Std;
 import funkin.ui.options.OptionsState;
 import funkin.ui.options.PreferencesMenu;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import funkin.save.Save;
 import funkin.modding.events.ScriptEvent;
+import funkin.modding.events.UpdateScriptEvent;
+import funkin.ui.options.ControlsMenu;
+import funkin.ui.AtlasText;
+import funkin.ui.ButtonStyle;
+import funkin.ui.Prompt;
+import funkin.ui.TextMenuItem;
+import funkin.util.InputUtil;
 
 class EXEOptions extends Module
 {
@@ -42,6 +50,15 @@ class EXEOptions extends Module
     public var doFreeplayCuts:Bool = false;
     public var doGenesisMode:Bool = false;
 
+    // Keybinds
+    public static var SAVE_KEY_RING_KEYBIND:String = "exe-ringKeybind";
+    var SAVE_KEY_RING_DEFAULT_VALUE:Array<Int> = [32, 0]; // 32 is Space by default
+    var UNBOUND_TEXT:String = "---"; 
+    
+    var rebindPrompt:Prompt;
+    var keyUsedToEnterPrompt:Null<Int> = null;
+    var storedIndex:Int = -1;
+
     private var optionForMobile:Map<String, Bool> = [
         "doJumpscares" => true,
         "doCameraShakes" => true,
@@ -72,6 +89,12 @@ class EXEOptions extends Module
     {
         if (!isMobile) return true;
         return optionForMobile.get(optionName) ?? true;
+    }
+
+    // Uses a dummy enum to act as a visual header without breaking the array lengths
+    private function createHeader(prefs:PreferencesMenu, title:String, description:String):Void
+    {
+        prefs.createPrefItemEnum(title, description, [" " => " "], function(value:String, oValue:String) {}, " ");
     }
 
     private function createCheckboxIfMobileAllowed(prefs:PreferencesMenu, optionName:String, label:String, description:String, callback:Dynamic, defaultValue:Bool):Void
@@ -106,6 +129,8 @@ class EXEOptions extends Module
         super("EXEOptions", 1, {state: OptionsState});
         doShaders = FlxG.onMobile ? false : true;
 
+        initSave(SAVE_KEY_RING_KEYBIND, SAVE_KEY_RING_DEFAULT_VALUE);
+
         initSave("doJumpscares", true);
         initSave("doCameraShakes", true);
         initSave("doScreenStatic", true);
@@ -139,40 +164,137 @@ class EXEOptions extends Module
     override function onStateChangeEnd(event:StateChangeScriptEvent) {
         if (!Std.isOfType(event.targetState, OptionsState)) return;
         
-        addCustomCategory(event.targetState);
         populateOptions(event.targetState);
+        addRingControl(event.targetState);
     }
 
-    function addCustomCategory(state:OptionsState) {
-        var prefs:PreferencesMenu = state.optionsCodex.addPage('exe-options', new PreferencesMenu());
-        prefs.onExit.add(() -> {
-            FlxG.state.optionsCodex.switchPage('options');
-        });
-        prefs.preferenceDesc = [];
-        prefs.items.clear();	
-        prefs.preferenceItems.clear();
+    override public function onUpdate(event:UpdateScriptEvent)
+    {
+        super.onUpdate(event);
+        if (Std.isOfType(FlxG.state, OptionsState))
+        {
+            updateOptions();
+            return;
+        }
+    }
 
-        var optionspage = state.optionsCodex.pages.get('options');
-        var exit = optionspage.items.getItem("LAG ADJUSTMENT") ?? null;
-        var option = optionspage.createItem("EXE Options", () -> state.optionsCodex.switchPage('exe-options')); 
-        
-        if (exit != null) {
-            optionspage.items.members.remove(option);
-            optionspage.items.members.insert(optionspage.items.members.indexOf(exit), option);
+    function addRingControl(optionsState:OptionsState) {
+        var cPage = optionsState.optionsCodex.pages.get("controls");
+        if (cPage == null) return;
+
+        var labels = cPage.labels;
+        var headers = cPage.members[1];
+        var lastItemY:Float = labels.members[labels.members.length - 1].y;
+
+        rebindPrompt = new Prompt("\nPress any key to rebind\n\n\nBackspace to unbind\n    Escape to cancel", ButtonStyle.None);
+        rebindPrompt.create();
+        rebindPrompt.createBgFromMargin(100, 0xFFfafd6d);
+        rebindPrompt.back.scrollFactor.set(0, 0);
+        rebindPrompt.exists = false;
+        cPage.add(rebindPrompt);
+
+        lastItemY += 70;
+        headers.add(new AtlasText(0, lastItemY, "VS SONIC.EXE", "bold")).screenCenter(0x01);
+
+        lastItemY += 70;
+        var label = labels.add(new AtlasText(ControlsMenu.CONTROL_BASE_X, lastItemY, "RING NOTE", "bold"));
+        label.alpha = 0.6;
+
+        var currentKeys:Array<Int> = Save.instance.modOptions.get(SAVE_KEY_RING_KEYBIND);
+        for (i in 0...currentKeys.length)
+        {
+            var keyName:String = InputUtil.getKeyName(currentKeys[i]);
+            var keyNameReal:String = (currentKeys[i] == 0 ? UNBOUND_TEXT : keyName);
+
+            var item:TextMenuItem = new TextMenuItem(label.x + ControlsMenu.CONTROL_MARGIN_X + i * ControlsMenu.CONTROL_SPACING_X, lastItemY, keyNameReal, "default", () -> openPrompt(i));
+            item.fireInstantly = true;
+            cPage.controlGrid.addItem(item.name, item);
         }
-        for (i in 0...optionspage.items.length) {
-            var item = optionspage.items.members[i];
-            item.y = 100 + i * 100;
+        cPage.controlGrid.onChange.removeAll();
+        cPage.controlGrid.onChange.add((selected:TextMenuItem) -> {
+            cPage.camFollow.y = selected.y;
+            labels.forEach((lbl:FlxSprite) -> lbl.alpha = 0.6);
+            labels.members[Std.int(cPage.controlGrid.selectedIndex / 2)].alpha = 1.0;
+        });
+    }
+
+    function updateOptions()
+    {
+        if (rebindPrompt != null && rebindPrompt.exists)
+        {
+            var key = FlxG.keys.firstJustReleased();
+            if (key != -1 && key != keyUsedToEnterPrompt)
+            {
+                switch (key)
+                {
+                    case 27:
+                    case 8: 
+                        bindKey(0);
+                    default:
+                        bindKey(key);
+                }
+                closePrompt();
+            }
         }
+    }
+
+    function bindKey(to:Int)
+    {
+        var bindTo:Int = to;
+        var cPage = FlxG.state.optionsCodex.pages.get("controls");
+
+        var keyArray:Array<Int> = Save.instance.modOptions.get(SAVE_KEY_RING_KEYBIND);
+        keyArray[storedIndex] = bindTo;
+
+        var item:AtlasText = cPage.controlGrid.selectedItem;
+        var keyName:String = (bindTo == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(bindTo));
+        item.label.text = keyName;
+
+        if ((bindTo != 0 && keyArray[0] == 0) || (bindTo == 0 && keyArray[1] != 0))
+        {
+            keyArray.reverse();
+            if (cPage.controlGrid.selectedIndex % 2 == 1)
+            {
+                var leftItem:AtlasText = cPage.controlGrid.members[cPage.controlGrid.selectedIndex - 1];
+                leftItem.label.text = (keyArray[0] == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(keyArray[0]));
+                item.label.text = UNBOUND_TEXT;
+            }
+            else
+            {
+                var rightItem:AtlasText = cPage.controlGrid.members[cPage.controlGrid.selectedIndex + 1];
+                item.label.text = (keyArray[0] == 0 ? UNBOUND_TEXT : InputUtil.getKeyName(keyArray[0]));
+                rightItem.label.text = UNBOUND_TEXT;
+            }
+        }
+        Save.instance.flush();
+    }
+
+    function openPrompt(index:Int)
+    {
+        var cPage = FlxG.state.optionsCodex.pages.get("controls");
+        storedIndex = index;
+        cPage.controlGrid.enabled = false;
+        cPage.canExit = false;
+        rebindPrompt.exists = true;
+        keyUsedToEnterPrompt = FlxG.keys.firstJustPressed();
+    }
+
+    function closePrompt()
+    {
+        var cPage = FlxG.state.optionsCodex.pages.get("controls");
+        rebindPrompt.exists = false;
+        cPage.controlGrid.enabled = true;
+        cPage.canExit = true;
+        keyUsedToEnterPrompt = null;
     }
 
     function populateOptions(state:OptionsState) {
-        var prefs:PreferencesMenu = state.optionsCodex.pages.get('exe-options');
+        // Appends directly to the base game's main preferences menu
+        var prefs:PreferencesMenu = state.optionsCodex.pages.get('preferences');
         if (prefs == null) return;
 
-        // GAMEPLAY
-        prefs.items.createItem(120, 120 * prefs.items.length + 30, "GAMEPLAY:", "bold", () -> false);
-        prefs.preferenceDesc.push("Gameplay options for VS Sonic.EXE");
+        createHeader(prefs, "  == VS SONIC.EXE ==", "");
+        createHeader(prefs, "== GAMEPLAY ==", "Gameplay options for VS Sonic.EXE");
 
         createCheckboxIfMobileAllowed(prefs, "doJumpscares", "Jumpscares", "Toggles jumpscares.", function(value:Bool) {
             Save.instance.modOptions.set("doJumpscares", value);
@@ -240,9 +362,7 @@ class EXEOptions extends Module
             Save.instance.flush();
         }, Save.instance.modOptions.get("camMovementIntensity"), 5, 100, 5, 0);
 
-        // GRAPHICS
-        prefs.items.createItem(120, 120 * prefs.items.length + 30, "GRAPHICS:", "bold", () -> false);
-        prefs.preferenceDesc.push("Graphical options for VS Sonic.EXE");
+        createHeader(prefs, "== GRAPHICS ==", "Visual options for VS Sonic.EXE");
 
         createCheckboxIfMobileAllowed(prefs, "allowGore", "Gore", "Toggles gore assets.", function(value:Bool) {
             Save.instance.modOptions.set("allowGore", value);
@@ -256,9 +376,7 @@ class EXEOptions extends Module
             Save.instance.flush();
         }, Save.instance.modOptions.get("doShaders"));
 
-        // HUD
-        prefs.items.createItem(120, 120 * prefs.items.length + 30, "HUD:", "bold", () -> false);
-        prefs.preferenceDesc.push("HUD options for VS Sonic.EXE");
+        createHeader(prefs, "== HUD ==", "HUD options for VS Sonic.EXE");
 
         createCheckboxIfMobileAllowed(prefs, "doGenesisHUD", "GENESIS HUD", "Toggles the GENESIS-styled HUD.", function(value:Bool) {
             Save.instance.modOptions.set("doGenesisHUD", value);
@@ -281,9 +399,7 @@ class EXEOptions extends Module
             Save.instance.flush();
         }, Save.instance.modOptions.get("timerMode"));
 
-        // UI
-        prefs.items.createItem(120, 120 * prefs.items.length + 30, "UI:", "bold", () -> false);
-        prefs.preferenceDesc.push("UI options for VS Sonic.EXE");
+        createHeader(prefs, "== UI ==", "UI options for VS Sonic.EXE");
 
         createCheckboxIfMobileAllowed(prefs, "doEXETitleIntro", "EXE Title Intro", "Toggles the intro video before the title screen.", function(value:Bool) {
             Save.instance.modOptions.set("doEXETitleIntro", value);
@@ -323,9 +439,7 @@ class EXEOptions extends Module
             Save.instance.flush();
         }, Save.instance.modOptions.get("freeplayBG"));
 
-        // EXTRAS
-        prefs.items.createItem(120, 120 * prefs.items.length + 30, "MISC:", "bold", () -> false);
-        prefs.preferenceDesc.push("Miscellaneous options for VS Sonic.EXE");
+        createHeader(prefs, "== MISC ==", "Miscellaneous options for VS Sonic.EXE");
 
         createCheckboxIfMobileAllowed(prefs, "doSongTransitions", "Song Transitions", "Toggles song transitions in freeplay.", function(value:Bool) {
             Save.instance.modOptions.set("doSongTransitions", value);

@@ -14,7 +14,7 @@
     },
     "stage": "launchbase",
     "noteStyle": "fatal",
-    "ratings": {"easy": 7, "normal": 9, "hard": 11},
+    "ratings": {"easy": 10, "normal": 11, "hard": 12},
     "previewStart": 0,
     "previewEnd": 15000
   },

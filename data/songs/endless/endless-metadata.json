@@ -9,7 +9,7 @@
     "characters": {"player": "bf-endless", "girlfriend": "", "opponent": "majin", "instrumental": "", "altInstrumentals": ["og", "erect"]},
     "stage": "majinForest",
     "noteStyle": "exeSemi",
-    "ratings": {"easy": 6, "normal": 7, "hard": 7 },
+    "ratings": {"easy": 6, "normal": 7, "hard": 8 },
     "album": "exeOST",
     "previewStart": 0,
     "previewEnd": 15000
